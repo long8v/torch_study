@@ -14,4 +14,4 @@
 |05|seq2seq 모델링|1022|연습문제|https://pytorch.org/tutorials/beginner/transformer_tutorial.html|
 |06|torchtext 분류|1023|정리필요|https://tutorials.pytorch.kr/beginner/text_sentiment_ngrams_tutorial.html|
 |07|torchtext 번역|||https://tutorials.pytorch.kr/beginner/torchtext_translation_tutorial.html|
-|08|seq2seq 번역||https://tutorials.pytorch.kr/intermediate/seq2seq_translation_tutorial.html|
+|08|seq2seq 번역|||https://tutorials.pytorch.kr/intermediate/seq2seq_translation_tutorial.html|
