@@ -5,7 +5,8 @@ __pycache__/
 *$py.class
 
 # files
-
+.data/
+scraping/
 data/
 runs/
 # C extensions
