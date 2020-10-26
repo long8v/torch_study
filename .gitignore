@@ -9,6 +9,8 @@ __pycache__/
 scraping/
 data/
 runs/
+*.zip
+
 # C extensions
 *.so
 
