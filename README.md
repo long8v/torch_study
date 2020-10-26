@@ -6,7 +6,7 @@
 🍔 2020.09.30~2020.12.31까지 끝내기 목표
 
 |순번|튜토리얼|시작일자|상태|링크|
-|--|----|---|--|----|
+|--|----|:---:|:--:|----|
 |01|what is torch.nn?|1010|완료|https://pytorch.org/tutorials/beginner/nn_tutorial.html|
 |02|Tensorboard|1012|완료|https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html|
 |03|이름분류|1013|완료|https://pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html|
