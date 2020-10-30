@@ -8,7 +8,7 @@
 :fries: 중복된 이미지가 들어가 보이는 것은 다운받으셔서 실행하면 제대로 나옵니다!
 
 |순번|튜토리얼|시작일자|상태|링크|
-|:--:|----|:---:|:---:|----|
+|:--:|----|:---:|:----:|----|
 |01|what is torch.nn?|1010|완료|https://pytorch.org/tutorials/beginner/nn_tutorial.html|
 |02|Tensorboard|1012|완료|https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html|
 |03|이름분류|1013|완료|https://pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html|
