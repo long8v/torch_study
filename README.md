@@ -10,9 +10,9 @@
 |순번|튜토리얼|시작일자|상태|주요내용|링크|
 |:--:|----|:---:|:----:|----|----|
 |01|what is torch.nn?|1010|완료|`nn.Functional`,`nn.Module`,`nn.Linear`,`optim`|https://tutorials.pytorch.kr/beginner/nn_tutorial.html|
-|02|Tensorboard|1012|완료||https://tutorials.pytorch.kr/intermediate/tensorboard_tutorial.html|
-|03|이름분류|1013|완료||https://tutorials.pytorch.kr/intermediate/char_rnn_classification_tutorial.html|
-|04|이름생성|1019|완료||https://tutorials.pytorch.kr/intermediate/char_rnn_generation_tutorial.html|
+|02|Tensorboard|1012|완료|`tensorboard`|https://tutorials.pytorch.kr/intermediate/tensorboard_tutorial.html|
+|03|이름분류|1013|완료|`nn.Linear`,`Dataset`,`DataLoader`|https://tutorials.pytorch.kr/intermediate/char_rnn_classification_tutorial.html|
+|04|이름생성|1019|완료|`nn.GRU`,`GPU running`|https://tutorials.pytorch.kr/intermediate/char_rnn_generation_tutorial.html|
 |05|seq2seq 번역|1030|연습문제||https://tutorials.pytorch.kr/intermediate/seq2seq_translation_tutorial.html|
 |06|torchtext 분류|1023|완료||https://tutorials.pytorch.kr/beginner/text_sentiment_ngrams_tutorial.html|
 |07|torchtext 번역|1026|완료||https://tutorials.pytorch.kr/beginner/torchtext_translation_tutorial.html|
