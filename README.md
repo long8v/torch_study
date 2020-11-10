@@ -16,4 +16,4 @@
 |05|seq2seq 번역|1030|완료|`nn.Embedding`,`torch.save`,`torch.load`|https://tutorials.pytorch.kr/intermediate/seq2seq_translation_tutorial.html|
 |06|torchtext 분류|1023|완료|`torchtext`,`Field`,`nn.EmbeddingBag`|https://tutorials.pytorch.kr/beginner/text_sentiment_ngrams_tutorial.html|
 |07|torchtext 번역|1026|완료|`TabularDataset`,`BucketIterator`|https://tutorials.pytorch.kr/beginner/torchtext_translation_tutorial.html|
-|08|seq2seq 모델링|1022|연습문제|`torch.nn.TransformerEncoder`|https://tutorials.pytorch.kr/beginner/transformer_tutorial.html|
+|08|seq2seq 모델링|1022|연습문제|`nn.TransformerEncoder`|https://tutorials.pytorch.kr/beginner/transformer_tutorial.html|
