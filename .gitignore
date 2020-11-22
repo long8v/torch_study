@@ -10,6 +10,7 @@ scraping/
 data/
 runs/
 *.zip
+*.swp
 
 # C extensions
 *.so
