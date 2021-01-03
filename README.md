@@ -10,8 +10,6 @@
 
 🍔 2020.09.30~2020.12.31까지 끝내기 목표 
 
-🥗 중복된 이미지가 들어가 보이는 것은 다운받으셔서 실행하면 제대로 나옵니다
-
 |순번|튜토리얼|시작일자|상태|주요내용|링크|
 |:--:|----|:---:|:----:|----|----|
 |01|what is torch.nn?|1010|완료|`nn.Functional`,`nn.Module`,`nn.Linear`,`optim`|https://tutorials.pytorch.kr/beginner/nn_tutorial.html|
