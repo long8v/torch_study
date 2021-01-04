@@ -3,13 +3,13 @@
 ## Paper
 🍕
 
-🍔 2021.01.03~2021.06.30까지 끝내기 목표
+🍔 2021.01.03~2021.06.30까지 끝내기 목표https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb
 
-|순번|paper|시작일자|author|link|
+|순번|paper|시작일자|reference|
 |:--:|----|----|----|----|
-|01|||||
-|02|||||
-|03|||||
+|01|Attention is all you need||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb||
+|02||||
+|03||||
 
 ## Tutorial 
 🍕 https://tutorials.pytorch.kr/ 노트북 다운 받아서 실행해보고 모르는 것 정리하고, 요약하고 연습문제 만들어서 풀기 
