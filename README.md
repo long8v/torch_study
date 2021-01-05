@@ -7,9 +7,10 @@
 
 |순번|paper|시작일자|reference|
 |:--:|----|----|----|
-|01|Attention is all you need||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb||
-|02||||
+|01|Convolutional Neural Networks for Sentence Classification||||
+|02|Attention is All You Need||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
 |03||||
+|04||||
 
 ## Tutorial 
 🍕 https://tutorials.pytorch.kr/ 노트북 다운 받아서 실행해보고 모르는 것 정리하고, 요약하고 연습문제 만들어서 풀기 
