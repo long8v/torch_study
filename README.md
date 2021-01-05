@@ -21,9 +21,9 @@
 
 🍔 2021.01.03~2021.06.30까지 끝내기 목표
 
-|순번|paper|시작일자|reference|
-|:--:|----|----|----|
-|01|Convolutional Neural Networks for Sentence Classification||https://github.com/bentrevett/pytorch-sentiment-analysis|
-|02|Sequence to Sequence Learning with Neural Networks||https://github.com/karpathy/minGPT
-|03|Improving Language Understanding by Generative Pre-Training||https://github.com/karpathy/minGPT|
-|04|Attention is All You Need||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
+|순번|paper|시작일자|상태|reference|
+|:--:|----|----|----|----|
+|01|Convolutional Neural Networks for Sentence Classification|0111||https://github.com/bentrevett/pytorch-sentiment-analysis|
+|02|Sequence to Sequence Learning with Neural Networks|0201||https://github.com/karpathy/minGPT
+|03|Improving Language Understanding by Generative Pre-Training|0301||https://github.com/karpathy/minGPT|
+|04|Attention is All You Need|0401||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
