@@ -17,7 +17,7 @@
 |08|seq2seq 모델링|1022|연습문제|`nn.TransformerEncoder`|https://tutorials.pytorch.kr/beginner/transformer_tutorial.html|
 
 ## Paper
-🍕 torch, torchtext만 사용하여 패키지 형태로 논문 그대로 재현하기  
+🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 그대로 재현하기  
 
 🍔 2021.01.03~2021.06.30까지 끝내기 목표
 
