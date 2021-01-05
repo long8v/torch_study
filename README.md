@@ -1,6 +1,19 @@
 # 😎 torch_study
 
-## Tutorial 
+## Paper
+🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 그대로 재현하기  
+
+🍔 2021.01.03~2021.06.30까지 끝내기 목표
+
+|순번|paper|시작일자|상태|reference|
+|:--:|----|----|----|----|
+|01|Convolutional Neural Networks for Sentence Classification|0111||https://github.com/bentrevett/pytorch-sentiment-analysis|
+|02|Sequence to Sequence Learning with Neural Networks|0201||https://github.com/karpathy/minGPT
+|03|Improving Language Understanding by Generative Pre-Training|0301||https://github.com/karpathy/minGPT|
+|04|Attention is All You Need|0401||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
+
+
+## *Tutorial(완료)* 
 🍕 https://tutorials.pytorch.kr/ 노트북 다운 받아서 실행해보고 모르는 것 정리하고, 요약하고 연습문제 만들어서 풀기 
 
 🍔 2020.09.30~2020.12.31까지 끝내기 목표 
@@ -14,16 +27,4 @@
 |05|seq2seq 번역|1030|완료|`nn.Embedding`,`torch.save`,`torch.load`|https://tutorials.pytorch.kr/intermediate/seq2seq_translation_tutorial.html|
 |06|torchtext 분류|1023|완료|`torchtext`,`Field`,`nn.EmbeddingBag`|https://tutorials.pytorch.kr/beginner/text_sentiment_ngrams_tutorial.html|
 |07|torchtext 번역|1026|완료|`TabularDataset`,`BucketIterator`|https://tutorials.pytorch.kr/beginner/torchtext_translation_tutorial.html|
-|08|seq2seq 모델링|1022|연습문제|`nn.TransformerEncoder`|https://tutorials.pytorch.kr/beginner/transformer_tutorial.html|
-
-## Paper
-🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 그대로 재현하기  
-
-🍔 2021.01.03~2021.06.30까지 끝내기 목표
-
-|순번|paper|시작일자|상태|reference|
-|:--:|----|----|----|----|
-|01|Convolutional Neural Networks for Sentence Classification|0111||https://github.com/bentrevett/pytorch-sentiment-analysis|
-|02|Sequence to Sequence Learning with Neural Networks|0201||https://github.com/karpathy/minGPT
-|03|Improving Language Understanding by Generative Pre-Training|0301||https://github.com/karpathy/minGPT|
-|04|Attention is All You Need|0401||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
+|08|seq2seq 모델링|1022|완료|`nn.TransformerEncoder`|https://tutorials.pytorch.kr/beginner/transformer_tutorial.html|
