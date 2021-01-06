@@ -33,3 +33,6 @@
 |06|torchtext 분류|1023|완료|`torchtext`,`Field`,`nn.EmbeddingBag`|https://tutorials.pytorch.kr/beginner/text_sentiment_ngrams_tutorial.html|
 |07|torchtext 번역|1026|완료|`TabularDataset`,`BucketIterator`|https://tutorials.pytorch.kr/beginner/torchtext_translation_tutorial.html|
 |08|seq2seq 모델링|1022|완료|`nn.TransformerEncoder`|https://tutorials.pytorch.kr/beginner/transformer_tutorial.html|
+
+
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Flong8v%2F&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)   
