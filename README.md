@@ -13,7 +13,7 @@
 |:--:|----|----|----|----|
 |01|Convolutional Neural Networks for Sentence Classification|0106||https://github.com/bentrevett/pytorch-sentiment-analysis|
 |02|Sequence to Sequence Learning with Neural Networks|0201||https://github.com/karpathy/minGPT
-|03|Improving Language Understanding by Generative Pre-Training|0301||https://github.com/karpathy/minGPT|
+|03|Improving Language Understanding by Generative Pre-Training|0301||https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb|
 |04|Attention is All You Need|0401||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
 
 
