@@ -12,6 +12,9 @@
 |03|Improving Language Understanding by Generative Pre-Training|0301||https://github.com/karpathy/minGPT|
 |04|Attention is All You Need|0401||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
 
+🌮 논문 구현 단계는 이와 같음
+
+1) 논문 읽기 2) reference code 읽기 3) 코드 짜기 4) 동일 조건 실험으로 성능이 재현되는지 확인하기
 
 ## *Tutorial(완료)* 
 🍕 https://tutorials.pytorch.kr/ 노트북 다운 받아서 실행해보고 모르는 것 정리하고, 요약하고 연습문제 만들어서 풀기 
