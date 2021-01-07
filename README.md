@@ -1,4 +1,6 @@
 # 😎 torch_study
+## 스터디원 모집 중
+https://forms.gle/CJ1aL3KVHT65z54UA 
 
 ## Paper
 🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 그대로 재현하기  
