@@ -1,7 +1,7 @@
 # 😎 torch_study
 
 ## Paper
-🍟 [스터디 진행 중](https://www.notion.so/kickoff-6634847c450741a68c1be736f102ecdd) 
+🍟 [스터디 진행 중..](https://www.notion.so/kickoff-6634847c450741a68c1be736f102ecdd) 
 
 🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 그대로 재현하기  
 
