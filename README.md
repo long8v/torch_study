@@ -15,8 +15,7 @@
 |:--:|----|----|----|----|----|
 |01|Convolutional Neural Networks for Sentence Classification|0106|paper reading|https://arxiv.org/abs/1408.5882|https://github.com/bentrevett/pytorch-sentiment-analysis/blob/master/4%20-%20Convolutional%20Sentiment%20Analysis.ipynb|
 |02|Sequence to Sequence Learning with Neural Networks|0201||https://arxiv.org/abs/1409.3215|https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb|
-|03|Improving Language Understanding by Generative Pre-Training|0301||https://www.cs.ubc.ca/~amuham01/LING530/papers/radford2018improving.pdf|https://github.com/karpathy/minGPT|
-|04|Attention is All You Need|0401||https://arxiv.org/abs/1706.03762|https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
+|03|Attention is All You Need|0301||https://arxiv.org/abs/1706.03762|https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
 
 
 
