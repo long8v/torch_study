@@ -5,12 +5,15 @@ __pycache__/
 *$py.class
 
 # files
+debug
+
 .data/
 scraping/
 data/
 runs/
 *.zip
 *.swp
+paper/01_CNN/.vector_cache/
 
 # C extensions
 *.so
