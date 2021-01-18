@@ -16,3 +16,12 @@ TransformerDecoder에 TransformerEncoderLayer 인스턴스를 넣어서 발생 -
 RNN은 한번에 한개씩 나와서 loss를 합쳐서 계산하지만 이 경우에는 어떻게 하지..?
 -> seq2seq문제인데 encoder만 써서 분류 문제를 풀어서 그럼 seq2seq으로 접근해야함
 optimizer.zero_grad() 이유
+
+### expected scalar type long but found float 
+The target should be a LongTensor using nn.CrossEntropyLoss (or nn.NLLLoss), since it is used to index the output logit (or log probability) for the current target class as shown in this formula 422 (note the indexing in x[class]).                                                     
+ target = target.long()                                                                          
+A
+A
+A
+~                                                                              
+~                         
