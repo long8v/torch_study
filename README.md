@@ -1,20 +1,22 @@
 # 😎 torch_study
 
 ## Paper
+🍟 [스터디 진행 중..](https://www.notion.so/kickoff-6634847c450741a68c1be736f102ecdd) 
+
 🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 그대로 재현하기  
 
-🍔 2021.01.03~2021.06.30까지 끝내기 목표
+🍔 2021.01.06~2021.06.30까지 끝내기 목표
 
 🌮 논문 구현 단계는 이와 같음
 
-1) 논문 읽기 2) reference code 읽기 3) 코드 짜기 4) 동일 조건 실험으로 성능이 재현되는지 확인하기
+`논문 읽기` -> `reference code 읽기` -> `코드 짜기` -> `동일 조건 실험으로 성능이 재현되는지 확인하기`
 
-|순번|paper|시작일자|상태|reference|
-|:--:|----|----|----|----|
-|01|Convolutional Neural Networks for Sentence Classification|0106||https://github.com/bentrevett/pytorch-sentiment-analysis|
-|02|Sequence to Sequence Learning with Neural Networks|0201||https://github.com/karpathy/minGPT
-|03|Improving Language Understanding by Generative Pre-Training|0301||https://github.com/karpathy/minGPT|
-|04|Attention is All You Need|0401||https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
+|순번|paper|시작일자|상태|arxiv|code reference|
+|:--:|----|----|----|----|----|
+|01|Convolutional Neural Networks for Sentence Classification|0106|reference code|https://arxiv.org/abs/1408.5882|https://github.com/bentrevett/pytorch-sentiment-analysis/blob/master/4%20-%20Convolutional%20Sentiment%20Analysis.ipynb|
+|02|Sequence to Sequence Learning with Neural Networks|0201||https://arxiv.org/abs/1409.3215|https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb|
+|02|Neural Machine Translation by Jointly Learning to Alignt and Translate|0201||https://arxiv.org/pdf/1409.0473.pdf|https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb|
+|03|Attention is All You Need|0301||https://arxiv.org/abs/1706.03762|https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
 
 
 
@@ -33,3 +35,6 @@
 |06|torchtext 분류|1023|완료|`torchtext`,`Field`,`nn.EmbeddingBag`|https://tutorials.pytorch.kr/beginner/text_sentiment_ngrams_tutorial.html|
 |07|torchtext 번역|1026|완료|`TabularDataset`,`BucketIterator`|https://tutorials.pytorch.kr/beginner/torchtext_translation_tutorial.html|
 |08|seq2seq 모델링|1022|완료|`nn.TransformerEncoder`|https://tutorials.pytorch.kr/beginner/transformer_tutorial.html|
+
+
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Flong8v%2F&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)   
