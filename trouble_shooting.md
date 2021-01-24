@@ -14,7 +14,9 @@ TabularDataset은 torchtext의 Iterator와 연동되고, DataLoader랑 하려면
 target = target.long()     
 
 The target should be a LongTensor using nn.CrossEntropyLoss (or nn.NLLLoss), since it is used to index the output logit (or log probability) for the current target class as shown in this formula 422 (note the indexing in x[class]).                                                     
-
+### new() received an invalid combination of arguments - got (int, dtype=type), but expected one of: * (*, torch.device device) didn't match because some of the keywords were incorrect: dtype * (torch.Storage storage) * (Tensor other) * (tuple of ints size, *, torch.device device) * (object data, *, torch.device device)
+dtype을 int로 주고싶은 경우
+torch.Tensor(xx, dtype=torch.int64) 가 아니라 torch.Tensor(xx).long()와 같이 짜기
 
 ## 특수 상황
 
