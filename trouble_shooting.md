@@ -18,6 +18,10 @@ The target should be a LongTensor using nn.CrossEntropyLoss (or nn.NLLLoss), sin
 dtype을 int로 주고싶은 경우
 torch.Tensor(xx, dtype=torch.int64) 가 아니라 torch.Tensor(xx).long()와 같이 짜기
 
+## RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation
+requires_grad=true주기?
+
+
 ## 특수 상황
 
 ### ValueError: Expected target size (20, 11), got torch.Size([20, 10])
