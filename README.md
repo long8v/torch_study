@@ -20,6 +20,7 @@
 류지은 [https://github.com/soohyunee/torch_study](https://github.com/soohyunee/torch_study)
 
 유용현 [https://github.com/YonghyunRyu/NLPwithPyTorch/](https://github.com/YonghyunRyu/NLPwithPyTorch/blob/main/cnn_classification.ipynb)
+
 🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 그대로 재현하기  
 
 🍔 2021.01.06~2021.06.30까지 끝내기 목표
