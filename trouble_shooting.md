@@ -1,5 +1,16 @@
 ## 일반적인 상황
 
+### RuntimeError: a leaf Variable that requires grad is being used in an in-place operation.
+
+for name, param in model.named_parameters():<br>
+    if 'fc' in name:<br>
+        param += 3
+
+에서 for name, param in model.named_parameters():<br>
+    param.data += 3
+
+로 수정한다 
+
 ### RuntimeError: CUDA error: device-side assert triggered
 device cpu로 바꾸고 디버깅 진행하기
 

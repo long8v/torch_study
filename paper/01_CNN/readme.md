@@ -1,3 +1,19 @@
+## 논문 구현하면서 배운 점 / 느낀 점
+ 
+- torch에서 왜 inplace 연산이 필요한지 a = a + 1하면 덮어쓰기 돼서 역전파가 진행이 안
+- `nn.CrossEntropyloss`가 `nn.LogSoftmax()`와 `nn.NLLLoss()`를 결합한 것이다
+- 사용자 데이터셋으로 torchtext dataset 형태처럼 만드는 법
+- `torchtext`의 `Example`이 행렬이나 데이터프레임의 row로 사용된다는 점 -> `Example.fromlist(데이터, 필드)`와 같이 사용 가능하다는 것
+- torch debugging 방법..모델에서 바꿀게 아니라 간단한 텐서로 example을 만들어서 해야한다는 
+- dropout의 train, inference때 작동 차이 
+- batch_size의 크기에 상관없이 모델을 만들어야 함
+- Adam의 대단함과 Adam이 나오기 전에 있었던 여러가지 정규화 방식들
+- max norm regularization, L2 norm regularization의 차이
+- `Dataset`에서 하는 처리와 `DataLoader`에서 해야 하는 처리. 
+ 
+
+## Paper review
+
 ### 1) PPT 한 장 분량으로 논문 정리
 ![Untitled](https://user-images.githubusercontent.com/46675408/105627460-706aca80-5e7a-11eb-96e8-187b3faac601.png)
 
