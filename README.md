@@ -3,6 +3,8 @@
 ## Paper
 🍟 [스터디 진행 중..](https://www.notion.so/kickoff-6634847c450741a68c1be736f102ecdd) 
 
+같이 하는 사람들..
+
 서수인 [https://github.com/tndls9304/nlp_torch_study](https://github.com/tndls9304/nlp_torch_study/)
 
 이종현 [https://github.com/jonghyunlee1993/PapersWithCode_NLP](https://github.com/jonghyunlee1993/PapersWithCode_NLP)
