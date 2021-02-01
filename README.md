@@ -3,23 +3,6 @@
 ## Paper
 🍟 [스터디 진행 중..](https://www.notion.so/kickoff-6634847c450741a68c1be736f102ecdd) 
 
-서수인 [https://github.com/tndls9304/nlp_torch_study](https://github.com/tndls9304/nlp_torch_study/)
-
-이종현 [https://github.com/jonghyunlee1993/PapersWithCode_NLP](https://github.com/jonghyunlee1993/PapersWithCode_NLP)
-
-이규민 [https://github.com/GyuminJack/torchstudy](https://github.com/GyuminJack/torchstudy)
-
-이태호 [https://github.com/adldotori/PapersWithCode](https://github.com/adldotori/PapersWithCode)
-
-최진욱 [https://github.com/Jinwook-Choi127/torchstudy](https://github.com/Jinwook-Choi127/torchstudy/)
-
-조영선 [https://github.com/wsr692/torchstudy](https://github.com/wsr692/torchstudy) 
-
-강민수 [https://github.com/karlie38/torchstudy](https://github.com/karlie38/torchstudy/blob/master/1.%20Convolutional%20Neural%20N%5B%E2%80%A6%5Dnce%20Classification/convolutional-sentiment-analysis-v01.ipynb)
-
-류지은 [https://github.com/soohyunee/torch_study](https://github.com/soohyunee/torch_study)
-
-유용현 [https://github.com/YonghyunRyu/NLPwithPyTorch/](https://github.com/YonghyunRyu/NLPwithPyTorch/blob/main/cnn_classification.ipynb)
 🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 그대로 재현하기  
 
 🍔 2021.01.06~2021.06.30까지 끝내기 목표
