@@ -1,6 +1,6 @@
 ## 논문 구현하면서 배운 점 / 느낀 점
  
-- torch에서 왜 inplace 연산이 필요한지 a = a + 1하면 덮어쓰기 돼서 역전파가 진행이 안
+- torch에서 왜 inplace 연산이 필요한지 a = a + 1하면 덮어쓰기 돼서 역전파가 진행이 안됨
 - `nn.CrossEntropyloss`가 `nn.LogSoftmax()`와 `nn.NLLLoss()`를 결합한 것이다
 - 사용자 데이터셋으로 torchtext dataset 형태처럼 만드는 법
 - `torchtext`의 `Example`이 행렬이나 데이터프레임의 row로 사용된다는 점 -> `Example.fromlist(데이터, 필드)`와 같이 사용 가능하다는 것

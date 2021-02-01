@@ -20,7 +20,7 @@ from gensim.models import KeyedVectors
 class Vocab:    
     def build_vocabs(self, sentence_list):
         from collections import defaultdict
-        self.stoi_dict = defaultdict(lambda: 0) # 원래 <UNK>로 되어있었음
+        self.stoi_dict = defaultdict(lambda: 0) 
         self.stoi_dict['<UNK>'] = 0
         self.stoi_dict['<PAD>'] = 1
         _index = 2
@@ -40,23 +40,21 @@ class Vocab:
     def itos(self, indices):
         return " ".join([self.itos_dict[index] for index in indices if self.itos_dict[index] != '<PAD>'])
 
-
-class CNNDataset: # 굳이 Dataset 상속을 안해줘도 된다고 함
-    def __init__(self, path, w2v):
+class CNNDataset: 
+    def __init__(self, path, w2v_path):
+        data = self.load_data(path)
         zipped_data = list(zip(*data))
-        
-        # 전처리하는 과정 __getitem__에서 안 한 이유는 vocab 만들때 같은 전처리를 사용해야해서..!!
+
         self.text = zipped_data[0]
         self.text = [self.clean_str(sen) for sen in self.text]
         self.text = [[word for word in self.tokenizer(sen)] for sen in self.text]
         self.label = zipped_data[1]
         
-        # vocab 만들기 -> class 안에 다른 class instance를 정의하는게 보편적인지는 잘 모르겠음
-        # ...이렇게 하면 문제점이 생기는게, train, valid, test 따로따로 build_vocab을 만들어서 안됨!!! 어떡하지
         self.vocab = Vocab()
         self.vocab.build_vocabs(self.text)    
+        self.w2v = self.load_word2vec(w2v_path)
         self.pretrained_embedding = self.get_pretrained_embeddings()
-        self.w2v = w2v
+        self.embedding_dim = len(self.pretrained_embedding[0])
 
     def __len__(self):
         return len(self.label)
@@ -67,18 +65,35 @@ class CNNDataset: # 굳이 Dataset 상속을 안해줘도 된다고 함
         sample_text = self.vocab.stoi(sample_text)
         return torch.Tensor(sample_text).long(), sample_label
     
+    def load_data(self, path):
+        with open(f'{path}/CNN_sentence/rt-polarity.pos', 'r', encoding = "ISO-8859-1") as f:
+            pos = f.readlines()
+        with open(f'{path}/CNN_sentence/rt-polarity.neg', 'r', encoding = "ISO-8859-1") as f:
+            neg = f.readlines()
+        pos = [(p, 1) for p in pos]
+        neg = [(n, 0) for n in neg]
+        return pos + neg
+    
     def tokenizer(self, sentence):
         return sentence.split()
     
+    def load_word2vec(self, w2v_path):
+        return KeyedVectors.load_word2vec_format(w2v_path, binary=True)
+
     def get_pretrained_embeddings(self):
         pretrained_embedding = []
         for word in self.vocab.stoi_dict:
-            if word in w2v:
-                pretrained_embedding.append(w2v[word])
+            if word in self.w2v:
+                pretrained_embedding.append(self.w2v[word])
             else: 
                 pretrained_embedding.append(np.random.uniform(-0.25, 0.25, 300))
-        return torch.from_numpy(np.array(pretrained_embedding))        
-    
+        return torch.from_numpy(np.array(pretrained_embedding))   
+
+    def pad_collate(self, batch):
+        (xx, yy) = zip(*batch)
+        xx_pad = pad_sequence(xx, batch_first=True, padding_value=0)
+        return xx_pad, yy
+
     def clean_str(self, string, TREC=False):
         """
         Tokenization/string cleaning for all datasets except for SST.
@@ -102,15 +117,15 @@ class CNNDataset: # 굳이 Dataset 상속을 안해줘도 된다고 함
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Dataset Builder')
-    parser.add_argument('-b', '--batch_size', type=int, default=2)
-    parser.add_argument('-p', '--path', type=str, default='../data')
-    parser.add_argument('-p', '--path', type=str, default='../data')
+    parser.add_argument('-b', '--batch_size', type=int, default=10)
+    parser.add_argument('-p', '--path', type=str, default='/home/long8v')
+    parser.add_argument('-w', '--w2v_path', type=str, default='/home/long8v/Downloads/GoogleNews-vectors-negative300.bin.gz')
     args = parser.parse_args()
 
-    dataset = MR(args)
+    dataset = CNNDataset(args.path, args.w2v_path)
     data_loader = DataLoader(dataset=dataset, 
                             batch_size=args.batch_size,
-                            collate_fn=dataset.collate_fn)
+                            collate_fn=dataset.pad_collate)
 
     for i in data_loader:
         print(i)
