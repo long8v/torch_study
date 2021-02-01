@@ -37,8 +37,7 @@ max-over-time-pooling이 중요한 feature만 뽑고 다른 길이의 input을 �
 - word2vec에 없는 단어는 랜덤 vector로 주어져야함 (Words not present in the set of pre-trained words are initalized randomly) : 보통 패키지에서 없는 단어는 [UNK] 토큰으로 한번에 처리하기 때문에이 부분을 새롭게 구현해야 할듯
 - CNN - static : word vector는 고정 → with no grad을 모델 중간에 넣을 수 있나? 해본 적이 없음..
 - CNN - mutli-channel : 한 채널은 픽스하고 한 채널은 back prop 되어야 함. 이것도 no grad ?
-- L2 norm weight : ??? in place operation
-- gradient clip
+- L2 norm weight
 - CNN max-over-time-pooling
 
 ### 6) 같이 얘기해봤으면 하는 부분
