@@ -91,7 +91,7 @@ class CNNDataset:
 
     def pad_collate(self, batch):
         (xx, yy) = zip(*batch)
-        xx_pad = pad_sequence(xx, batch_first=True, padding_value=0)
+        xx_pad = pad_sequence(xx, batch_first=True, padding_value=1)
         return xx_pad, yy
 
     def clean_str(self, string, TREC=False):
