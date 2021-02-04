@@ -12,9 +12,9 @@ from torch.utils.data.dataset import Subset
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Dataset Builder')
     parser.add_argument('-k', '--kfold', type=int, default=10)
-    parser.add_argument('-b', '--batch_size', type=int, default=10)
+    parser.add_argument('-b', '--batch_size', type=int, default=50)
     parser.add_argument('-p', '--path', type=str, default='/home/long8v')
-    parser.add_argument('-w', '--w2v_path', type=str, default='/home/long8v/Downloads/GoogleNews-vectors-negative300.bin.gz')
+    parser.add_argument('-w', '--w2v_path', type=str, default='C:/Users/long8v/torch_study/data/GoogleNews-vectors-negative300.bin')
     parser.add_argument('-n', '--n_filters', type=int, default=100)
     parser.add_argument('-f', '--filters_sizes', type=list, default=[3, 4, 5])
     parser.add_argument('-o', '--output_dim', type=int, default=2)
@@ -48,6 +48,8 @@ if __name__ == '__main__':
                     args.n_filters, args.filters_sizes, args.output_dim, args.dropout, dataset.vocab.stoi_dict['<PAD>'])
         model.to(device)
         optimizer = optim.Adam(model.parameters())
+        # optimizer = optim.Adadelta(model.parameters(), rho=0.95, lr=1.0, eps=1e-06, weight_decay=10)
+        # criterion = nn.BCEWithLogitsLoss().to(device)
         criterion = nn.CrossEntropyLoss()
         verbose_train(model, train_dl, valid_dl, optimizer, criterion, args.path, args.n_epochs)
         kth_fold += 1

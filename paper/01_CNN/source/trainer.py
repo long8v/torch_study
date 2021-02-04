@@ -12,12 +12,12 @@ import functools
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 
 from .model import *
 from .dataloader import *
 
-writer = SummaryWriter('runs/cnn')
+# writer = SummaryWriter('runs/cnn')
 SEED = 17
 random.seed(SEED)
 np.random.seed(SEED)
@@ -45,12 +45,12 @@ def train(model, iterator, optimizer, criterion):
         predictions = model(src)
         loss = criterion(predictions, trg)
         
-#         ## l2 weight norm https://stackoverflow.com/questions/42704283/adding-l1-l2-regularization-in-pytorch
-#         l2_lambda = 0.01
-#         l2_reg = torch.tensor(0., requires_grad=False)
-#         for param in model.parameters():
-#             l2_reg.data.add_(torch.sqrt(torch.norm(param)))
-#             loss.add_(l2_lambda * l2_reg)
+        # ## l2 weight norm https://stackoverflow.com/questions/42704283/adding-l1-l2-regularization-in-pytorch
+        # l2_lambda = 0.01
+        # l2_reg = torch.tensor(0., requires_grad=False)
+        # for param in model.parameters():
+        #     l2_reg.data.add_(torch.sqrt(torch.norm(param)))
+        #     loss.add_(l2_lambda * l2_reg)
 
         acc = softmax_accuracy(predictions, trg)
         loss.backward()
@@ -106,10 +106,10 @@ def verbose_train(model, train_dl, valid_dl, optimizer, criterion, save_path, N_
         
         train_loss, train_acc = train(model, train_dl, optimizer, criterion)
         valid_loss, valid_acc = evaluate(model, valid_dl, criterion)
-        writer.add_scalar('training loss', train_loss, epoch)
-        writer.add_scalar('training acc', train_acc, epoch)
-        writer.add_scalar('valid loss', valid_loss, epoch)
-        writer.add_scalar('valid acc', valid_acc, epoch)
+        # writer.add_scalar('training loss', train_loss, epoch)
+        # writer.add_scalar('training acc', train_acc, epoch)
+        # writer.add_scalar('valid loss', valid_loss, epoch)
+        # writer.add_scalar('valid acc', valid_acc, epoch)
 
         end_time = time.time()
 
