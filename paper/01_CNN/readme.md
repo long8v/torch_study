@@ -42,6 +42,7 @@ CNN 부분이 RNN 계열이었다면 성능이 더 높게 나올까? → vanilla
 - Adadelta -> Adam optimizer 
 - CNN에서 첫 단어 앞에 대해서 zero-padding 한 것
 - multi-channel만 구현
+- word2vec variance 구하지 않고 공식 코드 처럼 U(-0.25, 0.25)로 처리함
 
 ## 논문 구현하면서 배운 점 / 느낀 점
 - .clone.detach()의미하는 바
