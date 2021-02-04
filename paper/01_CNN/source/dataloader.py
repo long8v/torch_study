@@ -19,10 +19,9 @@ from gensim.models import KeyedVectors
 
 class Vocab:    
     def build_vocabs(self, sentence_list):
-        from collections import defaultdict
         self.stoi_dict = defaultdict(lambda: 0) 
-        self.stoi_dict['<UNK>'] = 0
-        self.stoi_dict['<PAD>'] = 1
+        self.stoi_dict['<PAD>'] = 0
+        self.stoi_dict['<UNK>'] = 1
         _index = 2
         for sentence in sentence_list:
             tokens_list = sentence
@@ -51,10 +50,11 @@ class CNNDataset:
         self.label = zipped_data[1]
         
         self.vocab = Vocab()
-        self.vocab.build_vocabs(self.text)    
+        self.vocab.build_vocabs(self.text)
+        self.pad_index = self.vocab.stoi_dict['<PAD>']    
         self.w2v = self.load_word2vec(w2v_path)
+        self.embedding_dim = self.w2v.vector_size
         self.pretrained_embedding = self.get_pretrained_embeddings()
-        self.embedding_dim = len(self.pretrained_embedding[0])
 
     def __len__(self):
         return len(self.label)
@@ -86,12 +86,12 @@ class CNNDataset:
             if word in self.w2v:
                 pretrained_embedding.append(self.w2v[word])
             else: 
-                pretrained_embedding.append(np.random.uniform(-0.25, 0.25, 300))
+                pretrained_embedding.append(np.random.uniform(-0.25, 0.25, self.embedding_dim))
         return torch.from_numpy(np.array(pretrained_embedding))   
 
     def pad_collate(self, batch):
         (xx, yy) = zip(*batch)
-        xx_pad = pad_sequence(xx, batch_first=True, padding_value=1)
+        xx_pad = pad_sequence(xx, batch_first=True, padding_value=0)
         return xx_pad, yy
 
     def clean_str(self, string, TREC=False):

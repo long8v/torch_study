@@ -8,6 +8,7 @@ import random
 from tqdm import tqdm
 import numpy as np
 import functools
+import logging
 
 import torch
 import torch.nn as nn
@@ -98,7 +99,9 @@ def softmax_accuracy(preds, y):
     acc = correct.sum() / len(correct)
     return acc
 
-def verbose_train(model, train_dl, valid_dl, optimizer, criterion, save_path, N_EPOCHS):
+
+def logging_train(model, train_dl, valid_dl, optimizer, criterion, save_path, N_EPOCHS, model_name):
+    logging.basicConfig(filename=f'{model_name}.log', level=logging.DEBUG)
     best_valid_accuracy = float(0)
     for epoch in range(N_EPOCHS):
 
@@ -106,10 +109,6 @@ def verbose_train(model, train_dl, valid_dl, optimizer, criterion, save_path, N_
         
         train_loss, train_acc = train(model, train_dl, optimizer, criterion)
         valid_loss, valid_acc = evaluate(model, valid_dl, criterion)
-        # writer.add_scalar('training loss', train_loss, epoch)
-        # writer.add_scalar('training acc', train_acc, epoch)
-        # writer.add_scalar('valid loss', valid_loss, epoch)
-        # writer.add_scalar('valid acc', valid_acc, epoch)
 
         end_time = time.time()
 
@@ -117,10 +116,13 @@ def verbose_train(model, train_dl, valid_dl, optimizer, criterion, save_path, N_
         
         if valid_acc > best_valid_accuracy:
             best_valid_accuracy = valid_acc
-            torch.save(model.state_dict(), f'{save_path}/torch_study/data/tut4-model.pt')
-        
+            torch.save(model.state_dict(), f'{save_path}/torch_study/data/{model_name}.pt')
+
+        logging.info(f'Epoch: {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
+        logging.info(f'\tTrain Loss: {train_loss:.3f}\t| Train Acc: {train_acc*100:.2f}%')
+        logging.info(f'\t Val. Loss: {valid_loss:.3f}\t|  Val. Acc: {valid_acc*100:.2f}%')
+
         print(f'Epoch: {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
         print(f'\tTrain Loss: {train_loss:.3f}\t| Train Acc: {train_acc*100:.2f}%')
         print(f'\t Val. Loss: {valid_loss:.3f}\t|  Val. Acc: {valid_acc*100:.2f}%')
-
-            
+    return best_valid_accuracy
