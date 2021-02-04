@@ -56,4 +56,5 @@ CNN 부분이 RNN 계열이었다면 성능이 더 높게 나올까? → vanilla
 - Adam의 대단함과 Adam이 나오기 전에 있었던 여러가지 정규화 방식들
 - max norm regularization, L2 norm regularization의 차이
 - `Dataset`에서 하는 처리와 `DataLoader`에서 해야 하는 처리 
+- 패키징 경험, argparse 사용 경험
  
