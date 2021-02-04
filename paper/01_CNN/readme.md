@@ -1,17 +1,3 @@
-## 논문 구현하면서 배운 점 / 느낀 점
- 
-- torch에서 왜 inplace 연산이 필요한지 a = a + 1하면 덮어쓰기 돼서 역전파가 진행이 안됨
-- `nn.CrossEntropyloss`가 `nn.LogSoftmax()`와 `nn.NLLLoss()`를 결합한 것이다
-- 사용자 데이터셋으로 torchtext dataset 형태처럼 만드는 법
-- `torchtext`의 `Example`이 행렬이나 데이터프레임의 row로 사용된다는 점 -> `Example.fromlist(데이터, 필드)`와 같이 사용 가능하다는 것
-- torch debugging 방법..모델에서 바꿀게 아니라 간단한 텐서 만들어서 해야 정확하다는 점
-- dropout의 train, inference때 작동 차이 
-- batch_size의 크기에 상관없이 모델을 만들어야 함
-- Adam의 대단함과 Adam이 나오기 전에 있었던 여러가지 정규화 방식들
-- max norm regularization, L2 norm regularization의 차이
-- `Dataset`에서 하는 처리와 `DataLoader`에서 해야 하는 처리 
- 
-
 ## Paper review
 
 ### 1) PPT 한 장 분량으로 논문 정리
@@ -35,8 +21,8 @@ max-over-time-pooling이 중요한 feature만 뽑고 다른 길이의 input을 �
 ### 5) 논문 구현 시 주의해야할 것 같은 부분
 
 - word2vec에 없는 단어는 랜덤 vector로 주어져야함 (Words not present in the set of pre-trained words are initalized randomly) : 보통 패키지에서 없는 단어는 [UNK] 토큰으로 한번에 처리하기 때문에이 부분을 새롭게 구현해야 할듯
-- CNN - static : word vector는 고정 → with no grad을 모델 중간에 넣을 수 있나? 해본 적이 없음..
-- CNN - mutli-channel : 한 채널은 픽스하고 한 채널은 back prop 되어야 함. 이것도 no grad ?
+- CNN - static : word vector는 고정 
+- CNN - mutli-channel : 한 채널은 픽스하고 한 채널은 back prop 되어야 함. 
 - L2 norm weight
 - CNN max-over-time-pooling
 
@@ -51,3 +37,22 @@ CNN 부분이 RNN 계열이었다면 성능이 더 높게 나올까? → vanilla
 - CNN이 강조된 논문이라고 생각했었는데 pretrained된 word2vec 모델이 universal 하게 작동하다는 것에 좀 더 강조를 둔 논문이란 것을 알게 됨
 - 이 논문이 언어에서 처음 CNN이 작동한다는 사실을 알게 된 논문은 아님(CNNs models have subsequently been shown to be effective for NLP ...)
 - max-over-time-pooling 이라는 용어. time series 차원에서 max 하는 것을 뜻함.
+
+## 논문과 다르게 구현한 부분
+- Adadelta -> Adam optimizer (max norm regularization 안 함)
+- CNN에서 첫 단어 앞에 대해서 zero-padding 한 것
+
+## 논문 구현하면서 배운 점 / 느낀 점
+- .clone.detach()의미하는 바
+- reqires_grad = False 
+- torch에서 왜 inplace 연산이 필요한지 a = a + 1하면 덮어쓰기 돼서 역전파가 진행이 안됨
+- `nn.CrossEntropyloss`가 `nn.LogSoftmax()`와 `nn.NLLLoss()`를 결합한 것이다
+- 사용자 데이터셋으로 torchtext dataset 형태처럼 만드는 법
+- `torchtext`의 `Example`이 행렬이나 데이터프레임의 row로 사용된다는 점 -> `Example.fromlist(데이터, 필드)`와 같이 사용 가능하다는 것
+- torch debugging 방법..모델에서 바꿀게 아니라 간단한 텐서 만들어서 해야 정확하다는 점
+- dropout의 train, inference때 작동 차이 
+- batch_size의 크기에 상관없이 모델을 만들어야 함
+- Adam의 대단함과 Adam이 나오기 전에 있었던 여러가지 정규화 방식들
+- max norm regularization, L2 norm regularization의 차이
+- `Dataset`에서 하는 처리와 `DataLoader`에서 해야 하는 처리 
+ 
