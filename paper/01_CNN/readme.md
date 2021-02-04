@@ -39,8 +39,9 @@ CNN 부분이 RNN 계열이었다면 성능이 더 높게 나올까? → vanilla
 - max-over-time-pooling 이라는 용어. time series 차원에서 max 하는 것을 뜻함.
 
 ## 논문과 다르게 구현한 부분
-- Adadelta -> Adam optimizer (max norm regularization 안 함)
+- Adadelta -> Adam optimizer 
 - CNN에서 첫 단어 앞에 대해서 zero-padding 한 것
+- multi-channel만 구현
 
 ## 논문 구현하면서 배운 점 / 느낀 점
 - .clone.detach()의미하는 바
