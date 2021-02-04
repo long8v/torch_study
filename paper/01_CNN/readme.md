@@ -1,8 +1,8 @@
-## 00. Result
+## 🤗 Result
 multi-channel K-fold accuracy mean : 0.8163 (paper : 81.1)
 
 
-## 01. Paper review
+## 🤔 Paper review
 
 **1) PPT 한 장 분량으로 논문 정리**
 ![Untitled](https://user-images.githubusercontent.com/46675408/105627460-706aca80-5e7a-11eb-96e8-187b3faac601.png)
@@ -42,13 +42,13 @@ CNN 부분이 RNN 계열이었다면 성능이 더 높게 나올까? → vanilla
 - 이 논문이 언어에서 처음 CNN이 작동한다는 사실을 알게 된 논문은 아님(CNNs models have subsequently been shown to be effective for NLP ...)
 - max-over-time-pooling 이라는 용어. time series 차원에서 max 하는 것을 뜻함.
 
-## 02. 논문과 다르게 구현한 부분
+## 🤫 논문과 다르게 구현한 부분
 - Adadelta -> Adam optimizer 
 - CNN에서 첫 단어 앞에 대해서 zero-padding 한 것
 - multi-channel만 구현
 - word2vec variance 구하지 않고 공식 코드 처럼 U(-0.25, 0.25)로 처리함
 
-## 03. 논문 구현하면서 배운 점 / 느낀 점
+## 🤭 논문 구현하면서 배운 점 / 느낀 점
 - .clone.detach()의미하는 바
 - reqires_grad = False 
 - torch에서 왜 inplace 연산이 필요한지 a = a + 1하면 덮어쓰기 돼서 역전파가 진행이 안됨
