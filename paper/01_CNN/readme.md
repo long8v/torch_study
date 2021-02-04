@@ -1,3 +1,7 @@
+## 
+multi-channel K-fold accuracy mean : 0.8163
+
+
 ## Paper review
 
 ### 1) PPT 한 장 분량으로 논문 정리
