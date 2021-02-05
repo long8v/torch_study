@@ -12,7 +12,7 @@
 `논문 읽기` -> `reference code 읽기` -> `코드 짜기` -> `동일 조건 실험으로 성능이 재현되는지 확인하기`
 
 |순번|paper|시작일자|상태|arxiv|code reference|
-|:--:|----|----|----|----|----|
+|:--:|----|:----:|:----:|:----:|:----:|
 |01|Convolutional Neural Networks for Sentence Classification|0106|Done|[paper](https://arxiv.org/abs/1408.5882)|[tutiorial](https://github.com/bentrevett/pytorch-sentiment-analysis/blob/master/4%20-%20Convolutional%20Sentiment%20Analysis.ipynb)<br>[official code](https://github.com/yoonkim/CNN_sentence)|
 |02|Sequence to Sequence Learning with Neural Networks|0203|paper reading|[paper](https://arxiv.org/abs/1409.3215)|[tutiorial](https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb)|
 |03|Neural Machine Translation by Jointly Learning to Alignt and Translate|0201|-|[paper](https://arxiv.org/pdf/1409.0473.pdf)|[tutiorial](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb)|
