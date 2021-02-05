@@ -15,8 +15,8 @@
 |:--:|----|----|----|----|----|
 |01|Convolutional Neural Networks for Sentence Classification|0106|Done|[paper](https://arxiv.org/abs/1408.5882)|[bentrevett tutiorial](https://github.com/bentrevett/pytorch-sentiment-analysis/blob/master/4%20-%20Convolutional%20Sentiment%20Analysis.ipynb)<br>[official code](https://github.com/yoonkim/CNN_sentence)|
 |02|Sequence to Sequence Learning with Neural Networks|0203|paper reading|[paper](https://arxiv.org/abs/1409.3215)|[bentrevett tutiorial](https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb)|
-|03|Neural Machine Translation by Jointly Learning to Alignt and Translate|0201||https://arxiv.org/pdf/1409.0473.pdf|https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb|
-|04|Attention is All You Need|0301||https://arxiv.org/abs/1706.03762|https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb|
+|03|Neural Machine Translation by Jointly Learning to Alignt and Translate|0201|-|[paper](https://arxiv.org/pdf/1409.0473.pdf)|[bentrevett tutiorial](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb)|
+|04|Attention is All You Need|0301|-|[paper](https://arxiv.org/abs/1706.03762)|[bentrevett tutiorial](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)|
 
 
 
