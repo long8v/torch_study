@@ -2,10 +2,10 @@
 - 
 
 ## 🤔 Paper review
-### 1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부
+**1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
 ![Untitled (1)](https://user-images.githubusercontent.com/46675408/108203501-f15d6f00-7165-11eb-9c68-8da61962b002.png)
 
-### 2) (슬랙으로 이미 토론을 했지만 그래도) 이해가 안 가는 부분, 이해가 안 가는 이유(논문 본문 복붙)
+**2) (슬랙으로 이미 토론을 했지만 그래도) 이해가 안 가는 부분, 이해가 안 가는 이유(논문 본문 복붙)**
 
 = 우리의 objective function는 ? 
 
@@ -20,7 +20,7 @@ Finally, we used the LSTM to rescore the publicly available 1000-best lists of t
 the same task [29]. By doing so, we obtained a BLEU score of 36.5, which improves the baseline by
 3.2 BLEU points and is close to the previous best published result on this task (which is 37.0 [9]).
 
-### 3) 재밌었던 부분
+**3) 재밌었던 부분**
 
 = reversed : 나중에 RNN seq2seq쓰는 것 있음 실험해봐야겠다 싶었음! 
 
@@ -32,7 +32,7 @@ the same task [29]. By doing so, we obtained a BLEU score of 36.5, which improve
 
 = We found deep LSTMs to significantly outperform shallow LSTMs, where each additional layer reduced perplexity by nearly 10% → 더 깊은게 항상 좋은건 아닌데 이 경우엔 깊은게 훨씬 좋았다네..그냥 신기
 
-### 4) 논문 구현 시 주의해야할 것 같은 부분(논문 본문 복붙)
+**4) 논문 구현 시 주의해야할 것 같은 부분(논문 본문 복붙)**
 
 = most frequent 단어만 사용하고 나머지는 [UNK] 처리함 → 결국 corpus 한 바퀴 다 봐야함ㅎㅎ
 We used 160,000 of the most frequent words for the source language
