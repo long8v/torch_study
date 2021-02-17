@@ -13,10 +13,10 @@
 
 |순번|paper|시작일자|상태|arxiv|reference code|
 |:--:|----|:-----:|:----:|:----:|:----:|
-|01|Convolutional Neural Networks for Sentence Classification|0106|Done|[paper](https://arxiv.org/abs/1408.5882)|[tutorial](https://github.com/bentrevett/pytorch-sentiment-analysis/blob/master/4%20-%20Convolutional%20Sentiment%20Analysis.ipynb)<br>[official code](https://github.com/yoonkim/CNN_sentence)|
-|02|Sequence to Sequence Learning with Neural Networks|0203|paper reading|[paper](https://arxiv.org/abs/1409.3215)|[tutorial](https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb)|
-|03|Neural Machine Translation by Jointly Learning to Alignt and Translate|0303|-|[paper](https://arxiv.org/pdf/1409.0473.pdf)|[tutorial](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb)|
-|04|Attention is All You Need|0401|-|[paper](https://arxiv.org/abs/1706.03762)|[tutorial](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)|
+|01|Convolutional Neural Networks for Sentence Classification|0106|Done|[paper](https://arxiv.org/abs/1408.5882)|[reference code](https://github.com/bentrevett/pytorch-sentiment-analysis/blob/master/4%20-%20Convolutional%20Sentiment%20Analysis.ipynb)<br>[official code](https://github.com/yoonkim/CNN_sentence)|
+|02|Sequence to Sequence Learning with Neural Networks|0203|paper reading|[paper](https://arxiv.org/abs/1409.3215)|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb)|
+|03|Neural Machine Translation by Jointly Learning to Alignt and Translate|0303|-|[paper](https://arxiv.org/pdf/1409.0473.pdf)|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb)|
+|04|Attention is All You Need|0401|-|[paper](https://arxiv.org/abs/1706.03762)|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)|
 
 
 
@@ -27,14 +27,14 @@
 
 |순번|튜토리얼|시작일자|상태|주요내용|링크|
 |:--:|----|:---:|:----:|----|----|
-|01|what is torch.nn?|1010|완료|`nn.Functional`,`nn.Module`,`nn.Linear`,`optim`|[original code](https://tutorials.pytorch.kr/beginner/nn_tutorial.html)|
-|02|Tensorboard|1012|완료|`tensorboard`|[original code](https://tutorials.pytorch.kr/intermediate/tensorboard_tutorial.html)|
-|03|이름분류|1013|완료|`nn.Linear`,`Dataset`,`DataLoader`|[original code](https://tutorials.pytorch.kr/intermediate/char_rnn_classification_tutorial.html)|
-|04|이름생성|1019|완료|`nn.GRU`,`.to(device)`|[original code](https://tutorials.pytorch.kr/intermediate/char_rnn_generation_tutorial.html)|
-|05|seq2seq 번역|1030|완료|`nn.Embedding`,`torch.save`,`torch.load`|[original code](https://tutorials.pytorch.kr/intermediate/seq2seq_translation_tutorial.html)|
-|06|torchtext 분류|1023|완료|`torchtext`,`Field`,`nn.EmbeddingBag`|[original code](https://tutorials.pytorch.kr/beginner/text_sentiment_ngrams_tutorial.html)|
-|07|torchtext 번역|1026|완료|`TabularDataset`,`BucketIterator`|[original code](https://tutorials.pytorch.kr/beginner/torchtext_translation_tutorial.html)|
-|08|seq2seq 모델링|1022|완료|`nn.TransformerEncoder`|[original code](https://tutorials.pytorch.kr/beginner/transformer_tutorial.html)|
+|01|what is torch.nn?|1010|완료|`nn.Functional`,`nn.Module`,`nn.Linear`,`optim`|[tutorial](https://tutorials.pytorch.kr/beginner/nn_tutorial.html)|
+|02|Tensorboard|1012|완료|`tensorboard`|[tutorial](https://tutorials.pytorch.kr/intermediate/tensorboard_tutorial.html)|
+|03|이름분류|1013|완료|`nn.Linear`,`Dataset`,`DataLoader`|[tutorial](https://tutorials.pytorch.kr/intermediate/char_rnn_classification_tutorial.html)|
+|04|이름생성|1019|완료|`nn.GRU`,`.to(device)`|[tutorial](https://tutorials.pytorch.kr/intermediate/char_rnn_generation_tutorial.html)|
+|05|seq2seq 번역|1030|완료|`nn.Embedding`,`torch.save`,`torch.load`|[tutorial](https://tutorials.pytorch.kr/intermediate/seq2seq_translation_tutorial.html)|
+|06|torchtext 분류|1023|완료|`torchtext`,`Field`,`nn.EmbeddingBag`|[tutorial](https://tutorials.pytorch.kr/beginner/text_sentiment_ngrams_tutorial.html)|
+|07|torchtext 번역|1026|완료|`TabularDataset`,`BucketIterator`|[tutorial](https://tutorials.pytorch.kr/beginner/torchtext_translation_tutorial.html)|
+|08|seq2seq 모델링|1022|완료|`nn.TransformerEncoder`|[tutorial](https://tutorials.pytorch.kr/beginner/transformer_tutorial.html)|
 
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Flong8v%2F&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com).  
