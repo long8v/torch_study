@@ -23,11 +23,14 @@ the same task [29]. By doing so, we obtained a BLEU score of 36.5, which improve
 ### 3) 재밌었던 부분
 
 = reversed : 나중에 RNN seq2seq쓰는 것 있음 실험해봐야겠다 싶었음! 
+
 = PCA해봤더니 단어는 거의 비슷한데 의미는 반대인 것이 묶인 것. 결과가 꽤 놀라워서 체리피킹인지 아닌지 꼭 테스트를 해봐야겠다
+
 = softmax 구하는데만 4개의 GPU를 쓴 것...ㅋㅋ→ 그럼 요즘은 다 hierachial softmax 쓰는건가?
+
 = size가 1인 beam search 즉 greedy search 성능이 나쁘지 않았던 것. 내가 seq2seq + greedy search를 썼을 땐 계속 확률이 높은 것 같은 똑같은 단어를 반복하던데 그런건 BLEU에서 크게 penalty 되지 않아서일까? 아니면 내가 트레이닝을 이상하게 시켜서 그런걸까 
-= We found deep LSTMs to significantly outperform shallow LSTMs, where
-each additional layer reduced perplexity by nearly 10% → 더 깊은게 항상 좋은건 아닌데 이 경우엔 깊은게 훨씬 좋았다네..그냥 신기
+
+= We found deep LSTMs to significantly outperform shallow LSTMs, where each additional layer reduced perplexity by nearly 10% → 더 깊은게 항상 좋은건 아닌데 이 경우엔 깊은게 훨씬 좋았다네..그냥 신기
 
 ### 4) 논문 구현 시 주의해야할 것 같은 부분(논문 본문 복붙)
 
