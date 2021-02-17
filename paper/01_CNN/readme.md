@@ -1,4 +1,5 @@
 ## 🤗 Result
+MR dataset
 multi-channel K-fold accuracy mean : 0.8163 (paper : 81.1)
 
 
