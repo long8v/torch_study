@@ -1,5 +1,11 @@
 # 😎 torch_study
 
+## prereiquisite
+```
+torch == 1.7.1
+torchtext == 0.8.1
+```
+
 ## Paper
 🍟 [스터디 진행 중..](https://www.notion.so/kickoff-6634847c450741a68c1be736f102ecdd) 
 
