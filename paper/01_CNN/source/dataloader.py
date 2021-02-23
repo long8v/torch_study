@@ -19,7 +19,7 @@ from gensim.models import KeyedVectors
 
 class Vocab:    
     def build_vocabs(self, sentence_list):
-        self.stoi_dict = defaultdict(lambda: 0) 
+        self.stoi_dict = defaultdict(lambda: 1) 
         self.stoi_dict['<PAD>'] = 0
         self.stoi_dict['<UNK>'] = 1
         _index = 2

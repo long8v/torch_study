@@ -7,6 +7,7 @@ __pycache__/
 # files
 debug
 
+paper/file/
 .data/
 scraping/
 data/
