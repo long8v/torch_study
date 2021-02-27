@@ -1,6 +1,6 @@
 # 🔥 torch_study 🔥
 
-## prerequisite
+## environment
 ```
 torch == 1.7.1
 torchtext == 0.8.1
