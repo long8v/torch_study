@@ -57,7 +57,7 @@ that all sentences in a minibatch are roughly of the same length, yielding a 2x 
 - dataset 
 - optimizer
 - halving learning rate every half epoch
-- beam search 미구
+- beam search 미구현..
 
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
 - [bucketing이 뭔지](https://stackoverflow.com/questions/49367871/concept-of-bucketing-in-seq2seq-model)(bucketiterator가 단순히 길이 순으로 정렬해주는 것뿐 아니라 bucketing이라는 연산까지 해준다는 점)
