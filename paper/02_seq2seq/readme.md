@@ -1,5 +1,5 @@
 ## 🤗 Result
-...
+WIP
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
