@@ -60,4 +60,5 @@ that all sentences in a minibatch are roughly of the same length, yielding a 2x 
 - [bucketing이 뭔지](https://stackoverflow.com/questions/49367871/concept-of-bucketing-in-seq2seq-model)(bucketiterator가 단순히 길이 순으로 정렬해주는 것뿐 아니라 bucketing이라는 연산까지 해준다는 점)
 - `pack_padded_sequence`, `pad_packed_sequence`
 - `.to(device)`는 모델에 데이터 부을때 넣는게 가장 효율적이다
-- 
+- torchtext의 `Field` 구현해 봄
+- collections의 namedtuple 매우 유용(DataLoader 구성할 때 `.src` 접근하려고 사용함) 
