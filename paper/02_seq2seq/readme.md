@@ -68,4 +68,4 @@ that all sentences in a minibatch are roughly of the same length, yielding a 2x 
 - torch의 `nn.LSTM`의 input output shape. for 문으로 hidden, cell 안넣어 줘도 모든 시퀀스에 대해 recurrent 계산을 해줌
 - multi-layered LSTM의 encoder-decoder 연결하는 cell, hidden이 모든 layer에서 연결되도록 구현되어 있다는 점
 - seq2seq에서 decoder는 input의 <eos>토큰이 들어가면 안됨 
-- teacher force 사용법
+- teacher force이 코드 상 어떻게 구현되는지
