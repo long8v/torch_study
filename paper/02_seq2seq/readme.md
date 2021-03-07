@@ -1,5 +1,5 @@
 ## 🤗 Result
-- 
+...
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
@@ -54,9 +54,10 @@ To address this problem, we made sure
 that all sentences in a minibatch are roughly of the same length, yielding a 2x speedup.
 
 ## 🤫 논문과 다르게 구현한 부분
--
+- a to z..
 
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
 - [bucketing이 뭔지](https://stackoverflow.com/questions/49367871/concept-of-bucketing-in-seq2seq-model)(bucketiterator가 단순히 길이 순으로 정렬해주는 것뿐 아니라 bucketing이라는 연산까지 해준다는 점)
-- packed_padded_sequence
+- `pack_padded_sequence`, `pad_packed_sequence`
 - `.to(device)`는 모델에 데이터 부을때 넣는게 가장 효율적이다
+- 
