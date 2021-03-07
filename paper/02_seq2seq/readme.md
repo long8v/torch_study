@@ -1,5 +1,5 @@
 ## 🤗 Result
-- 
+WIP
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
@@ -54,9 +54,19 @@ To address this problem, we made sure
 that all sentences in a minibatch are roughly of the same length, yielding a 2x speedup.
 
 ## 🤫 논문과 다르게 구현한 부분
--
+- dataset 
+- optimizer
+- halving learning rate every half epoch
+- beam search 미구현..
 
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
 - [bucketing이 뭔지](https://stackoverflow.com/questions/49367871/concept-of-bucketing-in-seq2seq-model)(bucketiterator가 단순히 길이 순으로 정렬해주는 것뿐 아니라 bucketing이라는 연산까지 해준다는 점)
-- packed_padded_sequence
+- `pack_padded_sequence`, `pad_packed_sequence`
 - `.to(device)`는 모델에 데이터 부을때 넣는게 가장 효율적이다
+- torchtext의 `Field` 구현해 봄
+- collections의 namedtuple 매우 유용(DataLoader 구성할 때 `.src` 접근하려고 사용함) 
+- Iterator의 sort, sort_key, sort_within_batch argument
+- torch의 `nn.LSTM`의 input output shape. for 문으로 hidden, cell 안넣어 줘도 모든 시퀀스에 대해 recurrent 계산을 해줌
+- multi-layered LSTM의 encoder-decoder 연결하는 cell, hidden이 모든 layer에서 연결되도록 구현되어 있다는 점
+- seq2seq에서 decoder는 input의 <eos>토큰이 들어가면 안됨 
+- teacher force이 코드 상 어떻게 구현되는지
