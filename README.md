@@ -21,7 +21,7 @@ torchtext == 0.8.1
 |:--:|----|:-----:|:----:|
 |01|[Convolutional Neural Networks for Sentence Classification (2014)](https://arxiv.org/abs/1408.5882)|0106|Done|[reference code](https://github.com/bentrevett/pytorch-sentiment-analysis/blob/master/4%20-%20Convolutional%20Sentiment%20Analysis.ipynb)<br>[official code](https://github.com/yoonkim/CNN_sentence)|
 |02|[Sequence to Sequence Learning with Neural Networks (2014)](https://arxiv.org/abs/1409.3215)|0203|WIP|[reference code1](https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb)<br>[reference code2](https://github.com/bentrevett/pytorch-seq2seq/blob/master/4%20-%20Packed%20Padded%20Sequences%2C%20Masking%2C%20Inference%20and%20BLEU.ipynb)|
-|03|[Neural Machine Translation by Jointly Learning to Alignt and Translate (2016)](https://arxiv.org/pdf/1409.0473.pdf)|0303|reference code reading|[paper]|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb)|
+|03|[Neural Machine Translation by Jointly Learning to Alignt and Translate (2016)](https://arxiv.org/pdf/1409.0473.pdf)|0303|reference code reading|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb)|
 |04|[Attention is All You Need](https://arxiv.org/abs/1706.03762)|0401|-|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)|
 
 
