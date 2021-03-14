@@ -6,9 +6,9 @@ __pycache__/
 
 # files
 debug
-
+*.pt
 paper/file/
-.data/
+data/
 scraping/
 data/
 runs/
