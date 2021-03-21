@@ -3,7 +3,6 @@
 ### RuntimeError: a leaf Variable that requires grad is being used in an in-place operation.
 
 for name, param in model.named_parameters():<br>
-    if 'fc' in name:<br>
         param += 3
 
 에서 for name, param in model.named_parameters():<br>
