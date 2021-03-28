@@ -52,7 +52,7 @@ class Multi30k_dataset:
 
     def load_Multi30k(self):
         return Multi30k.splits(exts = (f'.{self.src}', f'.{self.trg}'), 
-                                        fields = (self.src_field, self.trg_field))
+                                        fields = (self.srcs_field, self.trg_field))
 
     def field_build_vocab(self):
         self.src_field.build_vocab(self.train_data, min_freq=2)
