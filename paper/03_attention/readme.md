@@ -6,7 +6,7 @@
 
 **2) (슬랙으로 이미 토론을 했지만 그래도) 이해가 안 가는 부분, 이해가 안 가는 이유(논문 본문 복붙)**
 
-1) 
+1) ![image](https://user-images.githubusercontent.com/46675408/112748684-596e6300-8ff8-11eb-8f76-40a94163583a.png)
 
 2) alignment의 FCN부분 + decoder 부분 <br>
   a) encoder의 hidden state에 W벡터를 곱하고, decoder의 hidden state에 U벡터를 곱해서 더한 뒤(concat후 FCN한거랑 같음) tan를 구하고 이를 다시 v로 곱한걸 softmax취한게 attention score..어마어마하군<br>
@@ -16,7 +16,7 @@
 **3) 재밌었던 부분**
 
 성능 그래프 
-
+![image](https://user-images.githubusercontent.com/46675408/112748689-625f3480-8ff8-11eb-85d5-9f67c0bdcf05.png)
 1) 전반적으로 성능이 더 좋은 것 →이건 파라미터가 더 많아서 그럴 수 있음
 2) 단어 30개까지 학습한 것과 50개까지 학습하는걸 본 다음에 이걸 test셋을 또 sentence lentgh로 평가한 점 →참 훌륭하게 성능평가를 했다..논문 쓰려면 이렇게 해야되는구나
 3) RNNsearch-50의 우수함.. 왜 rnn-30은 길이 30 가까이서 떨어지는 추세가 보이는데 50은 저렇게 훌륭할까
