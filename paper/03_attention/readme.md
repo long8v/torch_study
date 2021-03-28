@@ -9,9 +9,9 @@
 
 1) 
 
-2) alignment의 FCN부분 + decoder 부분 
-  a) encoder의 hidden state에 W벡터를 곱하고, decoder의 hidden state에 U벡터를 곱해서 더한 뒤(concat후 FCN한거랑 같음) tan를 구하고 이를 다시 v로 곱한걸 softmax취한게 attention score..어마어마하군
-  b) 이 attention score를 encoder의  hidden state와 곱해서 context벡터를 구한다
+2) alignment의 FCN부분 + decoder 부분 <br>
+  a) encoder의 hidden state에 W벡터를 곱하고, decoder의 hidden state에 U벡터를 곱해서 더한 뒤(concat후 FCN한거랑 같음) tan를 구하고 이를 다시 v로 곱한걸 softmax취한게 attention score..어마어마하군<br>
+  b) 이 attention score를 encoder의  hidden state와 곱해서 context벡터를 구한다<br>
   c) context 벡터와 이전 시점의 output vector를 임베딩한거랑 decoder의 히든벡터랑을 weighted sum해서 target이 나오게 된다 
 
 **3) 재밌었던 부분**
