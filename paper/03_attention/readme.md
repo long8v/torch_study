@@ -19,8 +19,6 @@
 
 성능 그래프 
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e72803b-29e4-46a2-b233-fef481b2762c/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e72803b-29e4-46a2-b233-fef481b2762c/Untitled.png)
-
 1) 전반적으로 성능이 더 좋은 것 →이건 파라미터가 더 많아서 그럴 수 있음
 2) 단어 30개까지 학습한 것과 50개까지 학습하는걸 본 다음에 이걸 test셋을 또 sentence lentgh로 평가한 점 →참 훌륭하게 성능평가를 했다..논문 쓰려면 이렇게 해야되는구나
 3) RNNsearch-50의 우수함.. 왜 rnn-30은 길이 30 가까이서 떨어지는 추세가 보이는데 50은 저렇게 훌륭할까
