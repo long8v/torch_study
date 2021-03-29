@@ -36,9 +36,8 @@ alignment function과 RNN function을 본문에선 아주 일반적으로 작성
 
 **5) 소개하고 싶은 개념 하나 (발표 5분 분량, 선택)**
 
-maxout
-Dropout의 효과를 극대화시키기 위한 활성화 함수([https://arxiv.org/pdf/1302.4389.pdf](https://arxiv.org/pdf/1302.4389.pdf))
-[https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220836305907&proxyReferer=https:%2F%2Fwww.google.com%2F&view=img_2](https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220836305907&proxyReferer=https:%2F%2Fwww.google.com%2F&view=img_2)
+[maxout](https://arxiv.org/pdf/1302.4389.pdf)
+Dropout의 효과를 극대화시키기 위한 활성화 함수
 
 ## 🤫 논문과 다르게 구현한 부분
 
