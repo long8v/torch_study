@@ -167,7 +167,7 @@ def logging_train(model, train_dl, valid_dl, optimizer, criterion, save_path, N_
         logging.info(f'Epoch: {epoch+1:02} | Time: {epoch_mins}m {epoch_secs}s')
         logging.info(f'\tTrain Loss: {train_loss:.3f} | Train PPL: {math.exp(train_loss):7.3f} | train BLEU : {train_bleu:.3f}')
         logging.info(f'\tVal. Loss: {valid_loss:.3f} |  Val. PPL: {math.exp(valid_loss):7.3f} | valid BLEU : {valid_bleu:.3f}')
-
+        print(f'Epoch: {epoch+1:02} | Time: {epoch_mins}m {epoch_secs}s')
     logging.info(f'\t best Val. accuracy: {best_valid_bleu :.3f}')
 
 def logging_test(model, test_dl, criterion):

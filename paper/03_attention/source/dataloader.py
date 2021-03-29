@@ -24,13 +24,16 @@ torch.backends.cudnn.deterministic = True
 
 class Multi30k_dataset:
     def __init__(self, src = 'en', trg = 'fr', min_freq = 2):
+        self.min_freq = min_freq
         self.src = src
         self.trg = trg
         self.src_tokenizer = lambda text: self.spacy_tokenize(text, self.src)
         self.trg_tokenizer = lambda text: self.spacy_tokenize(text, self.trg)
         self.src_field = self.get_field(self.src_tokenizer)
         self.trg_field = self.get_field(self.trg_tokenizer)
+        print('load multi30k')
         self.train_data, self.valid_data, self.test_data = self.load_Multi30k()
+        print('field_vocab')
         self.field_build_vocab()
 
     def spacy_load_tokenizer(self, lan):
@@ -51,12 +54,15 @@ class Multi30k_dataset:
                     lower = True)
 
     def load_Multi30k(self):
+        # this takes so long.. 
         return Multi30k.splits(exts = (f'.{self.src}', f'.{self.trg}'), 
                                         fields = (self.src_field, self.trg_field))
 
     def field_build_vocab(self):
-        self.src_field.build_vocab(self.train_data, min_freq=2)
-        self.trg_field.build_vocab(self.train_data, min_freq=2)
+        print('build vocab for source')
+        self.src_field.build_vocab(self.train_data, min_freq = self.min_freq)
+        print('build vocab for target')
+        self.trg_field.build_vocab(self.train_data, min_freq = self.min_freq)
 
 
 class Multi30k_iterator:
@@ -70,6 +76,7 @@ class Multi30k_iterator:
 
 
 if __name__ == '__main__':
+    ds = Multi30k_dataset()
     parser = argparse.ArgumentParser(description='Dataset Builder')
     parser.add_argument('-b', '--batch_size', type=int, default=10)
     parser.add_argument('-p', '--path', type=str, default='/home/long8v')
