@@ -40,8 +40,8 @@ alignment function과 RNN function을 본문에선 아주 일반적으로 작성
 Dropout의 효과를 극대화시키기 위한 활성화 함수
 
 ## 🤫 논문과 다르게 구현한 부분
-- dataset : Multi30k
-- Adam optimizer
+- dataset : Multi30k english-french
+- optimizer : Adam
 
 
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
