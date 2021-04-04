@@ -1,4 +1,10 @@
 ## 🤗 Result
+🚩 데이터셋이 다름(Multi 30k)
+|model|maxout|# of parameters|test PPL|test BLEU|training time for one epoch|
+|reference code 그대로|x|21,196,869|13.162|39.637|3m 15s~3m 20s|
+|referecne code + maxout|o|14,631,921|12.380|40.204|3m 2s~4m 40s|
+|논문 파라미터 w/ maxout|o|40,127,409|12.747|40.328|4m 12s~4m 16s|
+
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
@@ -43,8 +49,8 @@ Dropout의 효과를 극대화시키기 위한 활성화 함수
 - dataset : Multi30k english-french
 - optimizer : Adam
 
-
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
+- aligning이라는 용어
 - Baddhanau attention
 - [maxout](https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220836305907&proxyReferer=https:%2F%2Fwww.google.com%2F)
 - [orthgonal initialization](https://smerity.com/articles/2016/orthogonal_init.html)
