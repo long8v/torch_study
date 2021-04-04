@@ -7,8 +7,8 @@ train.en, train.fr, val.en, val.fr 다운 받아서 실행 경로에 생기는 .
 python main.py
 ```
 - notebook<br>
-ㄴ 01_reference_code.ipynb : 데이터셋 바꿔서 영어 튜토리올 한글로 번역해 봄<br>
-ㄴ 02_reference_code_paper_detail.ipynb : 논문과 비교해보고 추가로 디테일 구현해 봄<br>
+ㄴ `01_reference_code.ipynb` : 데이터셋 바꿔서 영어 튜토리올 한글로 번역해 봄<br>
+ㄴ `02_reference_code_paper_detail.ipynb` : 논문과 비교해보고 추가로 디테일 구현해 봄<br>
 
 ## 🤗 Result
 🚩 데이터셋이 논문과 다름(Multi 30k en-fr)
