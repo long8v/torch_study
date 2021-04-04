@@ -1,4 +1,11 @@
 ## 🤗 Result
+🚩 데이터셋이 다름(Multi 30k en-fr)
+|model|maxout|# of parameters|test PPL|test BLEU|training time for one epoch|
+|----|----|----|----|----|----|
+|reference code 그대로|x|21,196,869|13.162|39.637|3m 15s~3m 20s|
+|referecne code w/o maxout|o|14,631,921|12.380|40.204|3m 2s~4m 40s|
+|논문 파라미터 w/ maxout|o|40,127,409|12.747|40.328|4m 12s~4m 16s|
+
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
@@ -43,8 +50,15 @@ Dropout의 효과를 극대화시키기 위한 활성화 함수
 - dataset : Multi30k english-french
 - optimizer : Adam
 
-
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
+- aligning이라는 용어
 - Baddhanau attention
 - [maxout](https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220836305907&proxyReferer=https:%2F%2Fwww.google.com%2F)
 - [orthgonal initialization](https://smerity.com/articles/2016/orthogonal_init.html)
+- torchtext Field의 `.preprocess`와 `.process`의 존재
+- `predict`를 지난 달보다 더 깔끔하게 구현함
+- RNN의 ouputs 중 output과 hidden에서 output이 모든 t시점의 마지막 층의 hidden state 를 모아놓은 것이라는 것[.](https://pytorch.org/docs/stable/generated/torch.nn.RNN.html) 
+- bi-directional LSTM의 output의 형태(hidden[-1, :, :]이 마지막 단어를 본 forward hidden state이고 hidden[-2, :, :]이 첫번째 단어를 본 backward hidden state
+- seq2seq에서 encoder를 bi-LSTM을 썼을 경우 forard, backward의 hidden state를 concat해서 넣어주는 것이 [정석](https://towardsdatascience.com/understanding-bidirectional-rnn-in-pytorch-5bd25a5dd66)
+- torch에서 여러 모델을 조립했을 때 `model.named_parameters()`가 얼마나 아름답게 나오는지 
+![image](https://user-images.githubusercontent.com/46675408/113498443-e446e480-9547-11eb-9be0-a910635c61c7.png)  
