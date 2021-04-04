@@ -2,7 +2,7 @@
 .en, .fr이 라이브러리로 못 불러와서 [홈페이지](https://github.com/multi30k/dataset/tree/master/data/task1/raw) 들어가서<br>
 train.en, train.fr, val.en, val.fr 다운 받아서 실행 경로에 생기는 .data(숨김폴더)에 들어가서 넣어줘야 함
 
-- script
+- source
 ```
 python main.py
 ```
