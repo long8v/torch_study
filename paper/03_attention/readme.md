@@ -9,6 +9,7 @@ python main.py
 - notebook<br>
 ㄴ `01_reference_code.ipynb` : 데이터셋 바꿔서 영어 튜토리올 한글로 번역해 봄<br>
 ㄴ `02_reference_code_paper_detail.ipynb` : 논문과 비교해보고 추가로 디테일 구현해 봄<br>
+이미지 중복해서 들어가 있고 주석처리한게 깨져서 보여서 다운받거나 포크해서 보는게 더 좋을듯 함
 
 ## 🤗 Result
 🚩 데이터셋이 논문과 다름(Multi 30k en-fr)
