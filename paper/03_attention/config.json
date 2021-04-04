@@ -1,0 +1,16 @@
+{
+    "batch_size": 50,
+    "n_epochs": 10,
+    "enc_emb_dim": 620,
+    "dec_emb_dim": 620,
+    "enc_hid_dim": 1000,
+    "dec_hid_dim": 1000,
+    "maxout_hid_dim": 500,
+    "maxout_poolsize": 2,
+    "ENC_DROPOUT": 0.5,
+    "DEC_DROPOUT": 0.5,
+    "teacher_forcing_ratio": 0,
+    "save_path": "./output",
+    "clip": 1,
+    "model_name": "seq2seq"
+}

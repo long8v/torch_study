@@ -194,14 +194,14 @@ class Decoder(nn.Module):
         return prediction, hidden.squeeze(0)
 
 class Seq2Seq(nn.Module):
-    def __init__(self, encoder, decoder, device):
+    def __init__(self, encoder, decoder, teacher_forcing_ratio, device):
         super().__init__()
         
         self.encoder = encoder
         self.decoder = decoder
         self.device = device
         
-    def forward(self, src, trg, teacher_forcing_ratio = 0.5):
+    def forward(self, src, trg, teacher_forcing_ratio):
         
         #src = [src len, batch size]
         #trg = [trg len, batch size]
@@ -210,6 +210,7 @@ class Seq2Seq(nn.Module):
         
         batch_size = src.shape[1]
         trg_len = trg.shape[0]
+
         trg_vocab_size = self.decoder.output_dim
         
         #tensor to store decoder outputs

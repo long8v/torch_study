@@ -27,11 +27,10 @@ class Multi30k_dataset:
         self.min_freq = min_freq
         self.src = src
         self.trg = trg
-        self.src_tokenizer = self.spacy_load_tokenizer(self.src)
-        self.trg_tokenizer = self.spacy_load_tokenizer(self.trg)
-        print(self.src_tokenizer, self.trg_tokenizer)
-        self.src_tokenizer = lambda text : self.spacy_tokenize(text, self.src_tokenizer)
-        self.trg_tokenizer = lambda text : self.spacy_tokenize(text, self.trg_tokenizer)
+        self.src_spacy = self.spacy_load_tokenizer(self.src)
+        self.trg_spacy = self.spacy_load_tokenizer(self.trg)
+        self.src_tokenizer = lambda text : self.spacy_tokenize(text, self.src_spacy)
+        self.trg_tokenizer = lambda text : self.spacy_tokenize(text, self.trg_spacy)
         self.src_field = self.get_field(self.src_tokenizer)
         self.trg_field = self.get_field(self.trg_tokenizer)
         print('load multi30k')
@@ -47,8 +46,7 @@ class Multi30k_dataset:
         return tokenizer
 
     def spacy_tokenize(self, text, tokenizer):
-        return [token.text 
-            for token in tokenizer.tokenizer(text)]
+        return [token.text for token in tokenizer.tokenizer(text)]
 
     def get_field(self, tokenizer):
         return Field(tokenize = tokenizer, 
