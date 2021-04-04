@@ -3,7 +3,7 @@
 |model|maxout|# of parameters|test PPL|test BLEU|training time for one epoch|
 |----|----|----|----|----|----|
 |reference code 그대로|x|21,196,869|13.162|39.637|3m 15s~3m 20s|
-|referecne code + maxout|o|14,631,921|12.380|40.204|3m 2s~4m 40s|
+|referecne code w/o maxout|o|14,631,921|12.380|40.204|3m 2s~4m 40s|
 |논문 파라미터 w/ maxout|o|40,127,409|12.747|40.328|4m 12s~4m 16s|
 
 
