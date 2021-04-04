@@ -56,3 +56,4 @@ Dropout의 효과를 극대화시키기 위한 활성화 함수
 - [maxout](https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220836305907&proxyReferer=https:%2F%2Fwww.google.com%2F)
 - [orthgonal initialization](https://smerity.com/articles/2016/orthogonal_init.html)
 - torchtext Field의 `.preprocess`와 `.process`의 존재
+- `predict`를 지난 달보다 더 깔끔하게 구현함
