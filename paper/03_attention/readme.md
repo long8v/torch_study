@@ -57,7 +57,7 @@ Dropout의 효과를 극대화시키기 위한 활성화 함수
 - [orthgonal initialization](https://smerity.com/articles/2016/orthogonal_init.html)
 - torchtext Field의 `.preprocess`와 `.process`의 존재
 - `predict`를 지난 달보다 더 깔끔하게 구현함
-- RNN의 ouput인 output과 hidden에서 output이 모든 t시점의 hidden state 를 모아놓은 것이라는 것 
+- RNN의 ouputs 중 output과 hidden에서 output이 모든 t시점의 마지막 층의 hidden state 를 모아놓은 것이라는 것[.](https://pytorch.org/docs/stable/generated/torch.nn.RNN.html) 
 - bi-directional LSTM의 
 - seq2seq에서 bi-LSTM을 썼을 경우 forard, backward의 hidden state를 concat해서 넣어주는 것이 [정석](https://towardsdatascience.com/understanding-bidirectional-rnn-in-pytorch-5bd25a5dd66)
 - torch에서 여러 모델을 조립했을 때 `model.named_parameters()`가 얼마나 
