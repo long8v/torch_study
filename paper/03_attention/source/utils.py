@@ -21,7 +21,7 @@ def logging_count_parameters(model):
     logging.info(f'The model has {count_parameters(model):,} trainable parameters')
 
 def get_today():
-    return datetime.today().strftime("%Y/%m/%d%H%M")
+    return datetime.today().strftime("%Y%m%d_%H_%M")
 
 def logging_time():
     logging.info(get_today())

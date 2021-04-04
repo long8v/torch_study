@@ -143,10 +143,9 @@ class attention_trainer:
                 src = batch.src
                 trg = batch.trg
 
-                output = model(src, trg, 0) #turn off teacher forcing
-
                 src, trg = src.to(self.device), trg.to(self.device)
-
+                output = model(src, trg, 0) #turn off teacher forcing
+                
                 #trg = [trg len, batch size]
                 #output = [trg len, batch size, output dim]
                 bleu = get_bleu_score(output, trg, self.trg_field)
@@ -168,7 +167,7 @@ class attention_trainer:
 
     def logging_train(self, model, train_dl, valid_dl, optimizer, criterion, save_path, 
                         N_EPOCHS, model_name, clip, teacher_forcing_ratio):
-        logging.basicConfig(filename=f'{model_name}.log', level=logging.DEBUG)
+        logging.basicConfig(filename=f'{save_path}/{model_name}.log', level=logging.DEBUG)
         best_valid_bleu = float(0)
         for epoch in range(N_EPOCHS):
 
@@ -192,5 +191,5 @@ class attention_trainer:
         logging.info(f'\t best Val. accuracy: {best_valid_bleu :.3f}')
 
     def logging_test(self, model, test_dl, criterion):
-        test_loss, test_bleu = evaluate(model, test_dl, criterion)
+        test_loss, test_bleu = self.evaluate(model, test_dl, criterion)
         logging.info(f'| Test Loss: {test_loss:.3f} | Test PPL: {math.exp(test_loss):7.3f} | Test BLEU : {test_bleu :.3f}')

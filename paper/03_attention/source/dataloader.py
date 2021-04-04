@@ -55,7 +55,7 @@ class Multi30k_dataset:
                     lower = True)
 
     def load_Multi30k(self):
-        # this takes so long.. 
+        # this takes so long .. 
         return Multi30k.splits(exts = (f'.{self.src}', f'.{self.trg}'), 
                                         fields = (self.src_field, self.trg_field))
 
