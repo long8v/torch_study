@@ -1,3 +1,8 @@
+## code 
+```
+run.py
+```
+
 ## 🤗 Result
 🚩 데이터셋이 논문과 다름(Multi 30k en-fr)
 |model|maxout|# of parameters|test PPL|test BLEU|training time for one epoch|
