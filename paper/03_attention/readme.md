@@ -5,7 +5,7 @@
 |reference code 그대로|x|21,196,869|13.162|39.637|3m 15s~3m 20s|
 |referecne code w/o maxout|o|14,631,921|12.380|40.204|3m 2s~4m 40s|
 |논문 파라미터 w/ maxout|o|40,127,409|12.747|40.328|4m 12s~4m 16s|
-
+maxout을 사용하면 파라미터 크기 대비 성능이 좋으나, max연산 때문인지 속도는 오히려 느려졌다
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
@@ -57,8 +57,8 @@ Dropout의 효과를 극대화시키기 위한 활성화 함수
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
 - aligning이라는 용어
 - Baddhanau attention
-- [maxout](https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220836305907&proxyReferer=https:%2F%2Fwww.google.com%2F)
-- [orthgonal initialization](https://smerity.com/articles/2016/orthogonal_init.html)
+- [maxout](https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220836305907&proxyReferer=https:%2F%2Fwww.google.com%2F) 개념과 이차함수 근사 경험
+- [orthgonal initialization](https://smerity.com/articles/2016/orthogonal_init.html) 
 - torchtext Field의 `.preprocess`와 `.process`의 존재
 - `predict`를 지난 달보다 더 깔끔하게 구현함
 - RNN의 ouputs 중 output과 hidden에서 output이 모든 t시점의 마지막 층의 hidden state 를 모아놓은 것이라는 것[.](https://pytorch.org/docs/stable/generated/torch.nn.RNN.html) 
