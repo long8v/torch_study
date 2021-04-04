@@ -58,9 +58,7 @@ Dropout의 효과를 극대화시키기 위한 활성화 함수
 - torchtext Field의 `.preprocess`와 `.process`의 존재
 - `predict`를 지난 달보다 더 깔끔하게 구현함
 - RNN의 ouputs 중 output과 hidden에서 output이 모든 t시점의 마지막 층의 hidden state 를 모아놓은 것이라는 것[.](https://pytorch.org/docs/stable/generated/torch.nn.RNN.html) 
-- bi-directional LSTM의 output의 형태(hidden[-1,:, :]이 마지막 단어를 본 forward hidden state이고 hidden[-2, :, :]이 첫번째 단어를 본 backward hidden state
-- seq2seq에서 bi-LSTM을 썼을 경우 forard, backward의 hidden state를 concat해서 넣어주는 것이 [정석](https://towardsdatascience.com/understanding-bidirectional-rnn-in-pytorch-5bd25a5dd66)
+- bi-directional LSTM의 output의 형태(hidden[-1, :, :]이 마지막 단어를 본 forward hidden state이고 hidden[-2, :, :]이 첫번째 단어를 본 backward hidden state
+- seq2seq에서 encoder를 bi-LSTM을 썼을 경우 forard, backward의 hidden state를 concat해서 넣어주는 것이 [정석](https://towardsdatascience.com/understanding-bidirectional-rnn-in-pytorch-5bd25a5dd66)
 - torch에서 여러 모델을 조립했을 때 `model.named_parameters()`가 얼마나 아름답게 나오는지 
-![image](https://user-images.githubusercontent.com/46675408/113498443-e446e480-9547-11eb-9be0-a910635c61c7.png)
-
--  
+![image](https://user-images.githubusercontent.com/46675408/113498443-e446e480-9547-11eb-9be0-a910635c61c7.png)  
