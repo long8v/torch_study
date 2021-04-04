@@ -1,9 +1,14 @@
-## code 
-```
-python run.py
-```
+## 🧐 run
 .en, .fr이 라이브러리로 못 불러와서 [홈페이지](https://github.com/multi30k/dataset/tree/master/data/task1/raw) 들어가서<br>
 train.en, train.fr, val.en, val.fr 다운 받아서 실행 경로에 생기는 .data(숨김폴더)에 들어가서 넣어줘야 함
+
+- script
+```
+python main.py
+```
+- notebook
+ㄴ 01_reference_code.ipynb : 데이터셋 바꿔서 영어 튜토리올 한글로 번역해 봄
+ㄴ 02_reference_code_paper_detail.ipynb : 논문과 비교해보고 추가로 디테일 구현해 봄
 
 ## 🤗 Result
 🚩 데이터셋이 논문과 다름(Multi 30k en-fr)
