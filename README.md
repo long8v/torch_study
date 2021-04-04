@@ -9,7 +9,7 @@ torchtext == 0.8.1
 ## Paper
 🍟 [스터디 진행 중..](https://www.notion.so/kickoff-6634847c450741a68c1be736f102ecdd) 
 
-🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 그대로 재현하기  
+🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 재현하기  
 
 🍔 2021.01.06~2021.06.30까지 끝내기 목표
 

@@ -1,11 +1,25 @@
+## 🧐 run
+.en, .fr이 라이브러리로 못 불러와서 [홈페이지](https://github.com/multi30k/dataset/tree/master/data/task1/raw) 들어가서<br>
+train.en, train.fr, val.en, val.fr 다운 받아서 실행 경로에 생기는 .data(숨김폴더)에 들어가서 넣어줘야 함
+
+- script
+```
+python main.py
+```
+- notebook<br>
+ㄴ `01_reference_code.ipynb` : 데이터셋 바꿔서 영어 튜토리올 한글로 번역해 봄<br>
+ㄴ `02_reference_code_paper_detail.ipynb` : 논문과 비교해보고 추가로 디테일 구현해 봄<br>
+이미지 중복해서 들어가 있고 주석처리한게 깨져서 보여서 다운받거나 포크해서 보는게 더 좋을듯 함
+
 ## 🤗 Result
-🚩 데이터셋이 다름(Multi 30k en-fr)
+**[주의] 데이터셋이 논문과 다름(Multi 30k en-fr)**
 |model|maxout|# of parameters|test PPL|test BLEU|training time for one epoch|
 |----|----|----|----|----|----|
 |reference code 그대로|x|21,196,869|13.162|39.637|3m 15s~3m 20s|
 |referecne code w/o maxout|o|14,631,921|12.380|40.204|3m 2s~4m 40s|
 |논문 파라미터 w/ maxout|o|40,127,409|12.747|40.328|4m 12s~4m 16s|
 
+maxout을 사용하면 파라미터 크기 대비 성능이 좋으나, max연산 때문인지 속도는 오히려 느려졌다
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
@@ -49,16 +63,21 @@ Dropout의 효과를 극대화시키기 위한 활성화 함수
 ## 🤫 논문과 다르게 구현한 부분
 - dataset : Multi30k english-french
 - optimizer : Adam
+- initialize 일부
+  - $W_a$와 $U_a$는 N(0, 0.001^2)이고 bias는 0 -> 코드에서 concat되어 있는데 그냥...하나로..
+  - $V_a$는 다 0으로 초기화 -> $v_a$라고 일단 생각함
+- 논문에서 Maxout hidden layer를 사용하는 것과 같은 의미다..라고 쓴걸 Maxout으로 구현함 
 
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
 - aligning이라는 용어
-- Baddhanau attention
-- [maxout](https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220836305907&proxyReferer=https:%2F%2Fwww.google.com%2F)
-- [orthgonal initialization](https://smerity.com/articles/2016/orthogonal_init.html)
+- Bahdanau attention
+- [maxout](https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220836305907&proxyReferer=https:%2F%2Fwww.google.com%2F) 개념과 이차함수 근사 경험
+- [orthgonal initialization](https://smerity.com/articles/2016/orthogonal_init.html) 
 - torchtext Field의 `.preprocess`와 `.process`의 존재
 - `predict`를 지난 달보다 더 깔끔하게 구현함
 - RNN의 ouputs 중 output과 hidden에서 output이 모든 t시점의 마지막 층의 hidden state 를 모아놓은 것이라는 것[.](https://pytorch.org/docs/stable/generated/torch.nn.RNN.html) 
 - bi-directional LSTM의 output의 형태(hidden[-1, :, :]이 마지막 단어를 본 forward hidden state이고 hidden[-2, :, :]이 첫번째 단어를 본 backward hidden state
 - seq2seq에서 encoder를 bi-LSTM을 썼을 경우 forard, backward의 hidden state를 concat해서 넣어주는 것이 [정석](https://towardsdatascience.com/understanding-bidirectional-rnn-in-pytorch-5bd25a5dd66)
+- v 벡터 따로 x 벡터 따로 해서 + 하는 것 대신 v벡터 x를 concat해서 FCN하는 trick
 - torch에서 여러 모델을 조립했을 때 `model.named_parameters()`가 얼마나 아름답게 나오는지 
 ![image](https://user-images.githubusercontent.com/46675408/113498443-e446e480-9547-11eb-9be0-a910635c61c7.png)  
