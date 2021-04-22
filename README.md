@@ -25,7 +25,6 @@ torchtext == 0.8.1
 |04|[Attention is All You Need](https://github.com/long8v/torch_study/tree/master/paper/04_transformer) (2017)|0406|paper implementation|[paper](https://arxiv.org/abs/1706.03762)||[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)|
 
 
-
 ## *Tutorial(완료)* 
 🍕 https://tutorials.pytorch.kr/ 노트북 다운 받아서 실행해보고 모르는 것 정리하고, 요약하고 연습문제 만들어서 풀기 
 
