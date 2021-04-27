@@ -23,7 +23,7 @@ torchtext == 0.8.1
 |02|[Sequence to Sequence Learning with Neural Networks](https://github.com/long8v/torch_study/tree/master/paper/02_seq2seq) (2014)|0203|WIP|[paper](https://arxiv.org/abs/1409.3215)|[notion](https://www.notion.so/long8v/2-seq2seq-68f1ccd8f7c9451191334eae6f83486c)|[reference code1](https://github.com/bentrevett/pytorch-seq2seq/blob/master/1%20-%20Sequence%20to%20Sequence%20Learning%20with%20Neural%20Networks.ipynb)<br>[reference code2](https://github.com/bentrevett/pytorch-seq2seq/blob/master/4%20-%20Packed%20Padded%20Sequences%2C%20Masking%2C%20Inference%20and%20BLEU.ipynb)|
 |03|[Neural Machine Translation by Jointly Learning to Align and Translate](https://github.com/long8v/torch_study/tree/master/paper/03_attention) (2016)|0303|Done|[paper](https://arxiv.org/pdf/1409.0473.pdf)|[notion](https://www.notion.so/long8v/3-attention-22ac89a1000f49cba65aaa4a0a2ce9fa)|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb)|
 |04|[Attention is All You Need](https://github.com/long8v/torch_study/tree/master/paper/04_transformer) (2017)|0406|WIP|[paper](https://arxiv.org/abs/1706.03762)|[notion](https://www.notion.so/long8v/4-Transformer-2a7651c264ba496b9441adda71e72ac2)|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)|
-|05|Deep contextualized word representations|0504|paper reading|[paper](https://arxiv.org/abs/1802.05365?)||
+|05|Deep contextualized word representations (2018)|0504|paper reading|[paper](https://arxiv.org/abs/1802.05365?)||
 
 
 ## *Tutorial(완료)* 
