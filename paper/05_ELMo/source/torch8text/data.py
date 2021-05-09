@@ -1,0 +1,78 @@
+from collections import defaultdict, Counter
+class Vocab:    
+    def __init__(self, min_freq = 0):
+        self.min_freq = min_freq
+        
+    def __call__(self, sentence_list, init_token='<SOS>', eos_token='<EOS>'):
+        self.stoi_dict = defaultdict(lambda: 0) 
+        self.stoi_dict['<UNK>'] = 0
+        self.stoi_dict['<PAD>'] = 1
+        if init_token:
+            self.stoi_dict[init_token] = len(self.stoi_dict) # 2
+        if eos_token:
+            self.stoi_dict[eos_token] = len(self.stoi_dict) # 3 if we have init token
+        self.special_tokens = list(self.stoi_dict)[:]
+        self.special_tokens_idx = list(self.stoi_dict.values())[:]
+        all_tokens = [token 
+                      for sentence in sentence_list 
+                      for token in sentence
+                      if token not in self.stoi_dict]
+        self.token_counter = Counter(all_tokens).most_common()
+        token_counter = [word for word, count in self.token_counter 
+                             if count > self.min_freq]        
+
+        _index = len(self.stoi_dict) # get number of special dict
+
+        for num, word in enumerate(token_counter):
+            self.stoi_dict[word] = num + _index # start with _index
+            
+        self.itos_dict = {v:k for k, v in self.stoi_dict.items()}
+        
+    def stoi(self, token_list):
+        return [self.stoi_dict[word] for word in token_list]
+
+    def itos(self, indices):
+        return " ".join([self.itos_dict[int(index)] 
+                         for index in indices if self.itos_dict[index] != '<PAD>'])
+    
+    def __len__(self):
+        return len(self.stoi_dict)
+    
+class Field:
+    def __init__(self, tokenize = lambda e: e.split(), init_token = '<SOS>', 
+                 eos_token = '<EOS>', preprocessing = None, lower = False, reverse = False):
+        self.tokenize = tokenize
+        self.init_token = init_token
+        self.eos_token = eos_token
+        self.lower = lower
+        self.reverse = reverse
+        self.preprocessing = preprocessing
+        self.vocab = None
+    
+    def build_vocab(self, data, min_freq = 0):
+        self.vocab = Vocab(min_freq)
+        self.vocab(self.preprocess_list(data))
+
+    def preprocess(self, data):
+        
+        if self.lower:
+            data = data.lower()
+        if self.preprocessing:
+            try:
+                data = self.preprocessing(data)
+            except:
+                print(data)
+        tokenized_data = self.tokenize(data)
+        if self.reverse:
+            tokenized_data = tokenized_data[::-1]
+        if self.init_token:
+            tokenized_data = [self.init_token] + tokenized_data
+        if self.eos_token:
+            tokenized_data = tokenized_data + [self.eos_token]
+        return tokenized_data
+    
+    def process(self, data):
+        return self.vocab.stoi(data)
+    
+    def preprocess_list(self, datalist):
+        return [self.preprocess(data) for data in datalist]

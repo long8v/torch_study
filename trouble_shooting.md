@@ -31,6 +31,9 @@ torch.Tensor(xx, dtype=torch.int64) 가 아니라 torch.Tensor(xx).long()와 같
 ## RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation
 requires_grad=true주기?
 
+## Thre were no tensor arguments to this function (e.g., you passed an empty list of Tensors), but no fallback function is registered for schema aten::_cat.  This usually means that this function requires a non-empty list of Tensors.  Available functions are [CPU, CUDA, QuantizedCPU, BackendSelect, Named, AutogradOther, AutogradCPU, AutogradCUDA, AutogradXLA, AutogradPrivateUse1, AutogradPrivateUse2, AutogradPrivateUse3, Tracer, Autocast, Batched, VmapMode].
+빈 리스트에 대해서 텐서 연산을 했을 경우. 
+
 
 ## 특수 상황
 
