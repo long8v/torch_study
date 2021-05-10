@@ -34,6 +34,9 @@ requires_grad=true주기?
 ## Thre were no tensor arguments to this function (e.g., you passed an empty list of Tensors), but no fallback function is registered for schema aten::_cat.  This usually means that this function requires a non-empty list of Tensors.  Available functions are [CPU, CUDA, QuantizedCPU, BackendSelect, Named, AutogradOther, AutogradCPU, AutogradCUDA, AutogradXLA, AutogradPrivateUse1, AutogradPrivateUse2, AutogradPrivateUse3, Tracer, Autocast, Batched, VmapMode].
 빈 리스트에 대해서 텐서 연산을 했을 경우. 
 
+## only one element tensors can be converted to python scalars
+dim이 (n,)인 tensor가 있는 list를 torch.Tensor혹은 np.array로 만들때, 에러가 남
+dim을 .unsqueeze로 (n, 1)로 만들어 주니 해결됨
 
 ## 특수 상황
 

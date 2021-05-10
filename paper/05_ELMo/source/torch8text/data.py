@@ -1,4 +1,8 @@
 from collections import defaultdict, Counter
+import numpy as np
+import torch
+import torch.nn as nn
+
 class Vocab:    
     def __init__(self, min_freq = 0):
         self.min_freq = min_freq
@@ -28,10 +32,14 @@ class Vocab:
             
         self.itos_dict = {v:k for k, v in self.stoi_dict.items()}
         
-    def stoi(self, token_list):
-        return [self.stoi_dict[word] for word in token_list]
+    def stoi(self, tokens):
+        if type(tokens) == str:
+            tokens = [tokens]
+        return [self.stoi_dict[word] for word in tokens]
 
     def itos(self, indices):
+        if type(indices) != list:
+            indices = [indicses]
         return " ".join([self.itos_dict[int(index)] 
                          for index in indices if self.itos_dict[index] != '<PAD>'])
     
@@ -48,13 +56,19 @@ class Field:
         self.reverse = reverse
         self.preprocessing = preprocessing
         self.vocab = None
+        self.pad = lambda data, pad_num: nn.ConstantPad2d((0, pad_num), 0)(data)
     
     def build_vocab(self, data, min_freq = 0):
         self.vocab = Vocab(min_freq)
-        self.vocab(self.preprocess_list(data))
-
-    def preprocess(self, data):
+        self.vocab(self.preprocess(data))
+        self.max_len = max([len(_) for _ in self.vocab.stoi_dict])
+       
         
+    def preprocess(self, data):
+        if type(data) == str:
+            pass
+        else:
+            return [self.preprocess(d) for d in data]
         if self.lower:
             data = data.lower()
         if self.preprocessing:
@@ -73,6 +87,14 @@ class Field:
     
     def process(self, data):
         return self.vocab.stoi(data)
+        
+    def pad_process(self, data): 
+        d_list = []
+        for d in data:
+            process_d = torch.tensor(self.process(d))
+            pad_d = self.pad(process_d, self.max_len - len(process_d)).unsqueeze(0)
+            d_list.append(pad_d)
+#         print(d_list)
+        return torch.cat((d_list), 0)
+
     
-    def preprocess_list(self, datalist):
-        return [self.preprocess(data) for data in datalist]
