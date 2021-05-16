@@ -48,7 +48,8 @@ class Vocab:
     
 class Field:
     def __init__(self, tokenize = lambda e: e.split(), init_token = '<SOS>', 
-                 eos_token = '<EOS>', preprocessing = None, lower = False, reverse = False):
+                 eos_token = '<EOS>', preprocessing = None, lower = False, reverse = False,
+                 max_len = 999):
         self.tokenize = tokenize
         self.init_token = init_token
         self.eos_token = eos_token
@@ -57,6 +58,7 @@ class Field:
         self.preprocessing = preprocessing
         self.vocab = None
         self.pad = lambda data, pad_num: nn.ConstantPad2d((0, pad_num), 0)(data)
+        self.max_len = max_len
     
     def build_vocab(self, data, min_freq = 0):
         self.vocab = Vocab(min_freq)
@@ -81,7 +83,7 @@ class Field:
             tokenized_data = [self.init_token] + tokenized_data
         if self.eos_token:
             tokenized_data = tokenized_data + [self.eos_token]
-        return tokenized_data
+        return tokenized_data[:self.max_len]
     
     def process(self, data):
         return self.vocab.stoi(data)
