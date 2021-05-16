@@ -2,25 +2,24 @@ from collections import defaultdict, Counter
 import numpy as np
 import torch
 import torch.nn as nn
+from .utils import *
 
 class Vocab:    
     def __init__(self, min_freq = 0):
         self.min_freq = min_freq
         
     def __call__(self, sentence_list, init_token='<SOS>', eos_token='<EOS>'):
-        self.stoi_dict = defaultdict(lambda: 0) 
-        self.stoi_dict['<UNK>'] = 0
-        self.stoi_dict['<PAD>'] = 1
+        self.stoi_dict = defaultdict(lambda: 1) 
+        self.stoi_dict['<UNK>'] = 1
+        self.stoi_dict['<PAD>'] = 0
         if init_token:
             self.stoi_dict[init_token] = len(self.stoi_dict) # 2
         if eos_token:
             self.stoi_dict[eos_token] = len(self.stoi_dict) # 3 if we have init token
         self.special_tokens = list(self.stoi_dict)[:]
         self.special_tokens_idx = list(self.stoi_dict.values())[:]
-        all_tokens = [token 
-                      for sentence in sentence_list 
-                      for token in sentence
-                      if token not in self.stoi_dict]
+        all_tokens = flatten(sentence_list)
+        all_tokens = [token for token in all_tokens if token not in self.stoi_dict]
         self.token_counter = Counter(all_tokens).most_common()
         token_counter = [word for word, count in self.token_counter 
                              if count > self.min_freq]        
@@ -94,7 +93,6 @@ class Field:
             process_d = torch.tensor(self.process(d))
             pad_d = self.pad(process_d, self.max_len - len(process_d)).unsqueeze(0)
             d_list.append(pad_d)
-#         print(d_list)
         return torch.cat((d_list), 0)
 
     
