@@ -18,7 +18,8 @@ class Vocab:
             self.stoi_dict[eos_token] = len(self.stoi_dict) # 3 if we have init token
         self.special_tokens = list(self.stoi_dict)[:]
         self.special_tokens_idx = list(self.stoi_dict.values())[:]
-        all_tokens = flatten(sentence_list)
+#         all_tokens = flatten(sentence_list)
+        all_tokens = [token for sentence in sentence_list for token in sentence]
         all_tokens = [token for token in all_tokens if token not in self.stoi_dict]
         self.token_counter = Counter(all_tokens).most_common()
         token_counter = [word for word, count in self.token_counter 
@@ -59,9 +60,7 @@ class Field:
     
     def build_vocab(self, data, min_freq = 0):
         self.vocab = Vocab(min_freq)
-        self.vocab(self.preprocess(data))
-        self.max_len = max([len(_) for _ in self.vocab.stoi_dict])
-       
+        self.vocab(self.preprocess(data))       
         
     def preprocess(self, data):
         if type(data) == str:
@@ -87,12 +86,13 @@ class Field:
     def process(self, data):
         return self.vocab.stoi(data)
         
-    def pad_process(self, data): 
+    def pad_process(self, data, max_len): 
         d_list = []
         for d in data:
-            process_d = torch.tensor(self.process(d))
-            pad_d = self.pad(process_d, self.max_len - len(process_d)).unsqueeze(0)
-            d_list.append(pad_d)
+            if d: # cleaner가 다 지워버리는 때도 있어서 빈 리스트가 나옴
+                process_d = torch.tensor(self.process(d))
+                pad_d = self.pad(process_d, max_len - len(process_d)).unsqueeze(0)
+                d_list.append(pad_d)
         return torch.cat((d_list), 0)
 
     

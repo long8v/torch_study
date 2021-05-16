@@ -38,6 +38,11 @@ requires_grad=true주기?
 dim이 (n,)인 tensor가 있는 list를 torch.Tensor혹은 np.array로 만들때, 에러가 남
 dim을 .unsqueeze로 (n, 1)로 만들어 주니 해결됨
 
+## RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.
+
+## AttributeError: cannot assign module before Module.__init__() call
+super().__init__()를 추가하면 된다
+
 ## 특수 상황
 
 ### ValueError: Expected target size (20, 11), got torch.Size([20, 10])
