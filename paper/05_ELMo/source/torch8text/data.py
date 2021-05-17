@@ -39,7 +39,7 @@ class Vocab:
 
     def itos(self, indices):
         if type(indices) != list:
-            indices = [indicses]
+            indices = [indices]
         return " ".join([self.itos_dict[int(index)] 
                          for index in indices if self.itos_dict[index] != '<PAD>'])
     
