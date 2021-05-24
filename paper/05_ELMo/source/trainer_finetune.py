@@ -1,6 +1,6 @@
 import mlflow
 from utils import *
-from model import *
+from model_finetune import *
 from dataset import *
 from torch8text import *
 import torch
@@ -15,27 +15,27 @@ from torch.utils.data import Dataset, DataLoader
 
 
 
-class ELMoTrainer(pl.LightningModule):
+class gruTrainer(pl.LightningModule):
     def __init__(self, dataset, config):
-        super(ELMoTrainer, self).__init__()
+        super(gruTrainer, self).__init__()
         
         self.config = config
-        self.petition_ds = PetitionDataset(config)
-        self.petition_ds = self.petition_ds(corpus)
-        self.petition_dl = DataLoader(self.petition_ds, config['DATA']['BATCH_SIZE'], collate_fn=pad_collate)
-        
-        chr_vocab_size = len(self.petition_ds.chr_field.vocab)
-        chr_pad_idx = self.petition_ds.chr_field.vocab.stoi_dict['<PAD>']
-        trg_pad_idx = self.petition_ds.token_field.vocab.stoi_dict['<PAD>']
-        predict_dim = len(self.petition_ds.token_field.vocab) 
-        self.elmo = ELMo(self.config, chr_vocab_size, chr_pad_idx, trg_pad_idx, predict_dim)
+        self.petition_ds = PetitionDataset_finetune(config)
+        self.petition_ds = self.petition_ds(dataset)
+        self.petition_dl = DataLoader(self.petition_ds, batch_size=4, collate_fn=pad_collate_finetune)
+        INPUT_DIM = len(self.petition_ds.chr_field.vocab.stoi_dict)
+        OUTPUT_DIM = len(self.petition_ds.label_field.vocab.stoi_dict)
+        N_LAYERS = 2
+        HID_DIM = 512
+        EMBEDDING_DIM = 1024
+        self.simple_gru = simpleGRU_model(self.config, INPUT_DIM, EMBEDDING_DIM, N_LAYERS, HID_DIM, OUTPUT_DIM)
         device = config['TRAIN']['DEVICE'] 
-        self.elmo.to(device)
-        self.elmo.train()
-        self.elmo.zero_grad()
-        self.elmo.apply(self.initialize_weights);
+        self.simple_gru.to(device)
+        self.simple_gru.train()
+        self.simple_gru.zero_grad()
+        self.simple_gru.apply(self.initialize_weights);
         
-        trainer = pl.Trainer(max_epochs=config['TRAIN']['N_EPOCHS'], progress_bar_refresh_rate=1, gpus=1)
+        trainer = pl.Trainer(max_epochs=self.config['TRAIN']['N_EPOCHS'], progress_bar_refresh_rate=1, gpus=1)
 
         # Auto log all MLflow entities
         mlflow.pytorch.autolog()
@@ -46,7 +46,7 @@ class ELMoTrainer(pl.LightningModule):
         mlflow.end_run() # 이전에 돌아가고 있던거 끄기
         with mlflow.start_run() as run:
             mlflow.log_params(config)
-            trainer.fit(self.elmo, self.petition_dl)
+            trainer.fit(self.simple_gru, self.petition_dl)
 
         # fetch the auto logged parameters and metrics
 #         print_auto_logged_info(mlflow.get_run(run_id=run.info.run_id))
@@ -68,11 +68,14 @@ class ELMoTrainer(pl.LightningModule):
     
     
 if __name__ == '__main__':
-    with open('../data/petitions.p', 'rb') as f:
-        corpus = pickle.load(f)
-    config_file = '/home/long8v/torch_study/paper/05_ELMo/config.yaml'
+    with open('../data/petitions_2019-01.txt', 'r') as f:
+        corpus = f.readlines()
+    json_list = [eval(json.strip()) for json in corpus]
+    corpus = [(json['content'], json['category']) for json in json_list]
+    corpus = corpus[:1037] 
+    config_file = '/home/long8v/torch_study/paper/05_ELMo/config_finetune.yaml'
     config = read_yaml(config_file)
     print('trainer loading..')
-    trainer = ELMoTrainer(corpus, config)
+    trainer = gruTrainer(corpus, config)
     print('start train..')
     trainer.train()

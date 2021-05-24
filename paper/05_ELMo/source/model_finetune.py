@@ -10,9 +10,10 @@ import torchtext
 from torch.optim.lr_scheduler import StepLR
 
 
-class simpleGRU_model(nn.Module):
-    def __init__(self, input_dim, embedding_dim, n_layers, hid_dim, output_dim):
+class simpleGRU_model(pl.LightningModule):
+    def __init__(self, config, input_dim, embedding_dim, n_layers, hid_dim, output_dim):
         super(simpleGRU_model, self).__init__()
+        self.config = config
         self.embedding_dim = embedding_dim
         self.embedding = nn.Embedding(input_dim, embedding_dim)
         self.gru = nn.GRU(embedding_dim, hid_dim, n_layers, batch_first=True)

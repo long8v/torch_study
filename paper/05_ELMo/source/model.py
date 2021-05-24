@@ -100,7 +100,7 @@ class LSTM_LM(pl.LightningModule):
         self.fc_out = nn.Linear(hid_dim, output_dim)
         self.dropout = nn.Dropout(dropout)
     
-    def forward(self, input):
+    def forward(self, input, finetune=False):
         input = input.permute(1, 0, 2)
         output, (hidden, cell) = self.lstm(input)  
         seq_len, bs, _ = output.size()
@@ -109,6 +109,8 @@ class LSTM_LM(pl.LightningModule):
         forward_hidden, backward_hidden = output[:,:,:,0], output[:,:,:,1]
         # forward_hidden : (seq_len, batch, hidden_size)
         # forward_prediction : (seq_len, batch, output_dim) -> (batch, seq_len, output_dim)
+        if finetune:
+            return forward_hidden, backward_hidden
         forward_prediction = self.fc_out(forward_hidden).permute(1, 0, 2)
         backward_prediction = self.fc_out(backward_hidden).permute(1, 0, 2)
         return forward_prediction, backward_prediction
@@ -140,10 +142,10 @@ class ELMo(pl.LightningModule):
         self.PREDICT_DIM = predict_dim
         
         
-    def forward(self, input):
+    def forward(self, input, finetune=False):
         output = self.cnn(input)
         output = self.highway(output)
-        forward_output, backward_output = self.rnn(output)
+        forward_output, backward_output = self.rnn(output, finetune)
         return forward_output, backward_output
 
 

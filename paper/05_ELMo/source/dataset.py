@@ -140,13 +140,14 @@ class PetitionDataset_finetune:
                 
     def __call__(self, corpus_category):
         # corpus : [(corpus, category), ]
-        clean_data = [(self.cleaner.cleaning(corpus), category) for corpus, category in corpus_category]
+        clean_data = [(self.token_field.preprocessing(corpus), category) for corpus, category in corpus_category]
         corpus = [corpus for corpus, _ in clean_data if corpus]
-        category = [category for _, category in clean_data if corpus]
+        category = [category for _, category in clean_data if _]
+        print(len(corpus), len(category))
         sent_corpus = [sent 
                        for text in corpus 
                        for sent in sent_tokenize(text) 
-                      ]
+                       if sent]
         
         self.token_field.build_vocab(sent_corpus)
         self.chr_field.build_vocab(sent_corpus)

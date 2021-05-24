@@ -98,9 +98,9 @@ class Field:
         d_list = []
         for d in data:
             process_d = torch.tensor(self.process(d))
-            if process_d:
-                pad_d = self.pad(process_d, max_len - len(process_d)).unsqueeze(0)
-                d_list.append(pad_d)
+#             if process_d:
+            pad_d = self.pad(process_d, max_len - len(process_d)).unsqueeze(0)
+            d_list.append(pad_d)
         return torch.cat((d_list), 0)
 
     
