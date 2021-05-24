@@ -1,17 +1,21 @@
 DATA:
-    minimum_space_count: 2
-    token_max_len: 40
-    chr_max_len: 3
-    batch_size: 64
+    MINIMUM_SPACE_COUNT: 2
+    TOKEN_MAX_LEN: 40
+    CHR_MAX_LEN: 4
+    BATCH_SIZE: 64
+    TOKEN_MIN_FREQ: 5
+    CHR_MIN_FREQ: 1
+    IS_FINETUNE: True
+    
 MODEL:
     CNN:
         EMBEDDING_DIM: 1024
         N_FILTERS: 10
-        FILTER_SIZES: [1, 2, 3]
+        FILTER_SIZES: [2, 3, 4]
         OUTPUT_DIM: 512
         DROPOUT: 0.5
 
-    Highway:
+    HIGHWAY:
         HIGHWAY_N_LAYERS: 1
 
     LSTM:
@@ -21,6 +25,6 @@ MODEL:
         BIDIRECTIONAL: True
 
 TRAIN:
-    LR: 0.000005
+    LR: 0.0005
     N_EPOCHS: 100
     DEVICE: cuda

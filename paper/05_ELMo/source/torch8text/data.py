@@ -8,8 +8,8 @@ class Vocab:
     def __init__(self, min_freq = 0):
         self.min_freq = min_freq
         
-    def __call__(self, sentence_list, init_token='<SOS>', eos_token='<EOS>'):
-        self.stoi_dict = defaultdict(lambda: 1) 
+    def __call__(self, sentence_list, init_token='<SOS>', eos_token='<EOS>', is_target=False):
+        self.stoi_dict = defaultdict(lambda: 1)
         self.stoi_dict['<UNK>'] = 1
         self.stoi_dict['<PAD>'] = 0
         if init_token:
@@ -18,9 +18,12 @@ class Vocab:
             self.stoi_dict[eos_token] = len(self.stoi_dict) # 3 if we have init token
         self.special_tokens = list(self.stoi_dict)[:]
         self.special_tokens_idx = list(self.stoi_dict.values())[:]
-#         all_tokens = flatten(sentence_list)
-        all_tokens = [token for sentence in sentence_list for token in sentence]
-        all_tokens = [token for token in all_tokens if token not in self.stoi_dict]
+
+        if type(sentence_list[0]) is list:
+            all_tokens = [token for sentence in sentence_list for token in sentence]
+        else:
+            all_tokens = sentence_list
+        all_tokens = [token for token in all_tokens if token not in self.stoi_dict] #
         self.token_counter = Counter(all_tokens).most_common()
         token_counter = [word for word, count in self.token_counter 
                              if count > self.min_freq]        
@@ -35,7 +38,7 @@ class Vocab:
     def stoi(self, tokens):
         if type(tokens) == str:
             tokens = [tokens]
-        return [self.stoi_dict[word] for word in tokens]
+        return [self.stoi_dict[token] for token in tokens]
 
     def itos(self, indices):
         if type(indices) != list:
@@ -49,7 +52,7 @@ class Vocab:
 class Field:
     def __init__(self, tokenize = lambda e: e.split(), init_token = '<SOS>', 
                  eos_token = '<EOS>', preprocessing = None, lower = False, reverse = False,
-                 max_len = 999):
+                 max_len = 999, min_freq = 0):
         self.tokenize = tokenize
         self.init_token = init_token
         self.eos_token = eos_token
@@ -59,9 +62,10 @@ class Field:
         self.vocab = None
         self.pad = lambda data, pad_num: nn.ConstantPad2d((0, pad_num), 0)(data)
         self.max_len = max_len
+        self.min_freq = min_freq
     
-    def build_vocab(self, data, min_freq = 0):
-        self.vocab = Vocab(min_freq)
+    def build_vocab(self, data):
+        self.vocab = Vocab(self.min_freq)
         self.vocab(self.preprocess(data))       
         
     def preprocess(self, data):
@@ -69,8 +73,10 @@ class Field:
             pass
         else:
             return [self.preprocess(d) for d in data]
+        
         if self.lower:
             data = data.lower()
+            
         if self.preprocessing:
             try:
                 data = self.preprocessing(data)
@@ -91,10 +97,31 @@ class Field:
     def pad_process(self, data, max_len): 
         d_list = []
         for d in data:
-            if d: # cleaner가 다 지워버리는 때도 있어서 빈 리스트가 나옴
-                process_d = torch.tensor(self.process(d))
+            process_d = torch.tensor(self.process(d))
+            if process_d:
                 pad_d = self.pad(process_d, max_len - len(process_d)).unsqueeze(0)
                 d_list.append(pad_d)
         return torch.cat((d_list), 0)
+
+    
+class LabelField:
+    def __init__(self, dtype):
+        self.dtype = dtype        
+    
+    def build_vocab(self, data):
+        self.vocab = Vocab()
+        category = set(data)
+        idx = 0
+        category_dict = {}
+        for cat in category:
+            category_dict[idx] = cat
+            idx += 1
+        self.vocab.itos_dict = category_dict
+        self.vocab.stoi_dict = {word:idx for idx, word in self.vocab.itos_dict.items()}
+    
+    def process(self, data):
+        return self.vocab.stoi(data)
+        
+
 
     

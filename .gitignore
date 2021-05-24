@@ -18,6 +18,11 @@ runs/
 *.swp
 paper/01_CNN/.vector_cache/
 
+
+**/mlruns/*
+**/lightning_logs/*
+mlruns/*
+
 # C extensions
 *.so
 

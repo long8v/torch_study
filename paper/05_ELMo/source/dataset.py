@@ -10,80 +10,66 @@ import sys
 sys.path.append('../source')
 from txt_cleaner.clean.master import MasterCleaner
 from txt_cleaner.utils import *
-from torch8text.data import Vocab, Field
+from torch8text.data import Vocab, Field, LabelField
 
 import pickle
 
 class ELMoDataset(Dataset):
-    def __init__(self, src, mecab_field, chr_field, max_len):
+    def __init__(self, src, token_field, chr_field, token_max_len, chr_max_len):
         self.src = src
-        self.mecab_field = mecab_field
+        self.token_field = token_field
         self.chr_field = chr_field
         self.named_tuple = namedtuple('data', ['src_chr', 'trg'])
-        self.max_len = max_len
+        self.token_max_len = token_max_len
+        self.chr_max_len = chr_max_len
         
     def __len__(self):
         return len(self.src)
     
     def __getitem__(self, idx):
-        return self.named_tuple(self.getitem(idx, is_char=True), self.getitem(idx)[1:]) 
+        return self.named_tuple(self.idx_process(idx, is_char=True), self.idx_process(idx)[1:]) 
     
-    def getitem(self, idx, is_char=False):
+    def idx_process(self, idx, is_char=False):
         data = self.src[idx]
-        tokenize_data = self.mecab_field.preprocess(data)[:self.max_len]
+        tokenize_data = self.token_field.preprocess(data)[:self.token_max_len]
         if is_char:
             chrs = self.chr_field.preprocess(tokenize_data)
-            pad_chrs = self.chr_field.pad_process(tokenize_data, max_len = self.max_len)
+            pad_chrs = self.chr_field.pad_process(tokenize_data, max_len = self.chr_max_len)
             return pad_chrs
-        return torch.Tensor(self.mecab_field.vocab.stoi(tokenize_data)).long()
-    
+        return torch.Tensor(self.token_field.vocab.stoi(tokenize_data)).long()
+       
 
-class ELMoDataLoader:
-    def __init__(self, batch_size = 64):
-        self.batch_size = batch_size 
-    
-    def __call__(self, dataset):
-        return DataLoader(dataset, batch_size = self.batch_size, collate_fn = self.pad_collate)
-    
-    def pad_collate(self, batch):
-        (src_chr, trg) = zip(*batch)
-        named_tuple = namedtuple('data', ['src_chr', 'trg'])
-        src_chr_pad = pad_sequence(src_chr, batch_first=True, padding_value=0)
-        trg_pad = pad_sequence(trg, batch_first=True, padding_value=0)
-        return named_tuple(src_chr_pad, trg_pad)
     
 class PetitionDataset:
     def __init__(self, config):
         self.config = config['DATA']
         print(self.config)
         self.mecab_tokenizer = mecab.MeCab()
-        self.token_cleaner = MasterCleaner({'minimum_space_count': self.config['minimum_space_count']})
-        self.chr_cleaner = MasterCleaner({'minimum_space_count':0})
-        self.mecab_field = Field(tokenize = self.tokenize_pos, 
-                                preprocessing = lambda e: self.token_cleaner.cleaning(e),
+        self.cleaner = MasterCleaner({'minimum_space_count': self.config['MINIMUM_SPACE_COUNT']})
+        self.token_field = Field(tokenize = self.tokenize_pos, 
+                                preprocessing = lambda e: self.cleaner.cleaning(e),
                                 init_token = False,
                                 eos_token = False,
-                                max_len = self.config['token_max_len']
+                                max_len = self.config['TOKEN_MAX_LEN'],
+                                min_freq = self.config['TOKEN_MIN_FREQ']
                                 )
         self.chr_field = Field(tokenize = list, 
-                                preprocessing = lambda e: self.chr_cleaner.cleaning(e) if len(e) > 1 else e,
                                 init_token = False,
                                 eos_token = False,
-                                max_len = self.config['chr_max_len']
+                                max_len = self.config['CHR_MAX_LEN'],
+                                min_freq = self.config['CHR_MIN_FREQ']
                                 )
-        self.dataloader = ELMoDataLoader(batch_size = self.config['batch_size'])
         
     def __call__(self, corpus):
         sent_corpus = [sent
                         for text in corpus 
                         for sent in sent_tokenize(text)
-                        if self.token_cleaner.cleaning(sent)]
+                        if self.cleaner.cleaning(sent)]
         
-        self.mecab_field.build_vocab(sent_corpus)
+        self.token_field.build_vocab(sent_corpus)
         self.chr_field.build_vocab(sent_corpus)
-        ds = ELMoDataset(sent_corpus, self.mecab_field, self.chr_field, max_len = self.chr_field.max_len)
-        dl = self.dataloader(ds)
-        return dl
+        return ELMoDataset(sent_corpus, self.token_field, self.chr_field, 
+                         token_max_len = self.token_field.max_len, chr_max_len = self.chr_field.max_len)
     
     def tokenize_pos(self, inp):
         if type(inp) == str:
@@ -91,11 +77,98 @@ class PetitionDataset:
         if type(inp) == list:
             return [self.tokenize_pos(i) for i in inp]
 
+
+def pad_collate(batch):
+    (src_chr, trg) = zip(*batch)
+    named_tuple = namedtuple('data', ['src_chr', 'trg'])
+    src_chr_pad = pad_sequence(src_chr, batch_first=True, padding_value=0)
+    trg_pad = pad_sequence(trg, batch_first=True, padding_value=0)
+    return named_tuple(src_chr_pad, trg_pad)   
+
+
+class ELMoDataset_finetune(Dataset):
+    def __init__(self, src, trg, token_field, chr_field, label_field, token_max_len, chr_max_len):
+        self.src = src
+        self.trg = list(trg)
+        self.token_field = token_field
+        self.chr_field = chr_field
+        self.label_field = label_field
+        self.named_tuple = namedtuple('data', ['src_chr', 'trg'])
+        self.token_max_len = token_max_len
+        self.chr_max_len = chr_max_len
         
+    def __len__(self):
+        return len(self.src)
+    
+    def __getitem__(self, idx):
+        return self.named_tuple(self.idx_process(idx, is_char=True), self.label_idx_process(idx)) 
+    
+    def label_idx_process(self, idx):
+        data = self.trg[idx]
+        return torch.Tensor(self.label_field.process(data)).long()
+    
+    def idx_process(self, idx, is_char=False):
+        data = self.src[idx]
+        tokenize_data = self.token_field.preprocess(data)[:self.token_max_len]
+        if is_char:
+            chrs = self.chr_field.preprocess(tokenize_data)
+            pad_chrs = self.chr_field.pad_process(tokenize_data, max_len = self.chr_max_len)
+            return pad_chrs
+        return torch.Tensor(self.token_field.vocab.stoi(tokenize_data)).long()
+
+
+class PetitionDataset_finetune:
+    def __init__(self, config):
+        self.config = config['DATA']
+        print(self.config)
+        self.mecab_tokenizer = mecab.MeCab()
+        self.cleaner = MasterCleaner({'minimum_space_count': self.config['MINIMUM_SPACE_COUNT']})
+        self.token_field = Field(tokenize = self.tokenize_pos, 
+                                preprocessing = lambda e: self.cleaner.cleaning(e),
+                                init_token = False,
+                                eos_token = False,
+                                max_len = self.config['TOKEN_MAX_LEN'],
+                                min_freq = self.config['TOKEN_MIN_FREQ']
+                                )
+        self.chr_field = Field(tokenize = list, 
+                                init_token = False,
+                                eos_token = False,
+                                max_len = self.config['CHR_MAX_LEN'],
+                                min_freq = self.config['CHR_MIN_FREQ']
+                                )
+        self.label_field = LabelField(dtype=torch.float)
+                
+    def __call__(self, corpus_category):
+        # corpus : [(corpus, category), ]
+        clean_data = [(self.cleaner.cleaning(corpus), category) for corpus, category in corpus_category]
+        corpus = [corpus for corpus, _ in clean_data if corpus]
+        category = [category for _, category in clean_data if corpus]
+        sent_corpus = [sent 
+                       for text in corpus 
+                       for sent in sent_tokenize(text) 
+                      ]
         
+        self.token_field.build_vocab(sent_corpus)
+        self.chr_field.build_vocab(sent_corpus)
+        self.label_field.build_vocab(category)
+        return ELMoDataset_finetune(corpus, category, self.token_field, self.chr_field, self.label_field,
+                         token_max_len = self.token_field.max_len, chr_max_len = self.chr_field.max_len)
+    
+    def tokenize_pos(self, inp):
+        if type(inp) == str:
+            return self.mecab_tokenizer.morphs(inp)
+        if type(inp) == list:
+            return [self.tokenize_pos(i) for i in inp]
+
+def pad_collate_finetune(batch):
+    (src_chr, trg) = zip(*batch)
+    named_tuple = namedtuple('data', ['src_chr', 'trg'])
+    src_chr_pad = pad_sequence(src_chr, batch_first=True, padding_value=0)
+    trg = torch.tensor(trg)
+    return named_tuple(src_chr_pad, trg)   
     
 if __name__ == '__main__':
-    with open('../data/petitions.p', 'rb') as f:
+    with open('../data/petitions_dev.p', 'rb') as f:
         corpus = pickle.load(f)
     config = read_yaml('../config.yaml')
     pet_ds = PetitionDataset(config)
