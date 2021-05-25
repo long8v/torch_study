@@ -55,7 +55,8 @@ class gruTrainer(pl.LightningModule):
         self.simple_gru.apply(self.initialize_weights);
         
         trainer = pl.Trainer(max_epochs=self.finetune_config['TRAIN']['N_EPOCHS'], 
-                             progress_bar_refresh_rate=10, gpus=1)
+                             progress_bar_refresh_rate=10, gpus=1,
+                             auto_lr_find=True)
 
         # Auto log all MLflow entities
         mlflow.pytorch.autolog()

@@ -8,6 +8,6 @@ MODEL:
         EMBEDDING_DIM: 1024
 
 TRAIN:
-    LR: 0.0005
-    N_EPOCHS: 10
+    LR: 0.00005
+    N_EPOCHS: 25
     DEVICE: cuda

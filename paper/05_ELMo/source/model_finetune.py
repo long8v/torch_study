@@ -83,15 +83,26 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         seq_len =  output.shape[1]
         output = output.reshape(bs, -1, self.embedding_dim)
         _, output = self.gru(output)
-        output = self.fc(output[-1, :, :])
+        output = output.transpose(1, 0)
+        output = self.fc(output[:, -1, :]) # batch_first
         return output
     
     def training_step(self, batch, batch_nb):
         src_chr, trg = batch
         src_chr, trg = src_chr.to(self.device), trg.to(self.device)
-        loss = self.criterion(self(src_chr), trg)
+        output = self(src_chr)
+        loss = self.criterion(output, trg)
+        accuracy = self.multi_acc(output, trg)
         self.log('train_loss', loss, on_step=True)
+        self.log('train_accuracy', accuracy, on_step=True)
         return loss
+    
+    def multi_acc(self, y_pred, y_test):
+        _, y_pred_tags = torch.max(y_pred, dim = 1)
+        correct_pred = (y_pred_tags == y_test).float()
+        acc = correct_pred.sum() / len(correct_pred)
+        acc = torch.round(acc * 100)
+        return acc
 
         
     def print_auto_logged_info(r):
