@@ -145,6 +145,8 @@ class ELMo(pl.LightningModule):
     def forward(self, input, finetune=False):
         output = self.cnn(input)
         output = self.highway(output)
+        if finetune:
+            return self.rnn(output, finetune)
         forward_output, backward_output = self.rnn(output, finetune)
         return forward_output, backward_output
 
