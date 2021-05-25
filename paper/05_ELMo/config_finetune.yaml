@@ -1,27 +1,11 @@
-DATA:
-    MINIMUM_SPACE_COUNT: 2
-    TOKEN_MAX_LEN: 40
-    CHR_MAX_LEN: 4
-    BATCH_SIZE: 64
-    TOKEN_MIN_FREQ: 5
-    CHR_MIN_FREQ: 1
+ELMO:
+    PATH: /home/long8v/torch_study/paper/05_ELMo/source/lightning_logs/version_55/checkpoints/epoch=34-step=85224.ckpt
     
 MODEL:
-    CNN:
-        EMBEDDING_DIM: 1024
-        N_FILTERS: 10
-        FILTER_SIZES: [2, 3, 4]
-        OUTPUT_DIM: 512
-        DROPOUT: 0.5
-
-    HIGHWAY:
-        HIGHWAY_N_LAYERS: 1
-
-    LSTM:
+    GRU:
         HID_DIM: 1024
         N_LAYERS: 2
-        DROPOUT: 0.5
-        BIDIRECTIONAL: True
+        EMBEDDING_DIM: 1024
 
 TRAIN:
     LR: 0.0005

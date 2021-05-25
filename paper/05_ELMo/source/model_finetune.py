@@ -51,21 +51,36 @@ class simpleGRU_model(pl.LightningModule):
         return [optimizer], [scheduler]
     
 
-class simpleGRU_model_w_elmo(nn.Module):
-    def __init__(self, elmo, input_dim, embedding_dim, n_layers, hid_dim, output_dim):
+class simpleGRU_model_w_elmo(pl.LightningModule):
+    def __init__(self, config, elmo, input_dim, embedding_dim, n_layers, hid_dim, output_dim):
         super(simpleGRU_model_w_elmo, self).__init__()
+        self.config = config
         self.elmo = elmo
         self.embedding_dim = embedding_dim
         self.embedding = nn.Embedding(input_dim, embedding_dim)
         self.gru = nn.GRU(embedding_dim, hid_dim, n_layers, batch_first=True)
         self.fc = nn.Linear(hid_dim, output_dim)
+        self.n_layers = n_layers
+        self.criterion = nn.CrossEntropyLoss()
         
     def forward(self, x):
+        
+        ### get_ elmo vector ###
+        # x : batch_size, max_token_len, max_chr_len
         bs = x.shape[0]
         with torch.no_grad():
-            forward_elmo_vector, _ = elmo.forward(x, finetune=True)
-        elmo_vector = torch.sum(forward_elmo_vector, dim = -1)
+            forward_hidden, backward_hidden = self.elmo.forward(x, finetune=True)
+        # forward_hidden : seq_len, batch, hidden_size
+        elmo_vector = torch.stack([forward_hidden, backward_hidden])   
+        
+        ### another rnn ### 
+        # elmo_vector : 2, seq_len, batch, hidden_dim
         output = self.embedding(x)
+        # output : batch_size, seq_len, max_chr_len, embedding_dim
+        elmo_vector = elmo_vector.permute(2, 1, 0, 3)
+        output = torch.cat([elmo_vector, output], dim = 2)
+        # output : batch_size ,seq_len, max_chr_len + 2, embedding_dim
+        seq_len =  output.shape[1]
         output = output.reshape(bs, -1, self.embedding_dim)
         _, output = self.gru(output)
         output = self.fc(output[-1, :, :])

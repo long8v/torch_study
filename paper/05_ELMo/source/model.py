@@ -108,9 +108,9 @@ class LSTM_LM(pl.LightningModule):
         output = output.reshape(seq_len, bs, -1, 2) # 2 because bidirectional, stacked RNN output is last layer output
         forward_hidden, backward_hidden = output[:,:,:,0], output[:,:,:,1]
         # forward_hidden : (seq_len, batch, hidden_size)
-        # forward_prediction : (seq_len, batch, output_dim) -> (batch, seq_len, output_dim)
         if finetune:
             return forward_hidden, backward_hidden
+        # forward_prediction : (seq_len, batch, output_dim) -> (batch, seq_len, output_dim)
         forward_prediction = self.fc_out(forward_hidden).permute(1, 0, 2)
         backward_prediction = self.fc_out(backward_hidden).permute(1, 0, 2)
         return forward_prediction, backward_prediction
