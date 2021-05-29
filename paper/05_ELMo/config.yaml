@@ -2,7 +2,7 @@ DATA:
     MINIMUM_SPACE_COUNT: 2
     TOKEN_MAX_LEN: 40
     CHR_MAX_LEN: 4
-    BATCH_SIZE: 64
+    BATCH_SIZE: 256
     TOKEN_MIN_FREQ: 5
     CHR_MIN_FREQ: 1
     
@@ -15,7 +15,7 @@ MODEL:
         DROPOUT: 0.5
 
     HIGHWAY:
-        HIGHWAY_N_LAYERS: 1
+        HIGHWAY_N_LAYERS: 2
 
     LSTM:
         HID_DIM: 1024
@@ -24,6 +24,6 @@ MODEL:
         BIDIRECTIONAL: True
 
 TRAIN:
-    LR: 0.00005
-    N_EPOCHS: 10
+    LR: 0.005
+    N_EPOCHS: 100
     DEVICE: cuda

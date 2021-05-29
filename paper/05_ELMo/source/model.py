@@ -48,9 +48,10 @@ class CNN(pl.LightningModule):
         conved_1 = F.relu(self.conv_1(embedded).squeeze(3))
         conved_2 = F.relu(self.conv_2(embedded).squeeze(3))
 
-        pooled_0 = torch.max(conved_0, dim = -1).values
-        pooled_1 = torch.max(conved_1, dim = -1).values
-        pooled_2 = torch.max(conved_2, dim = -1).values
+        pooled_0, _ = torch.max(conved_0, dim = -1)
+        pooled_1, _ = torch.max(conved_1, dim = -1)
+        pooled_2, _ = torch.max(conved_2, dim = -1)
+        
         cat = self.dropout(torch.cat((pooled_0, pooled_1, pooled_2), dim = -1))
         cat = cat.view(bs, max_seq_len, -1) 
         return cat
@@ -105,8 +106,8 @@ class LSTM_LM(pl.LightningModule):
         output, (hidden, cell) = self.lstm(input)  
         seq_len, bs, _ = output.size()
         # output : (seq_len, batch, num_directions * hidden size) -> (seq_len, batch, hidden_size, num_directions)
-        output = output.reshape(seq_len, bs, -1, 2) # 2 because bidirectional, stacked RNN output is last layer output
-        forward_hidden, backward_hidden = output[:,:,:,0], output[:,:,:,1]
+        output = output.reshape(seq_len, bs, 2, -1) # 2 because bidirectional, stacked RNN output is last layer output
+        forward_hidden, backward_hidden = output[:,:,0,:], output[:,:,1,:]
         # forward_hidden : (seq_len, batch, hidden_size)
         if finetune:
             return forward_hidden, backward_hidden
@@ -128,9 +129,9 @@ class ELMo(pl.LightningModule):
                        chr_pad_idx)
         
         highway_config = self.config['MODEL']['HIGHWAY']
-#         cnn_output_dim = sum([(self.config['DATA']['CHR_MAX_LEN'] - fs + 1) for fs in cnn_config['FILTER_SIZES']])
+
         cnn_output_dim = len(cnn_config['FILTER_SIZES']) * cnn_config['N_FILTERS']
-        print('cnn_output_dim', cnn_output_dim)
+
         self.highway = Highway(cnn_output_dim, highway_config['HIGHWAY_N_LAYERS'], f=torch.nn.functional.relu)
         
         
@@ -140,13 +141,11 @@ class ELMo(pl.LightningModule):
         
         self.criterion = nn.CrossEntropyLoss(ignore_index = trg_pad_idx)
         self.PREDICT_DIM = predict_dim
-        
+        self.lr = self.config['TRAIN']['LR']
         
     def forward(self, input, finetune=False):
         output = self.cnn(input)
         output = self.highway(output)
-        if finetune:
-            return self.rnn(output, finetune)
         forward_output, backward_output = self.rnn(output, finetune)
         return forward_output, backward_output
 
@@ -159,13 +158,24 @@ class ELMo(pl.LightningModule):
 
         # trg -> (batch_size, seq_len)
         # trg.reshape(-1) -> (batch_size * seq_len)
-        forward_output, backward_output = self(src_chr[:, :-1 :])
+        forward_output, backward_output = self(src_chr[:, :-1, :])
         forward_loss = self.criterion(forward_output.reshape(-1, self.PREDICT_DIM), trg.reshape(-1))
         backward_loss = self.criterion(backward_output.reshape(-1, self.PREDICT_DIM), trg.reshape(-1))
         loss = forward_loss + backward_loss
-        self.log('train_loss', loss, on_step=True)
-        return loss
-
+        accuracy = self.multi_acc(forward_output.reshape(-1, self.PREDICT_DIM), trg.reshape(-1))
+        self.log('train_loss', loss / 2 , on_step=True)
+        self.log('train_accuracy', accuracy, on_step=True)    
+        return loss / 2
+    
+    
+    def multi_acc(self, y_pred, y_test):
+        _, y_pred_tags = torch.max(y_pred, dim = 1)
+        print(y_pred_tags.tolist()[:10])
+        correct_pred = (y_pred_tags == y_test).float()
+        acc = correct_pred.sum() / len(correct_pred)
+        acc = torch.round(acc * 100)
+        return acc
+    
         
     def print_auto_logged_info(r):
         tags = {k: v for k, v in r.data.tags.items() if not k.startswith("mlflow.")}
@@ -177,6 +187,7 @@ class ELMo(pl.LightningModule):
         print("tags: {}".format(tags))
         
     def configure_optimizers(self):
-        optimizer = optim.Adam(self.parameters(), lr = self.config['TRAIN']['LR'])
+        optimizer = optim.Adam(self.parameters(), lr = self.lr)
         scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
+#         return optimizer
         return [optimizer], [scheduler]

@@ -27,6 +27,7 @@ class gruTrainer(pl.LightningModule):
         chr_pad_idx = 0
         trg_pad_idx = 0
         predict_dim = 18216
+        MAX_CHR_LEN = 4
                 
         elmo = ELMo(elmo_config, chr_vocab_size, chr_pad_idx, trg_pad_idx, predict_dim)
         PATH = self.finetune_config['ELMO']['PATH']
@@ -35,7 +36,7 @@ class gruTrainer(pl.LightningModule):
         
         self.petition_ds = PetitionDataset_finetune(elmo_config)
         self.petition_ds = self.petition_ds(dataset)
-        self.petition_dl = DataLoader(self.petition_ds, batch_size=4, collate_fn=pad_collate_finetune)
+        self.petition_dl = DataLoader(self.petition_ds, batch_size=self.finetune_config['DATA']['BATCH_SIZE'], collate_fn=pad_collate_finetune)
         
         INPUT_DIM = len(self.petition_ds.chr_field.vocab.stoi_dict)
         OUTPUT_DIM = len(self.petition_ds.label_field.vocab.stoi_dict)
@@ -45,7 +46,10 @@ class gruTrainer(pl.LightningModule):
         HID_DIM = model_config['HID_DIM']
         EMBEDDING_DIM = model_config['EMBEDDING_DIM']
         
-        self.simple_gru = simpleGRU_model_w_elmo(self.finetune_config, elmo, INPUT_DIM, EMBEDDING_DIM, 
+#         self.simple_gru = simpleGRU_model_w_elmo(self.finetune_config, elmo, INPUT_DIM, EMBEDDING_DIM, MAX_CHR_LEN,
+#                                           N_LAYERS, HID_DIM, OUTPUT_DIM)
+        print(self.finetune_config)
+        self.simple_gru = simpleGRU_model(self.finetune_config, INPUT_DIM, EMBEDDING_DIM, 
                                           N_LAYERS, HID_DIM, OUTPUT_DIM)
         
         device = finetune_config['TRAIN']['DEVICE'] 

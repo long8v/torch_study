@@ -34,7 +34,7 @@ class ELMoDataset(Dataset):
         tokenize_data = self.token_field.preprocess(data)[:self.token_max_len]
         if is_char:
             chrs = self.chr_field.preprocess(tokenize_data)
-            pad_chrs = self.chr_field.pad_process(tokenize_data, max_len = self.chr_max_len)
+            pad_chrs = self.chr_field.pad_process(chrs, max_len = self.chr_max_len)
             return pad_chrs
         return torch.Tensor(self.token_field.vocab.stoi(tokenize_data)).long()
        
@@ -65,7 +65,7 @@ class PetitionDataset:
                         for text in corpus 
                         for sent in sent_tokenize(text)
                         if self.cleaner.cleaning(sent)]
-        
+        self.sent_corpus = sent_corpus
         self.token_field.build_vocab(sent_corpus)
         self.chr_field.build_vocab(sent_corpus)
         return ELMoDataset(sent_corpus, self.token_field, self.chr_field, 
@@ -77,6 +77,13 @@ class PetitionDataset:
         if type(inp) == list:
             return [self.tokenize_pos(i) for i in inp]
 
+    def see_process(self, data):
+        token_data = self.token_field.preprocess(data)
+        print(token_data)
+        token_chr_data = self.chr_field.preprocess(token_data) 
+        print(token_chr_data)
+        process_chr = self.chr_field.pad_process(token_chr_data, max_len = self.chr_field.max_len)
+        print(process_chr)
 
 def pad_collate(batch):
     (src_chr, trg) = zip(*batch)
@@ -161,6 +168,7 @@ class PetitionDataset_finetune:
         if type(inp) == list:
             return [self.tokenize_pos(i) for i in inp]
 
+
 def pad_collate_finetune(batch):
     (src_chr, trg) = zip(*batch)
     named_tuple = namedtuple('data', ['src_chr', 'trg'])
@@ -174,7 +182,9 @@ if __name__ == '__main__':
     config = read_yaml('../config.yaml')
     pet_ds = PetitionDataset(config)
     dl = pet_ds(corpus)
-    for _ in dl:
-        print(_.src_chr)
-        print(_.trg)
+    for original, _ in zip(pet_ds.sent_corpus, dl):
+        print(original)
+#         pet_ds.see_process(original)
+#         print(_.trg)
+        print(pet_ds.token_field.vocab.itos(_.trg.tolist()))
         break

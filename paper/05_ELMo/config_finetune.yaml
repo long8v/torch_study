@@ -1,6 +1,8 @@
 ELMO:
     PATH: /home/long8v/torch_study/paper/05_ELMo/source/lightning_logs/version_55/checkpoints/epoch=34-step=85224.ckpt
     
+DATA:
+    BATCH_SIZE: 64
 MODEL:
     GRU:
         HID_DIM: 1024

@@ -31,9 +31,20 @@ class simpleGRU_model(pl.LightningModule):
     def training_step(self, batch, batch_nb):
         src_chr, trg = batch
         src_chr, trg = src_chr.to(self.device), trg.to(self.device)
-        loss = self.criterion(self(src_chr), trg)
+        output = self(src_chr)
+        loss = self.criterion(output, trg)
+        accuracy = self.multi_acc(output, trg)
         self.log('train_loss', loss, on_step=True)
+        self.log('train_accuracy', accuracy, on_step=True)
         return loss
+    
+    def multi_acc(self, y_pred, y_test):
+        _, y_pred_tags = torch.max(y_pred, dim = 1)
+        print(y_pred_tags)
+        correct_pred = (y_pred_tags == y_test).float()
+        acc = correct_pred.sum() / len(correct_pred)
+        acc = torch.round(acc * 100)
+        return acc
 
         
     def print_auto_logged_info(r):
@@ -52,13 +63,13 @@ class simpleGRU_model(pl.LightningModule):
     
 
 class simpleGRU_model_w_elmo(pl.LightningModule):
-    def __init__(self, config, elmo, input_dim, embedding_dim, n_layers, hid_dim, output_dim):
+    def __init__(self, config, elmo, input_dim, embedding_dim, max_chr_len, n_layers, hid_dim, output_dim):
         super(simpleGRU_model_w_elmo, self).__init__()
         self.config = config
         self.elmo = elmo
         self.embedding_dim = embedding_dim
         self.embedding = nn.Embedding(input_dim, embedding_dim)
-        self.gru = nn.GRU(embedding_dim, hid_dim, n_layers, batch_first=True)
+        self.gru = nn.GRU(embedding_dim * (max_chr_len + 2), hid_dim, n_layers, batch_first=True)
         self.fc = nn.Linear(hid_dim, output_dim)
         self.n_layers = n_layers
         self.criterion = nn.CrossEntropyLoss()
@@ -81,9 +92,13 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         output = torch.cat([elmo_vector, output], dim = 2)
         # output : batch_size ,seq_len, max_chr_len + 2, embedding_dim
         seq_len =  output.shape[1]
-        output = output.reshape(bs, -1, self.embedding_dim)
-        _, output = self.gru(output)
+        # output : batch_size, seq_len, (max_chr_len + 2) * embeding_dim
+        output = output.reshape(bs, seq_len, -1)
+        print(output.shape)
+        _, output = self.gru(output) # (num_layers * num_directions, batch, hidden_size)
+        print(output.shape)
         output = output.transpose(1, 0)
+        # (batch, num_layers * num_directions, hidden_size)
         output = self.fc(output[:, -1, :]) # batch_first
         return output
     
@@ -99,6 +114,7 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
     
     def multi_acc(self, y_pred, y_test):
         _, y_pred_tags = torch.max(y_pred, dim = 1)
+        print(y_pred_tags)
         correct_pred = (y_pred_tags == y_test).float()
         acc = correct_pred.sum() / len(correct_pred)
         acc = torch.round(acc * 100)

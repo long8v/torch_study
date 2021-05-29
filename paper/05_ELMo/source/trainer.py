@@ -29,18 +29,19 @@ class ELMoTrainer(pl.LightningModule):
         trg_pad_idx = self.petition_ds.token_field.vocab.stoi_dict['<PAD>']
         predict_dim = len(self.petition_ds.token_field.vocab) 
         self.elmo = ELMo(self.config, chr_vocab_size, chr_pad_idx, trg_pad_idx, predict_dim)
+        
         device = config['TRAIN']['DEVICE'] 
         self.elmo.to(device)
         self.elmo.train()
         self.elmo.zero_grad()
         self.elmo.apply(self.initialize_weights);
         
-        trainer = pl.Trainer(max_epochs=config['TRAIN']['N_EPOCHS'], progress_bar_refresh_rate=1, gpus=1)
+        trainer = pl.Trainer(max_epochs=config['TRAIN']['N_EPOCHS'], progress_bar_refresh_rate=10,
+                             gpus=1, auto_lr_find = True)
+        
 
         # Auto log all MLflow entities
         mlflow.pytorch.autolog()
-        
-
         
         # Train the model
         mlflow.end_run() # 이전에 돌아가고 있던거 끄기
@@ -48,13 +49,11 @@ class ELMoTrainer(pl.LightningModule):
             mlflow.log_params(config)
             trainer.fit(self.elmo, self.petition_dl)
 
-        # fetch the auto logged parameters and metrics
-#         print_auto_logged_info(mlflow.get_run(run_id=run.info.run_id))
 
     def initialize_weights(self, m):
         if hasattr(m, 'weight'):
             if m.weight is None:
-                print('?? why none') # weight가 None인 것들이 있음
+                print(m)  # weight가 None인 것들이 있음 -> crossentropy loss
             elif m.weight.dim() > 1:
                 nn.init.xavier_uniform_(m.weight.data)
         
