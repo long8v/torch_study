@@ -1,16 +1,17 @@
 ELMO:
-    PATH: '/home/long8v/torch_study/paper/05_ELMo/source/model/elmo_30051604'
+    PATH: '/home/long8v/torch_study/paper/05_ELMo/model/elmo_30051929'
 
     
 DATA:
     MINIMUM_SPACE_COUNT: 2
     TOKEN_MAX_LEN: 40
     CHR_MAX_LEN: 4
-    BATCH_SIZE: 256
+    BATCH_SIZE: 64
     TOKEN_MIN_FREQ: 5
     CHR_MIN_FREQ: 1
     BATCH_SIZE: 64
 MODEL:
+    ELMO: False
     GRU:
         HID_DIM: 1024
         N_LAYERS: 2

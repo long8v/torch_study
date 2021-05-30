@@ -16,7 +16,7 @@ from torch.utils.data import Dataset, DataLoader
 
 
 class ELMoTrainer(pl.LightningModule):
-    def __init__(self, dataset, config):
+    def __init__(self, corpus, config):
         super(ELMoTrainer, self).__init__()
         
         self.config = config
@@ -24,11 +24,12 @@ class ELMoTrainer(pl.LightningModule):
         self.petition_ds = self.petition_ds(corpus)
         self.petition_dl = DataLoader(self.petition_ds, config['DATA']['BATCH_SIZE'], collate_fn=pad_collate)
         
-        chr_vocab_size = len(self.petition_ds.chr_field.vocab)
-        chr_pad_idx = self.petition_ds.chr_field.vocab.stoi_dict['<PAD>']
-        trg_pad_idx = self.petition_ds.token_field.vocab.stoi_dict['<PAD>']
-        predict_dim = len(self.petition_ds.token_field.vocab) 
-        self.elmo = ELMo(self.config, chr_vocab_size, chr_pad_idx, trg_pad_idx, predict_dim)
+        self.chr_vocab_size = len(self.petition_ds.chr_field.vocab)
+        self.chr_pad_idx = self.petition_ds.chr_field.vocab.stoi_dict['<PAD>']
+        self.trg_pad_idx = self.petition_ds.token_field.vocab.stoi_dict['<PAD>']
+        self.predict_dim = len(self.petition_ds.token_field.vocab) 
+        
+        self.elmo = ELMo(self.config, self.chr_vocab_size, self.chr_pad_idx, self.trg_pad_idx, self.predict_dim)
         
         device = config['TRAIN']['DEVICE'] 
         self.elmo.to(device)
@@ -41,7 +42,7 @@ class ELMoTrainer(pl.LightningModule):
         
 
 #         Auto log all MLflow entities
-#         mlflow.pytorch.autolog()
+        mlflow.pytorch.autolog()
         
         # Train the model
         mlflow.end_run() # 이전에 돌아가고 있던거 끄기
@@ -65,10 +66,10 @@ class ELMoTrainer(pl.LightningModule):
         {
             'DATA':
             {
-                'CHR_VOCAB_SIZE': len(self.petition_ds.chr_field.vocab),
-                'CHR_PAD_IDX': self.petition_ds.chr_field.vocab.stoi_dict['<PAD>'],
-                'TRG_PAD_IDX': self.petition_ds.token_field.vocab.stoi_dict['<PAD>'],
-                'PREDICT_DIM': len(self.petition_ds.token_field.vocab),
+                'CHR_VOCAB_SIZE': self.chr_vocab_size,
+                'CHR_PAD_IDX': self.chr_pad_idx,
+                'TRG_PAD_IDX': self.trg_pad_idx,
+                'PREDICT_DIM': self.predict_dim,
                 'MAX_CHR_LEN': self.petition_ds.chr_field.max_len
             }
         }
@@ -77,8 +78,6 @@ class ELMoTrainer(pl.LightningModule):
         save_yaml(dict(self.petition_ds.token_field.vocab.stoi_dict), f'{path}/token_dict.yaml')
         save_yaml(dict(self.petition_ds.chr_field.vocab.stoi_dict), f'{path}/chr_dict.yaml')
         print(read_yaml(f'{path}/chr_dict.yaml'))
-        
-
     
     
 if __name__ == '__main__':

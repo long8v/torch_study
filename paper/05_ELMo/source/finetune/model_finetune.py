@@ -1,3 +1,4 @@
+
 import pytorch_lightning as pl
 import re
 import mecab
@@ -8,7 +9,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import torchtext
 from torch.optim.lr_scheduler import StepLR
-
+from sklearn.metrics import f1_score
 
 class simpleGRU_model(pl.LightningModule):
     def __init__(self, config, input_dim, embedding_dim, n_layers, hid_dim, output_dim):
@@ -34,17 +35,34 @@ class simpleGRU_model(pl.LightningModule):
         output = self(src_chr)
         loss = self.criterion(output, trg)
         accuracy = self.multi_acc(output, trg)
+        fscore = self.fscore(output, trg)
         self.log('train_loss', loss, on_step=True)
         self.log('train_accuracy', accuracy, on_step=True)
+        self.log('train_fscore', fscore, on_step=True)
+        return loss
+    
+    def validation_step(self, batch, batch_idx):
+        src_chr, trg = batch
+        src_chr, trg = src_chr.to(self.device), trg.to(self.device)
+        output = self(src_chr)
+        loss = self.criterion(output, trg)
+        accuracy = self.multi_acc(output, trg)
+        fscore = self.fscore(output, trg)
+        self.log('valid_loss', loss, on_step=True)
+        self.log('valid_accuracy', accuracy, on_step=True)
+        self.log('valid_fscore', fscore, on_step=True)
         return loss
     
     def multi_acc(self, y_pred, y_test):
         _, y_pred_tags = torch.max(y_pred, dim = 1)
-        print(y_pred_tags)
         correct_pred = (y_pred_tags == y_test).float()
         acc = correct_pred.sum() / len(correct_pred)
         acc = torch.round(acc * 100)
         return acc
+    
+    def fscore(self, y_pred, y_test):
+        _, y_pred_tags = torch.max(y_pred, dim = 1)
+        return f1_score(y_test.cpu(), y_pred_tags.cpu(), average='macro')
 
         
     def print_auto_logged_info(r):
@@ -94,9 +112,7 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         seq_len =  output.shape[1]
         # output : batch_size, seq_len, (max_chr_len + 2) * embeding_dim
         output = output.reshape(bs, seq_len, -1)
-        print(output.shape)
         _, output = self.gru(output) # (num_layers * num_directions, batch, hidden_size)
-        print(output.shape)
         output = output.transpose(1, 0)
         # (batch, num_layers * num_directions, hidden_size)
         output = self.fc(output[:, -1, :]) # batch_first
@@ -108,17 +124,34 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         output = self(src_chr)
         loss = self.criterion(output, trg)
         accuracy = self.multi_acc(output, trg)
+        fscore = self.fscore(output, trg)
         self.log('train_loss', loss, on_step=True)
         self.log('train_accuracy', accuracy, on_step=True)
+        self.log('train_fscore', fscore, on_step=True)
+        return loss
+    
+    def validation_step(self, batch, batch_idx):
+        src_chr, trg = batch
+        src_chr, trg = src_chr.to(self.device), trg.to(self.device)
+        output = self(src_chr)
+        loss = self.criterion(output, trg)
+        accuracy = self.multi_acc(output, trg)
+        fscore = self.fscore(output, trg)
+        self.log('valid_loss', loss, on_step=True)
+        self.log('valid_accuracy', accuracy, on_step=True)
+        self.log('valid_fscore', fscore, on_step=True)
         return loss
     
     def multi_acc(self, y_pred, y_test):
         _, y_pred_tags = torch.max(y_pred, dim = 1)
-        print(y_pred_tags)
         correct_pred = (y_pred_tags == y_test).float()
         acc = correct_pred.sum() / len(correct_pred)
         acc = torch.round(acc * 100)
         return acc
+    
+    def fscore(self, y_pred, y_test):
+        _, y_pred_tags = torch.max(y_pred, dim = 1)
+        return f1_score(y_test.cpu(), y_pred_tags.cpu(), average='macro')
 
         
     def print_auto_logged_info(r):
