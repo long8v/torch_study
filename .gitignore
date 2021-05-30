@@ -17,6 +17,7 @@ runs/
 *.zip
 *.swp
 paper/01_CNN/.vector_cache/
+paper/05_ELMo/source/model/*
 
 
 **/mlruns/*

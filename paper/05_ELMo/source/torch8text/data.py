@@ -35,6 +35,11 @@ class Vocab:
             
         self.itos_dict = {v:k for k, v in self.stoi_dict.items()}
         
+    def build_from_dict(self, dict_obj):
+        self.stoi_dict = defaultdict(lambda: 1)
+        self.stoi_dict.update(dict_obj)
+        self.itos_dict = {v:k for k, v in self.stoi_dict.items()}
+        
     def stoi(self, tokens):
         if type(tokens) == str:
             tokens = [tokens]
@@ -68,6 +73,11 @@ class Field:
         self.vocab = Vocab(self.min_freq)
         self.vocab(self.preprocess(data))       
         
+    def build_vocab_from_dict(self, dict_obj):
+        self.vocab = Vocab()
+        self.vocab.build_from_dict(dict_obj)
+
+        
     def preprocess(self, data):
         if type(data) == str:
             pass
@@ -98,10 +108,10 @@ class Field:
         d_list = []
         for d in data:
             process_d = torch.tensor(self.process(d))
-#             if process_d:
             pad_d = self.pad(process_d, max_len - len(process_d)).unsqueeze(0)
             d_list.append(pad_d)
         return torch.cat((d_list), 0)
+    
 
     
 class LabelField:

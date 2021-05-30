@@ -130,7 +130,7 @@ class PetitionDataset_finetune:
         print(self.config)
         self.mecab_tokenizer = mecab.MeCab()
         self.cleaner = MasterCleaner({'minimum_space_count': self.config['MINIMUM_SPACE_COUNT']})
-        self.token_field = Field(tokenize = self.tokenize_pos, 
+        self.token_field = Field(tokenize = lambda e: e.split(), #self.tokenize_pos, 
                                 preprocessing = lambda e: self.cleaner.cleaning(e),
                                 init_token = False,
                                 eos_token = False,
@@ -145,7 +145,7 @@ class PetitionDataset_finetune:
                                 )
         self.label_field = LabelField(dtype=torch.float)
                 
-    def __call__(self, corpus_category):
+    def __call__(self, corpus_category, token_stoi_dict, chr_stoi_dict):
         # corpus : [(corpus, category), ]
         clean_data = [(self.token_field.preprocessing(corpus), category) for corpus, category in corpus_category]
         corpus = [corpus for corpus, _ in clean_data if corpus]
@@ -156,8 +156,8 @@ class PetitionDataset_finetune:
                        for sent in sent_tokenize(text) 
                        if sent]
         
-        self.token_field.build_vocab(sent_corpus)
-        self.chr_field.build_vocab(sent_corpus)
+        self.token_field.build_vocab_from_dict(token_stoi_dict)
+        self.chr_field.build_vocab_from_dict(chr_stoi_dict)
         self.label_field.build_vocab(category)
         return ELMoDataset_finetune(corpus, category, self.token_field, self.chr_field, self.label_field,
                          token_max_len = self.token_field.max_len, chr_max_len = self.chr_field.max_len)
@@ -177,7 +177,7 @@ def pad_collate_finetune(batch):
     return named_tuple(src_chr_pad, trg)   
     
 if __name__ == '__main__':
-    with open('../data/petitions_dev.p', 'rb') as f:
+    with open('../data/petitions.p', 'rb') as f:
         corpus = pickle.load(f)
     config = read_yaml('../config.yaml')
     pet_ds = PetitionDataset(config)

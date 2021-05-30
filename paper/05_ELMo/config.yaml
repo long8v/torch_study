@@ -25,5 +25,5 @@ MODEL:
 
 TRAIN:
     LR: 0.005
-    N_EPOCHS: 100
+    N_EPOCHS: 1
     DEVICE: cuda

@@ -143,6 +143,7 @@ class ELMo(pl.LightningModule):
         self.PREDICT_DIM = predict_dim
         self.lr = self.config['TRAIN']['LR']
         
+        
     def forward(self, input, finetune=False):
         output = self.cnn(input)
         output = self.highway(output)

@@ -40,14 +40,15 @@ class ELMoTrainer(pl.LightningModule):
                              gpus=1, auto_lr_find = True)
         
 
-        # Auto log all MLflow entities
-        mlflow.pytorch.autolog()
+#         Auto log all MLflow entities
+#         mlflow.pytorch.autolog()
         
         # Train the model
         mlflow.end_run() # 이전에 돌아가고 있던거 끄기
         with mlflow.start_run() as run:
             mlflow.log_params(config)
             trainer.fit(self.elmo, self.petition_dl)
+        self.save(f'model/elmo_{get_now()}')
 
 
     def initialize_weights(self, m):
@@ -56,18 +57,32 @@ class ELMoTrainer(pl.LightningModule):
                 print(m)  # weight가 None인 것들이 있음 -> crossentropy loss
             elif m.weight.dim() > 1:
                 nn.init.xavier_uniform_(m.weight.data)
+    
+    def save(self, path):
+        mkdir(path)
+        torch.save(self.elmo.state_dict(), f'{path}/model.pt')
+        model_config = \
+        {
+            'DATA':
+            {
+                'CHR_VOCAB_SIZE': len(self.petition_ds.chr_field.vocab),
+                'CHR_PAD_IDX': self.petition_ds.chr_field.vocab.stoi_dict['<PAD>'],
+                'TRG_PAD_IDX': self.petition_ds.token_field.vocab.stoi_dict['<PAD>'],
+                'PREDICT_DIM': len(self.petition_ds.token_field.vocab),
+                'MAX_CHR_LEN': self.petition_ds.chr_field.max_len
+            }
+        }
+        self.config.update(model_config)
+        save_yaml(self.config, f'{path}/model_config.yaml')
+        save_yaml(dict(self.petition_ds.token_field.vocab.stoi_dict), f'{path}/token_dict.yaml')
+        save_yaml(dict(self.petition_ds.chr_field.vocab.stoi_dict), f'{path}/chr_dict.yaml')
+        print(read_yaml(f'{path}/chr_dict.yaml'))
         
-    def evaluate(self):
-        pass
-    
-    def predict(self):
-        pass
-    
 
     
     
 if __name__ == '__main__':
-    with open('../data/petitions.p', 'rb') as f:
+    with open('../data/petitions_dev.p', 'rb') as f:
         corpus = pickle.load(f)
     config_file = '/home/long8v/torch_study/paper/05_ELMo/config.yaml'
     config = read_yaml(config_file)

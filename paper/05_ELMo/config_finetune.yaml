@@ -1,7 +1,14 @@
 ELMO:
-    PATH: /home/long8v/torch_study/paper/05_ELMo/source/lightning_logs/version_55/checkpoints/epoch=34-step=85224.ckpt
+    PATH: '/home/long8v/torch_study/paper/05_ELMo/source/model/elmo_30051604'
+
     
 DATA:
+    MINIMUM_SPACE_COUNT: 2
+    TOKEN_MAX_LEN: 40
+    CHR_MAX_LEN: 4
+    BATCH_SIZE: 256
+    TOKEN_MIN_FREQ: 5
+    CHR_MIN_FREQ: 1
     BATCH_SIZE: 64
 MODEL:
     GRU:
@@ -11,5 +18,5 @@ MODEL:
 
 TRAIN:
     LR: 0.00005
-    N_EPOCHS: 25
+    N_EPOCHS: 10
     DEVICE: cuda
