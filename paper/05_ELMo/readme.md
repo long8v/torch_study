@@ -7,6 +7,11 @@ pytorch-lightning == 1.2.8
 ```
 
 
-## mlflow
-![image](https://user-images.githubusercontent.com/46675408/119345242-96429780-bcd3-11eb-808d-3546b3100896.png)
-![image](https://user-images.githubusercontent.com/46675408/119345303-a8243a80-bcd3-11eb-932d-d71339e15c86.png)
+## result
+### pretraining
+![image](https://user-images.githubusercontent.com/46675408/120097868-c5db1f00-c16d-11eb-91fa-41763c01a640.png)
+
+### finetuning
+![image](https://user-images.githubusercontent.com/46675408/120098983-f1f99e80-c173-11eb-8298-349465c879ee.png)
+![image](https://user-images.githubusercontent.com/46675408/120099002-15244e00-c174-11eb-88b8-99a045d85161.png)
+![image](https://user-images.githubusercontent.com/46675408/120099010-1f464c80-c174-11eb-8d76-1efc719191ba.png)
