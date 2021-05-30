@@ -11,7 +11,7 @@ DATA:
     CHR_MIN_FREQ: 1
     BATCH_SIZE: 64
 MODEL:
-    ELMO: False
+    ELMO: True
     GRU:
         HID_DIM: 1024
         N_LAYERS: 2

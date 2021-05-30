@@ -87,10 +87,11 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         self.elmo = elmo
         self.embedding_dim = embedding_dim
         self.embedding = nn.Embedding(input_dim, embedding_dim)
-        self.gru = nn.GRU(embedding_dim * (max_chr_len + 2), hid_dim, n_layers, batch_first=True)
+        self.gru = nn.GRU(embedding_dim * 2, hid_dim, n_layers, batch_first=True)
         self.fc = nn.Linear(hid_dim, output_dim)
         self.n_layers = n_layers
         self.criterion = nn.CrossEntropyLoss()
+        self.output_dim = output_dim
         
     def forward(self, x):
         
@@ -98,19 +99,19 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         # x : batch_size, max_token_len, max_chr_len
         bs = x.shape[0]
         with torch.no_grad():
-            forward_hidden, backward_hidden = self.elmo.forward(x, finetune=True)
-        # forward_hidden : seq_len, batch, hidden_size
-        elmo_vector = torch.stack([forward_hidden, backward_hidden])   
-        
+            all_layers_seq_len = self.elmo.forward(x, finetune=True) # seq_len, num_layers(=2), batch_size, hidden_dim
+            s = torch.softmax(all_layers_seq_len, dim=1)
+            elmo_vector = torch.sum(all_layers_seq_len[:, :, :, :] * s, dim=1) 
+            # elmo_vector : seq_len, batch, hidden_dim
+            
         ### another rnn ### 
-        # elmo_vector : 2, seq_len, batch, hidden_dim
-        output = self.embedding(x)
-        # output : batch_size, seq_len, max_chr_len, embedding_dim
-        elmo_vector = elmo_vector.permute(2, 1, 0, 3)
+        # 여기서 깨달음..finetune task는 토큰별로 해야하는구나...근데 너무 귀찮아서 그냥 캐릭터 단위로 임베딩하고 sum을 하는걸로 하자..
+        embedded = self.embedding(x)
+        # embedded : batch_size, seq_len, max_chr_len, embedding_dim
+        output = embedded.sum(dim=2)
+        elmo_vector = elmo_vector.permute(1, 0, 2) 
         output = torch.cat([elmo_vector, output], dim = 2)
-        # output : batch_size ,seq_len, max_chr_len + 2, embedding_dim
         seq_len =  output.shape[1]
-        # output : batch_size, seq_len, (max_chr_len + 2) * embeding_dim
         output = output.reshape(bs, seq_len, -1)
         _, output = self.gru(output) # (num_layers * num_directions, batch, hidden_size)
         output = output.transpose(1, 0)

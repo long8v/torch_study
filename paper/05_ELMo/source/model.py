@@ -103,14 +103,25 @@ class LSTM_LM(pl.LightningModule):
     
     def forward(self, input, finetune=False):
         input = input.permute(1, 0, 2)
+        if finetune:
+            hidden_all_layer = []
+            seq_len = input.shape[0] # seq_len
+            for seq in range(seq_len):
+                inp = input[seq, :, :]
+                inp = inp.unsqueeze(0)
+                output, (hidden, cell) = self.lstm(inp)
+                num_layers_num_directions, bs, hidden_size = hidden.size() 
+                hidden_all_layer.append(hidden)
+            return torch.cat(hidden_all_layer).reshape(seq_len, num_layers_num_directions, bs, hidden_size)
+        
         output, (hidden, cell) = self.lstm(input)  
         seq_len, bs, _ = output.size()
         # output : (seq_len, batch, num_directions * hidden size) -> (seq_len, batch, hidden_size, num_directions)
         output = output.reshape(seq_len, bs, 2, -1) # 2 because bidirectional, stacked RNN output is last layer output
         forward_hidden, backward_hidden = output[:,:,0,:], output[:,:,1,:]
         # forward_hidden : (seq_len, batch, hidden_size)
-        if finetune:
-            return forward_hidden, backward_hidden
+#         if finetune:
+#             return forward_hidden, backward_hidden
         # forward_prediction : (seq_len, batch, output_dim) -> (batch, seq_len, output_dim)
         forward_prediction = self.fc_out(forward_hidden).permute(1, 0, 2)
         backward_prediction = self.fc_out(backward_hidden).permute(1, 0, 2)
@@ -147,6 +158,8 @@ class ELMo(pl.LightningModule):
     def forward(self, input, finetune=False):
         output = self.cnn(input)
         output = self.highway(output)
+        if finetune:
+            return self.rnn(output, finetune)
         forward_output, backward_output = self.rnn(output, finetune)
         return forward_output, backward_output
 

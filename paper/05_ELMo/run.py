@@ -23,14 +23,12 @@ if __name__ == '__main__':
     with open('/home/long8v/torch_study/data/ynat/train_tokenized.ynat', 'r') as f:
         corpus = f.readlines()
     corpus = [(txt.split('\t')[1], txt.split('\t')[0]) for txt in corpus]
-    corpus = corpus[:1024]
     config_file = '/home/long8v/torch_study/paper/05_ELMo/config_finetune.yaml'
     finetune_config = read_yaml(config_file)
     print(finetune_config)
     with open('/home/long8v/torch_study/data/ynat/val_tokenized.ynat', 'r') as f:
         corpus_valid = f.readlines()
     corpus_valid = [(txt.split('\t')[1], txt.split('\t')[0]) for txt in corpus_valid]
-    corpus_valid = corpus_valid[:1024]
     config_file = '/home/long8v/torch_study/paper/05_ELMo/config_finetune.yaml'
     finetune_config = read_yaml(config_file)
     print('trainer loading..')

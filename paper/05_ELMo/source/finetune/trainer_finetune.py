@@ -93,7 +93,7 @@ class gruTrainer(pl.LightningModule):
     def initialize_weights(self, m):
         if hasattr(m, 'weight'):
             if m.weight is None:
-                print('?? why none') # weight가 None인 것들이 있음
+                print(m)
             elif m.weight.dim() > 1:
                 nn.init.xavier_uniform_(m.weight.data)  
 

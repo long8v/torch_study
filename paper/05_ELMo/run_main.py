@@ -22,7 +22,7 @@ from trainer_finetune import *
 
     
 if __name__ == '__main__':
-    with open('./data/petitions_dev.p', 'rb') as f:
+    with open('./data/petitions.p', 'rb') as f:
         corpus = pickle.load(f)
     config_file = '/home/long8v/torch_study/paper/05_ELMo/config.yaml'
     config = read_yaml(config_file)
