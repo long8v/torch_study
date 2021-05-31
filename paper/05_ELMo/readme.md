@@ -14,14 +14,7 @@ pytorch-lightning == 1.2.8
 |train loss|train accuracy|
 |---|---|
 |0.343|0.55|
-```
-model 
- ㄴelmo_mmddss  
-  ㄴmodel.pt
-  ㄴmodel_config.yaml
-  ㄴtoken_dict.yaml
-  ㄴchar_dict.yaml
-```
+
 
 ### finetuning
 - data : KLUE
