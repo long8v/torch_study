@@ -30,9 +30,9 @@ class simpleGRU_model(pl.LightningModule):
         return output
     
     def training_step(self, batch, batch_nb):
-        src_chr, trg = batch
-        src_chr, trg = src_chr.to(self.device), trg.to(self.device)
-        output = self(src_chr)
+        src_token, _, trg = batch
+        src_token, _, trg = src_token.to(self.device), trg.to(self.device)
+        output = self(src_token)
         loss = self.criterion(output, trg)
         accuracy = self.multi_acc(output, trg)
         fscore = self.fscore(output, trg)
@@ -77,7 +77,9 @@ class simpleGRU_model(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = optim.Adam(self.parameters(), lr = self.config['TRAIN']['LR'])
         scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
-        return [optimizer], [scheduler]
+        if self.config['TRAIN']['SCHEDULER']:
+            return [optimizer], [scheduler]
+        return optimizer
     
 
 class simpleGRU_model_w_elmo(pl.LightningModule):
@@ -86,43 +88,39 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         self.config = config
         self.elmo = elmo
         self.embedding_dim = embedding_dim
-        self.embedding = nn.Embedding(input_dim, embedding_dim)
+        self.embedding = nn.Embedding(input_dim, embedding_dim) # input_dim 
         self.gru = nn.GRU(embedding_dim * 2, hid_dim, n_layers, batch_first=True)
         self.fc = nn.Linear(hid_dim, output_dim)
         self.n_layers = n_layers
         self.criterion = nn.CrossEntropyLoss()
         self.output_dim = output_dim
         
-    def forward(self, x):
+    def forward(self, token, chrs):
         
         ### get_ elmo vector ###
-        # x : batch_size, max_token_len, max_chr_len
-        bs = x.shape[0]
+        # chrs : batch_size, max_token_len, max_chr_len
+        bs = chrs.shape[0]
         with torch.no_grad():
-            all_layers_seq_len = self.elmo.forward(x, finetune=True) # seq_len, num_layers(=2), batch_size, hidden_dim
+            all_layers_seq_len = self.elmo.forward(chrs, finetune=True) # seq_len, num_layers(=2), batch_size, hidden_dim
             s = torch.softmax(all_layers_seq_len, dim=1)
-            elmo_vector = torch.sum(all_layers_seq_len[:, :, :, :] * s, dim=1) 
+            elmo_vector = torch.sum(all_layers_seq_len * s, dim=1) 
             # elmo_vector : seq_len, batch, hidden_dim
-            
         ### another rnn ### 
-        # 여기서 깨달음..finetune task는 토큰별로 해야하는구나...근데 너무 귀찮아서 그냥 캐릭터 단위로 임베딩하고 sum을 하는걸로 하자..
-        embedded = self.embedding(x)
-        # embedded : batch_size, seq_len, max_chr_len, embedding_dim
-        output = embedded.sum(dim=2)
-        elmo_vector = elmo_vector.permute(1, 0, 2) 
-        output = torch.cat([elmo_vector, output], dim = 2)
+        embedded = self.embedding(token)
+        # embedded : batch_size, seq_len, embedding_dim
+        elmo_vector = elmo_vector.permute(1, 0, 2)  # our gru model is batch_first model
+        output = torch.cat([elmo_vector, embedded], dim = 2)
         seq_len =  output.shape[1]
         output = output.reshape(bs, seq_len, -1)
         _, output = self.gru(output) # (num_layers * num_directions, batch, hidden_size)
-        output = output.transpose(1, 0)
-        # (batch, num_layers * num_directions, hidden_size)
+        output = output.transpose(1, 0) # (batch, num_layers * num_direections, hidden_size)
         output = self.fc(output[:, -1, :]) # batch_first
         return output
     
     def training_step(self, batch, batch_nb):
-        src_chr, trg = batch
-        src_chr, trg = src_chr.to(self.device), trg.to(self.device)
-        output = self(src_chr)
+        src_token, src_chr, trg = batch
+        src_toekn, src_chr, trg = src_token.to(self.device), src_chr.to(self.device), trg.to(self.device)
+        output = self(src_token, src_chr)
         loss = self.criterion(output, trg)
         accuracy = self.multi_acc(output, trg)
         fscore = self.fscore(output, trg)
@@ -132,9 +130,9 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         return loss
     
     def validation_step(self, batch, batch_idx):
-        src_chr, trg = batch
-        src_chr, trg = src_chr.to(self.device), trg.to(self.device)
-        output = self(src_chr)
+        src_token, src_chr, trg = batch
+        src_token, src_chr, trg = src_token.to(self.device), src_chr.to(self.device), trg.to(self.device)
+        output = self(src_token, src_chr)
         loss = self.criterion(output, trg)
         accuracy = self.multi_acc(output, trg)
         fscore = self.fscore(output, trg)
@@ -167,5 +165,6 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = optim.Adam(self.parameters(), lr = self.config['TRAIN']['LR'])
         scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
-        return [optimizer], [scheduler]
-    
+        if self.config['TRAIN']['SCHEDULER']:
+            return [optimizer], [scheduler]
+        return optimizer

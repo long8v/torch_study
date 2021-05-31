@@ -33,8 +33,6 @@ class CNN(pl.LightningModule):
         
         self.fc = nn.Linear(len(filter_sizes) * n_filters, output_dim)
         
-#         self.ln = nn.LayerNorm(sum([j for _, j in self.kernal_out_dims]))
-        
         self.dropout = nn.Dropout(dropout)
         
     def forward(self, text):
@@ -120,16 +118,13 @@ class LSTM_LM(pl.LightningModule):
         output = output.reshape(seq_len, bs, 2, -1) # 2 because bidirectional, stacked RNN output is last layer output
         forward_hidden, backward_hidden = output[:,:,0,:], output[:,:,1,:]
         # forward_hidden : (seq_len, batch, hidden_size)
-#         if finetune:
-#             return forward_hidden, backward_hidden
         # forward_prediction : (seq_len, batch, output_dim) -> (batch, seq_len, output_dim)
         forward_prediction = self.fc_out(forward_hidden).permute(1, 0, 2)
         backward_prediction = self.fc_out(backward_hidden).permute(1, 0, 2)
         return forward_prediction, backward_prediction
     
-
+# https://www.mlflow.org/docs/latest/python_api/mlflow.pytorch.html 
 class ELMo(pl.LightningModule):
-    # https://www.mlflow.org/docs/latest/python_api/mlflow.pytorch.html 
     def __init__(self, config, chr_vocab_size, chr_pad_idx, trg_pad_idx, predict_dim):
         super(ELMo, self).__init__()
         self.config = config
@@ -203,5 +198,7 @@ class ELMo(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = optim.Adam(self.parameters(), lr = self.lr)
         scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
-#         return optimizer
-        return [optimizer], [scheduler]
+        if self.config['TRAIN']['SCHEDULER']:
+            return [optimizer], [scheduler]
+        return optimizer
+        

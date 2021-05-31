@@ -54,7 +54,7 @@ class gruTrainer(pl.LightningModule):
             self.petition_ds_valid = self.petition_ds(dataset_valid, token_stoi_dict, chr_stoi_dict)
             self.petition_dl_valid = DataLoader(self.petition_ds_valid, batch_size=self.finetune_config['DATA']['BATCH_SIZE'], collate_fn=pad_collate_finetune)
 
-        INPUT_DIM = elmo_config['DATA']['CHR_VOCAB_SIZE']
+        INPUT_DIM = elmo_config['DATA']['PREDICT_DIM'] # now we have one input as token
         OUTPUT_DIM = len(self.petition_ds.label_field.vocab.stoi_dict)
         
         model_config = self.finetune_config['MODEL']['GRU']

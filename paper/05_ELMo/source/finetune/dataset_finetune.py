@@ -21,7 +21,7 @@ class ELMoDataset_finetune(Dataset):
         self.token_field = token_field
         self.chr_field = chr_field
         self.label_field = label_field
-        self.named_tuple = namedtuple('data', ['src_chr', 'trg'])
+        self.named_tuple = namedtuple('data', ['src_token', 'src_chr', 'trg'])
         self.token_max_len = token_max_len
         self.chr_max_len = chr_max_len
         
@@ -29,7 +29,7 @@ class ELMoDataset_finetune(Dataset):
         return len(self.src)
     
     def __getitem__(self, idx):
-        return self.named_tuple(self.idx_process(idx, is_char=True), self.label_idx_process(idx)) 
+        return self.named_tuple(self.idx_process(idx), self.idx_process(idx, is_char=True), self.label_idx_process(idx))
     
     def label_idx_process(self, idx):
         data = self.trg[idx]
@@ -87,11 +87,12 @@ class PetitionDataset_finetune:
 
 
 def pad_collate_finetune(batch):
-    (src_chr, trg) = zip(*batch)
-    named_tuple = namedtuple('data', ['src_chr', 'trg'])
+    (src_token, src_chr, trg) = zip(*batch)
+    named_tuple = namedtuple('data', ['src_token', 'src_chr', 'trg'])
+    src_token_pad = pad_sequence(src_token, batch_first=True, padding_value=0)
     src_chr_pad = pad_sequence(src_chr, batch_first=True, padding_value=0)
     trg = torch.tensor(trg)
-    return named_tuple(src_chr_pad, trg)   
+    return named_tuple(src_token_pad, src_chr_pad, trg)   
     
 if __name__ == '__main__':
     with open('/home/long8v/torch_study/data/ynat/train_tokenized.ynat', 'r') as f:

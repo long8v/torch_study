@@ -45,3 +45,6 @@ super().__init__()를 추가하면 된다
 
 ## 데이터셋을 만들었는데 데이터 로더에 넣었는데 인덱스 에러가 나요
 두 페어의 길이가 다른 것임. 데이터셋 잘못 만들었을 것 
+
+## pytorch/aten/src/ATen/native/cuda/Indexing.cu:658: indexSelectLargeIndex: block: [67,0,0], thread: [0,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
+임베딩 input차원이 실제 들어간 것보다 작음. input차원 맞게 했는지 확인하기.
