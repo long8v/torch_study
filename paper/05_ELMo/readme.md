@@ -17,6 +17,10 @@ pytorch-lightning == 1.2.8
 
 #### accuracy
 ![image](https://user-images.githubusercontent.com/46675408/120183336-82a2ae00-c24a-11eb-8937-3ce061567e93.png)
+|train accuracy|valid accuracy|
+|0.95|0.79|
 
 #### fscore
 ![image](https://user-images.githubusercontent.com/46675408/120183572-d614fc00-c24a-11eb-9aa5-5a5069c7bf29.png)
+|train f-score|valid f-score|
+|0.9319|0.7639|
