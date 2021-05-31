@@ -31,3 +31,10 @@ pytorch-lightning == 1.2.8
 |train f-score|valid f-score|
 |---|---|
 |0.9319|0.7639|
+
+#### ablation study
+. gamma vector added : http://127.0.0.1:5000/#/metric/train_accuracy?runs=[%22cb98a733d76b4d71ae4149ba07df32ef%22,%228e87923752b14f9e8785880d16586fd1%22]&experiment=0&plot_metric_keys=[%22train_accuracy%22,%22valid_accuracy%22]&plot_layout={%22autosize%22:true,%22xaxis%22:{},%22yaxis%22:{}}&x_axis=relative&y_axis_scale=linear&line_smoothness=1&show_point=false&deselected_curves=[]&last_linear_y_axis_range=[]
+
+. chr vs token while finetuning :
+![image](https://user-images.githubusercontent.com/46675408/120248286-7867ca80-c2b1-11eb-9688-7bdecb50654a.png)
+캐릭터 단위가 오히려 높음 unk 토큰이 많아
