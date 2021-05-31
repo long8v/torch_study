@@ -31,7 +31,7 @@ class simpleGRU_model(pl.LightningModule):
     
     def training_step(self, batch, batch_nb):
         src_token, _, trg = batch
-        src_token, _, trg = src_token.to(self.device), trg.to(self.device)
+        src_token, trg = src_token.to(self.device), trg.to(self.device)
         output = self(src_token)
         loss = self.criterion(output, trg)
         accuracy = self.multi_acc(output, trg)
@@ -42,9 +42,9 @@ class simpleGRU_model(pl.LightningModule):
         return loss
     
     def validation_step(self, batch, batch_idx):
-        src_chr, trg = batch
-        src_chr, trg = src_chr.to(self.device), trg.to(self.device)
-        output = self(src_chr)
+        src_token, _, trg = batch
+        src_token, trg = src_token.to(self.device), trg.to(self.device)
+        output = self(src_token)
         loss = self.criterion(output, trg)
         accuracy = self.multi_acc(output, trg)
         fscore = self.fscore(output, trg)
@@ -94,6 +94,7 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         self.n_layers = n_layers
         self.criterion = nn.CrossEntropyLoss()
         self.output_dim = output_dim
+        self.task_gamma = nn.Parameter(torch.ones(1, requires_grad=True))
         
     def forward(self, token, chrs):
         
@@ -105,6 +106,7 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
             s = torch.softmax(all_layers_seq_len, dim=1)
             elmo_vector = torch.sum(all_layers_seq_len * s, dim=1) 
             # elmo_vector : seq_len, batch, hidden_dim
+        elmo_vector = self.task_gamma * elmo_vector # gamma vector should be trained 
         ### another rnn ### 
         embedded = self.embedding(token)
         # embedded : batch_size, seq_len, embedding_dim
