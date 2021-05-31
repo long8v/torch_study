@@ -10,8 +10,21 @@ pytorch-lightning == 1.2.8
 ## result
 ### pretraining
 ![image](https://user-images.githubusercontent.com/46675408/120097868-c5db1f00-c16d-11eb-91fa-41763c01a640.png)
+|train loss|train accuracy|
+|0.343|0.55|
 
 ### finetuning
-![image](https://user-images.githubusercontent.com/46675408/120098983-f1f99e80-c173-11eb-8298-349465c879ee.png)
-![image](https://user-images.githubusercontent.com/46675408/120099002-15244e00-c174-11eb-88b8-99a045d85161.png)
-![image](https://user-images.githubusercontent.com/46675408/120099010-1f464c80-c174-11eb-8d76-1efc719191ba.png)
+- data : KLUE
+- task : topic classification
+
+#### accuracy
+![image](https://user-images.githubusercontent.com/46675408/120183336-82a2ae00-c24a-11eb-8937-3ce061567e93.png)
+|train accuracy|valid accuracy|
+|---|---|
+|0.95|0.79|
+
+#### fscore
+![image](https://user-images.githubusercontent.com/46675408/120183572-d614fc00-c24a-11eb-9aa5-5a5069c7bf29.png)
+|train f-score|valid f-score|
+|---|---|
+|0.9319|0.7639|
