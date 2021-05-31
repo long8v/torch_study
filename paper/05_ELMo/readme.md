@@ -39,4 +39,4 @@ pytorch-lightning == 1.2.8
 
 ![image](https://user-images.githubusercontent.com/46675408/120248286-7867ca80-c2b1-11eb-9688-7bdecb50654a.png)
 
-캐릭터 단위가 오히려 높음 unk 토큰이 많아
+캐릭터 단위가 오히려 높음 unk 토큰이 많아서 그런가?  
