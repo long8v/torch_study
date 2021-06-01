@@ -34,6 +34,7 @@ pytorch-lightning == 1.2.8
 
 #### ablation study
 . gamma vector added :
+
 ![image](https://user-images.githubusercontent.com/46675408/120253013-35155800-c2c1-11eb-943f-23711215fa93.png)
 |gamma vector x valid accuracy|gamma vector o valid accuracy|
 |---|---|
