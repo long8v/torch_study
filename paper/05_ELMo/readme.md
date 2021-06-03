@@ -12,7 +12,9 @@ pytorch-lightning == 1.2.8
 - data : [petition data](https://github.com/lovit/petitions_archive)
 - task : Language modeling
 
-`run_main.py`
+```
+run_main.py
+```
 ![image](https://user-images.githubusercontent.com/46675408/120097868-c5db1f00-c16d-11eb-91fa-41763c01a640.png)
 
 |train loss|train accuracy|
@@ -24,7 +26,9 @@ pytorch-lightning == 1.2.8
 - data : KLUE
 - task : topic classification
 
-`run.py`
+```
+run.py
+```
 
 #### accuracy
 ![image](https://user-images.githubusercontent.com/46675408/120183336-82a2ae00-c24a-11eb-8937-3ce061567e93.png)
