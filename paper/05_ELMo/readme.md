@@ -13,7 +13,7 @@ pytorch-lightning == 1.2.8
 - task : Language modeling
 
 ```
-run_main.py
+python run_main.py
 ```
 ![image](https://user-images.githubusercontent.com/46675408/120097868-c5db1f00-c16d-11eb-91fa-41763c01a640.png)
 
@@ -27,7 +27,7 @@ run_main.py
 - task : topic classification
 
 ```
-run.py
+python run.py
 ```
 
 #### accuracy
