@@ -23,7 +23,7 @@ python run_main.py
 
 
 ### finetuning
-- data : KLUE
+- data : [KLUE](https://klue-benchmark.com/tasks/66/leaderboard/task)
 - task : topic classification
 
 ```
