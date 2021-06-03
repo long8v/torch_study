@@ -126,6 +126,7 @@ class simpleGRU_model_w_elmo(pl.LightningModule):
         loss = self.criterion(output, trg)
         accuracy = self.multi_acc(output, trg)
         fscore = self.fscore(output, trg)
+        self.log('gamma_vector', self.task_gamma, on_step=True)
         self.log('train_loss', loss, on_step=True)
         self.log('train_accuracy', accuracy, on_step=True)
         self.log('train_fscore', fscore, on_step=True)
