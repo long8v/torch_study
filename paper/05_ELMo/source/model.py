@@ -101,16 +101,16 @@ class LSTM_LM(pl.LightningModule):
     
     def forward(self, input, finetune=False):
         input = input.permute(1, 0, 2)
-        if finetune:
-            hidden_all_layer = []
-            seq_len = input.shape[0] # seq_len
+        seq_len, bs, _ = input.size() 
+        elmo_vector = torch.zeros(seq_len, self.n_layers, 2, bs, self.hid_dim) 
+        if finetune: # while finetuning
             for seq in range(seq_len):
                 inp = input[seq, :, :]
                 inp = inp.unsqueeze(0)
                 output, (hidden, cell) = self.lstm(inp)
-                num_layers_num_directions, bs, hidden_size = hidden.size() 
-                hidden_all_layer.append(hidden)
-            return torch.cat(hidden_all_layer).reshape(seq_len, num_layers_num_directions, bs, hidden_size)
+                hidden = hidden.reshape(self.n_layers, 2, bs, self.hid_dim)
+                elmo_vector[seq, :, :, :] = hidden # seq_len, n_layers, n_directions, bs, hid_dim
+            return elmo_vector
         
         output, (hidden, cell) = self.lstm(input)  
         seq_len, bs, _ = output.size()
