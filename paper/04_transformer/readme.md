@@ -3,6 +3,7 @@
 ## 🤔 Paper review
 
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
+![image](https://user-images.githubusercontent.com/46675408/121776733-7c58ee00-cbc9-11eb-8c31-ede9ffc29e88.png)
 
 
 **2) (슬랙으로 이미 토론을 했지만 그래도) 이해가 안 가는 부분, 이해가 안 가는 이유(논문 본문 복붙)**
