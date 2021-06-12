@@ -52,9 +52,6 @@ python run.py
 |---|---|
 |0.74|0.79|
 
-gamma vector
-![image](https://user-images.githubusercontent.com/46675408/120253141-92110e00-c2c1-11eb-91c7-60dbac14dc57.png)
-
 
 ## 🤔 Paper review
 ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/068b3b54-4f13-42be-8725-88081a29b6fe/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/068b3b54-4f13-42be-8725-88081a29b6fe/Untitled.png)
