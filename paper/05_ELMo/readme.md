@@ -63,8 +63,8 @@ python run.py
 
 CNN-BIG-LSTM in Jozefowicz et al. ´(2016). The final model uses L = 2 biLSTM layers with 4096 units and 512 dimension projections and a residual connection from the first to second layer. The context insensitive type representation uses 2048 character n-gram convolutional filters followed by two highway layers (Srivastava et al., 2015) and a linear projection down to a 512 representation.
 
-= 아래 문장이 forward, backward의 토큰 표현과 softmax layer를 공유한다고 하는 것 같은데, softmax layer를 공유한다는거는 마지막 FCN까지를 의미한다는건가?  We tie the parameters for both the token representation (Θx) and Softmax layer (Θs) in the forward and backward direction while maintaining separate parameters for the LSTMs in each direction. 
--> FCN 레이어 공유.
+= 아래 문장이 forward, backward의 토큰 표현과 softmax layer를 공유한다고 하는 것 같은데, softmax layer를 공유한다는거는 마지막 FCN까지를 의미한다는건가? <BR>We tie the parameters for both the token representation (Θx) and Softmax layer (Θs) in the forward and backward direction while maintaining separate parameters for the LSTMs in each direction. <BR>
+-> forward, backward concat해서 FCN + softmax 레이어로 예측.
 
 = ELMo fine tuning시 어디까지 ? LM을 한 모든 파라미터를 freeze하고 ELMotask와 xk에 대한 임베딩을 concat한다음에 RNN만 학습되는 건가? 
 
