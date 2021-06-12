@@ -93,11 +93,11 @@ including ELMo at both the input and output layers for SNLI and SQuAD improves o
 
 **4) 논문 구현 시 주의해야할 것 같은 부분(논문 본문 복붙)**
 
-. residual connection - LSTM
-. L2 regularization
-. CNN모델에서 highway 
-. ELMo task vector 만드는 부분
-. fine-tuning task구하기, 데이터셋 구하기
+. residual connection - LSTM<BR>
+. L2 regularization<BR>
+. CNN모델에서 highway <BR>
+. ELMo task vector 만드는 부분<BR>
+. fine-tuning task구하기, 데이터셋 구하기<BR>
 
 ## 🤫 논문과 다르게 구현한 부분
 
