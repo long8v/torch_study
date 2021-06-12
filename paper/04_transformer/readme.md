@@ -16,16 +16,10 @@ self-attention + FFN이 몇층으로 쌓는건데 한 layer의 output이 어떻�
 
 → FFN 후의 (seq_len, d_model)의 MATRIX을 각 K, V, Q로 LINEAR PROJECTION해서 재사용
 
-~~ㄴ. teacher forcing이 아닌 경우에 input은 어떻게 들어가야 하는가?~~ 
-
-~~논문에서 teacher forcing을 염두하지 않은듯~~
-
-~~At each step the model is auto-regressive [10], consuming the previously generated symbols as additional input when generating the nex~~t.
-
-ㄷ. Encoder에서도 stack layer가 N = 6 이고 decoder 에서도 stack layer가 N = 6인데 우리의 역사적인 토론 주제인 인코더 디코더는 각 stack에서 히든벡터로 연결되는가 아님 인코더의 마지막 stack만 가는가 가 궁금하네요 wikidocs는 후자처럼 그려지네용
+ㄴ. Encoder에서도 stack layer가 N = 6 이고 decoder 에서도 stack layer가 N = 6인데 우리의 역사적인 토론 주제인 인코더 디코더는 각 stack에서 히든벡터로 연결되는가 아님 인코더의 마지막 stack만 가는가 가 궁금하네요 wikidocs는 후자처럼 그려지네용
 
 → 맨 위 stack만 가는게 맞다
-ㄹ.  3.2.3 마이너스 무한대로 뭘 어떻게 바꿨다는건지..? attention 값을 바꾼건가..? [MASK] 이런 토큰으로 바꾸면 왜 안될까?
+ㄷ.  3.2.3 마이너스 무한대로 뭘 어떻게 바꿨다는건지..? attention 값을 바꾼건가..? [MASK] 이런 토큰으로 바꾸면 왜 안될까?
 
 Similarly, self-attention layers in the decoder allow each position in the decoder to attend to all positions in the decoder up to and including that position. We need to prevent leftward information flow in the decoder to preserve the auto-regressive property. We implement this inside of **scaled dot-product attention by masking out (setting to −∞)** all values in the input of the softmax which correspond to illegal connections. See Figure 2.
 
@@ -33,10 +27,11 @@ Similarly, self-attention layers in the decoder allow each position in the decod
 
 →[MASK] token으로 바꾸면 어찌됐든 [MASK]란 토큰이 들어간 채로 학습이 될거여서 아예 어텐션 벨류를 마이너스 무한대로 해서 softmax를 0으로 바꿔서 학습이 안되게 하기
 
-ㅁ. 3.4. share embedding?
+ㄹ. 3.4. share embedding?
 
 In our model, we share the **same weight matrix between the two embedding layers** and the pre-softmax linear transformation, similar to [30]. In the embedding layers, we multiply those weights by √dmodel. ...?
-ㅂ. label smoothing 
+
+ㅁ. label smoothing 
 크로스 엔트로피에서 정답 레이블을 1, 0 으로 두는게 아니고  1 - 엡실론, 0 + 엡실론으로 두는 것
 1) 오버피팅을 방지할 수 있음
 모델이 트레이닝 데이터의 GT 레이블에 full probability를 할당하면, 일반화하기 어려울 수 있음
@@ -50,14 +45,14 @@ In our model, we share the **same weight matrix between the two embedding layers
 
 **4) 논문 구현 시 주의해야할 것 같은 부분(논문 본문 복붙)**
 
-. scaled dot attention
-. self attention
-. stack self attention?
-. Residual block
-. multi-head self attention
-. mask
-. positional encoding
-. optimizer
+. scaled dot attention<br>
+. self attention<br>
+. stack self attention?<br>
+. Residual block<br>
+. multi-head self attention<br>
+. masking<br>
+. positional encoding<br>
+. optimizer<br>
 . warm-up step 
 
 ## 🤫 논문과 다르게 구현한 부분
