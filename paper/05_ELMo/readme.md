@@ -66,13 +66,14 @@ gamma vector
 ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/068b3b54-4f13-42be-8725-88081a29b6fe/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/068b3b54-4f13-42be-8725-88081a29b6fe/Untitled.png)
 
 **2) (슬랙으로 이미 토론을 했지만 그래도) 이해가 안 가는 부분, 이해가 안 가는 이유(논문 본문 복붙)
-=** CNN을 어떻게 했다는 건지? 저 Srivastava 논문이랑 똑같이 하면 되는건가? 2048 character n-gram이라는게 무슨 뜻인지
 
-cnn filter가 2048개다 
+=** CNN을 어떻게 했다는 건지? 저 Srivastava 논문이랑 똑같이 하면 되는건가? 2048 character n-gram이라는게 무슨 뜻인지
+-> cnn filter가 2048개다 
 
 CNN-BIG-LSTM in Jozefowicz et al. ´(2016). The final model uses L = 2 biLSTM layers with 4096 units and 512 dimension projections and a residual connection from the first to second layer. The context insensitive type representation uses 2048 character n-gram convolutional filters followed by two highway layers (Srivastava et al., 2015) and a linear projection down to a 512 representation.
 
 = 아래 문장이 forward, backward의 토큰 표현과 softmax layer를 공유한다고 하는 것 같은데, softmax layer를 공유한다는거는 마지막 FCN까지를 의미한다는건가?  We tie the parameters for both the token representation (Θx) and Softmax layer (Θs) in the forward and backward direction while maintaining separate parameters for the LSTMs in each direction. 
+-> FCN 레이어 공유.
 
 = ELMo fine tuning시 어디까지 ? LM을 한 모든 파라미터를 freeze하고 ELMotask와 xk에 대한 임베딩을 concat한다음에 RNN만 학습되는 건가? 
 
@@ -89,6 +90,7 @@ including ELMo at both the input and output layers for SNLI and SQuAD improves o
 . 표 4에서 glove는 토큰 하나당 표현 하나여서 여러 품사의 토큰을 담지만, ELMo의 표현은 그런 품사 등의 정보까지 표현할 수 있는 것
 . 여러 가지 당시 논문들을 짬뽕한 점
 . 레이어마다 히든 벡터를 사용해서 단어표현을 한 점. 제목이 처음엔 쌩뚱맞았는데 읽다보니 그렇구나..싶음 
+
 **4) 논문 구현 시 주의해야할 것 같은 부분(논문 본문 복붙)**
 
 . residual connection - LSTM
