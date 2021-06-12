@@ -54,7 +54,7 @@ python run.py
 
 
 ## 🤔 Paper review
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/068b3b54-4f13-42be-8725-88081a29b6fe/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/068b3b54-4f13-42be-8725-88081a29b6fe/Untitled.png)
+![image](https://user-images.githubusercontent.com/46675408/121776935-87f8e480-cbca-11eb-9a25-04e002dc721b.png)
 
 **2) (슬랙으로 이미 토론을 했지만 그래도) 이해가 안 가는 부분, 이해가 안 가는 이유(논문 본문 복붙)
 
