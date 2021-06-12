@@ -56,9 +56,9 @@ python run.py
 ## 🤔 Paper review
 ![image](https://user-images.githubusercontent.com/46675408/121776935-87f8e480-cbca-11eb-9a25-04e002dc721b.png)
 
-**2) (슬랙으로 이미 토론을 했지만 그래도) 이해가 안 가는 부분, 이해가 안 가는 이유(논문 본문 복붙)
+**2) (슬랙으로 이미 토론을 했지만 그래도) 이해가 안 가는 부분, 이해가 안 가는 이유(논문 본문 복붙)**
 
-=** CNN을 어떻게 했다는 건지? 저 Srivastava 논문이랑 똑같이 하면 되는건가? 2048 character n-gram이라는게 무슨 뜻인지
+CNN을 어떻게 했다는 건지? 저 Srivastava 논문이랑 똑같이 하면 되는건가? 2048 character n-gram이라는게 무슨 뜻인지
 -> cnn filter가 2048개다 
 
 CNN-BIG-LSTM in Jozefowicz et al. ´(2016). The final model uses L = 2 biLSTM layers with 4096 units and 512 dimension projections and a residual connection from the first to second layer. The context insensitive type representation uses 2048 character n-gram convolutional filters followed by two highway layers (Srivastava et al., 2015) and a linear projection down to a 512 representation.
