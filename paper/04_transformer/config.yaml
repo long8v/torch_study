@@ -1,0 +1,18 @@
+MODEL:
+    ENCODER:
+        HID_DIM: 256
+        N_LAYERS: 3
+        N_HEADS: 8
+        PF_DIM: 512
+        DROPOUT: 0.1
+    DECODER:
+        HID_DIM: 256
+        N_LAYERS: 3
+        N_HEADS: 8
+        PF_DIM: 512
+        DROPOUT: 0.1
+TRAIN:
+    BATCH_SIZE: 1024
+    LR: 0.0005
+    DEVICE: cuda
+    N_EPOCHS: 10

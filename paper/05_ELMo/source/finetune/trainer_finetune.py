@@ -22,10 +22,7 @@ class gruTrainer(pl.LightningModule):
     def __init__(self, dataset, dataset_valid, finetune_config):
         super(gruTrainer, self).__init__()
         self.finetune_config = finetune_config
-        
-        
-        ### 하드 코딩 : 모델 어딘가에 저장되도록 해야함
-                
+                       
         elmo_path = self.finetune_config['ELMO']['PATH']
         pt_file = torch.load(f'{elmo_path}/model.pt')
     
