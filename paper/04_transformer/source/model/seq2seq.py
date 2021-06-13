@@ -124,7 +124,9 @@ class Seq2Seq(pl.LightningModule):
     
 
     def get_bleu_score(self, output, trg, trg_field):
-        
+        '''
+        bleu 코드 다시 짜야함!        
+        '''
         def get_speical_token(field):
             def get_stoi(idx):
                 return field.vocab.stoi[idx]
@@ -138,16 +140,18 @@ class Seq2Seq(pl.LightningModule):
             return [get_itos_str(batch, field) for batch in tokens_batch]
         
         with torch.no_grad():
-            output_token = output.argmax(-1)
-        output_token = output_token.permute(1, 0)
-        trg = trg.permute(1, 0)
+            #output shape : 
+            output_token = output.argmax(-1) 
+            print('output shape', output.shape)
+#         output_token = output_token.permute(1, 0)
+#         trg = trg.permute(1, 0)
         system = get_itos_batch(output_token, trg_field)
         refs = get_itos_batch(trg, trg_field)
-        try:
-            bleu = corpus_bleu(system, [refs], force=True).score
-        except EOFError:
-            print('eof error!') # 왜 에러가 나는지 모르겠음
-            bleu = 0
+        print('len system:', len(system))
+        print('len refs', len(refs))
+        print('system: ', system[1][:100])
+        print('refs: ', refs[1][:100])
+        bleu = corpus_bleu(system, [refs], force=True).score
         return bleu
         
             
