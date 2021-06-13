@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from .position_encoding import *
+from .pe import *
 from .attention import *
 
 class DecoderLayer(nn.Module):

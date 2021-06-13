@@ -48,3 +48,6 @@ super().__init__()를 추가하면 된다
 
 ## pytorch/aten/src/ATen/native/cuda/Indexing.cu:658: indexSelectLargeIndex: block: [67,0,0], thread: [0,0,0] Assertion `srcIndex < srcSelectDimSize` failed.
 임베딩 input차원이 실제 들어간 것보다 작음. input차원 맞게 했는지 확인하기.
+
+## mlflow: RuntimeError: Cannot set the device explicitly. Please use module.to(new_device).
+pl.LightningModule을 상속한 경우 self.device를 주면 안되는 듯 하다. 다른 이름으로 넣어주자
