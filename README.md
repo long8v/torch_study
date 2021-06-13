@@ -24,7 +24,7 @@ torchtext == 0.8.1
 |03|[Neural Machine Translation by Jointly Learning to Align and Translate](https://github.com/long8v/torch_study/tree/master/paper/03_attention) (2016)|0303|Done|[paper](https://arxiv.org/pdf/1409.0473.pdf)|[notion](https://www.notion.so/long8v/3-attention-22ac89a1000f49cba65aaa4a0a2ce9fa)|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb)|
 |04|[Attention is All You Need](https://github.com/long8v/torch_study/tree/master/paper/04_transformer) (2017)|0406|WIP|[paper](https://arxiv.org/abs/1706.03762)|[notion](https://www.notion.so/long8v/4-Transformer-2a7651c264ba496b9441adda71e72ac2)|[reference code](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)||
 |05|[Deep contextualized word representations](https://github.com/long8v/torch_study/tree/master/paper/05_ELMo) (2018)|0504|Done|[paper](https://arxiv.org/abs/1802.05365?)|[notion](https://www.notion.so/long8v/5-ELMo-a7de21b9988d4b0aa9d7e094de772075)|-|
-|06|[BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://github.com/long8v/torch_study/tree/master/paper/06_BERT/) (2019)|0608|paper reading|[paper](https://arxiv.org/abs/1810.04805)||-|
+|06|[BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://github.com/long8v/torch_study/tree/master/paper/06_BERT/) (2019)|0608|paper implementation|[paper](https://arxiv.org/abs/1810.04805)||-|
 
 
 ## *Tutorial(완료)* 
