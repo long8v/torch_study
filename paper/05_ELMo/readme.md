@@ -91,8 +91,8 @@ including ELMo at both the input and output layers for SNLI and SQuAD improves o
 . fine-tuning task구하기, 데이터셋 구하기<BR>
 
 ## 🤫 논문과 다르게 구현한 부분
-. dataset : [petition data](https://github.com/lovit/petitions_archive)
-. LSTM residual connection 부분 생략함
+. dataset : [petition data](https://github.com/lovit/petitions_archive)<BR>
+. LSTM residual connection 부분 생략함<BR>
 . L2 norm 등 ... 
   
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
