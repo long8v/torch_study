@@ -6,6 +6,7 @@ sys.path.append('/home/long8v/torch_study/paper/05_ELMo/source')
 from txt_cleaner.clean.master import MasterCleaner
 from nltk.tokenize import sent_tokenize
 from tokenizers.implementations import BertWordPieceTokenizer
+import random
 
 '''
 1) 데이터 전처리
@@ -31,21 +32,28 @@ class prepare_BERT:
         self.pos = mecab.MeCab()
         self.cleaner = MasterCleaner({'minimum_space_count': 5})
         print('cleaning and pos tagging corpus..')
-        with open(f'{save_path}/bert_mecab.txt', 'w') as f_mecab:
-            with open(f'{save_path}/bert.txt', 'w') as f:
-                for file in files:
-                    print(file, sep=',')
-                    corpus = read_pickle(file)
-                    for paragraph in corpus:
-                        for sentence in sent_tokenize(paragraph):
-                            sentence = self.cleaner.cleaning(sentence)
-                            if sentence.strip():
-                                f.write(f'{sentence.strip()}\n')
-                                sentence = self.get_morphs(sentence.strip())
-                                f_mecab.write(f'{sentence}\n')
-                          
-                        f.write('<EOD>\n')
+        f_mecab = open(f'{save_path}/bert_mecab.txt', 'w')
+        f = open(f'{save_path}/bert.txt', 'w')
+        f_valid = open(f'{save_path}/bert_valid.txt', 'w')
+        for file in files:
+            print(file)
+            corpus = read_pickle(file)
+            for paragraph in corpus:
+                for sentence in sent_tokenize(paragraph):
+                    sentence = self.cleaner.cleaning(sentence)
+                    if sentence.strip():
+                        if random.random() < 0.1:
+                            f_valid.write(f'{sentence}\n')
+                        else:
+                            f.write(f'{sentence.strip()}\n')
+                            sentence = self.get_morphs(sentence.strip())
+                            f_mecab.write(f'{sentence}\n')
 
+                f.write('<EOD>\n')
+                f_valid.write('<EOD>\n')
+        f.close()
+        f_mecab.close()
+        f_valid.close()
         files = glob(f'{corpus_path}/*_mecab.txt')
         self.tokenizer = BertWordPieceTokenizer(wordpieces_prefix='##', strip_accents=False)
         print('train tokenizer..')

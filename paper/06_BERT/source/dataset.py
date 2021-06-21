@@ -1,8 +1,11 @@
 # https://keep-steady.tistory.com/37#recentEntries
-# 
+# https://huggingface.co/docs/tokenizers/python/latest/api/reference.html#tokenizer
+
 from torch.utils.data import Dataset, DataLoader
 import random
 import numpy.random
+from collections import namedtuple  
+from torch.nn.utils.rnn import pad_sequence, pack_padded_sequence
 import torch
 import math
 import linecache
@@ -48,6 +51,9 @@ class BERT_Dataset(Dataset):
         seqA, seqB = seqA.ids, seqB.ids
         len_senA = len(seqA)
         len_senB = len(seqB)
+        if len_senA > self.max_len - 3:
+            len_senA = self.max_len - 3
+            seqA = seqA[:self.max_len - 3]
         token_much = (len_senA + len_senB + 3) - self.max_len
         if token_much > 0:
             len_senB = len_senB - token_much
@@ -90,17 +96,24 @@ class BERT_Dataset(Dataset):
         replaced_tokens = [_cls] + replaced_tokens[:len_senA] + [_sep] + replaced_tokens[len_senA:] + [_sep]
         len_ids = len(ids)
         mask_ids = [1 if ids in mask else 0 for ids in range(len_ids)] 
-        mask_ids = [0] + mask_ids[:len_senA] + [0] + mask_ids[len_senA:] + [0]
         segment_ids = [0 for _ in range(len_senA + 2)] + [1 for _ in range(len_senB + 1)] 
         return torch.Tensor(ids).long(), torch.Tensor(mask_ids).long(), torch.Tensor(replaced_tokens).long(), torch.Tensor(segment_ids).long(), torch.Tensor([isNext]).long()
     
- 
+def pad_collate(batch):
+    ids, mask_ids, replaced_ids, segment_ids, nsp = zip(*batch)
+    named_tuple = namedtuple('data', ['ids', 'mask_ids', 'replaced_ids', 'segment_ids', 'nsp'])
+    ids_pad = pad_sequence(ids, batch_first=True, padding_value=4)
+    mask_ids_pad = pad_sequence(mask_ids, batch_first=True, padding_value=4)
+    replaced_ids_pad = pad_sequence(replaced_ids, batch_first=True, padding_value=4)
+    segment_ids_pad = pad_sequence(segment_ids, batch_first=True, padding_value=4)
+    nsp_pad = pad_sequence(nsp, batch_first=True, padding_value=4)
+    return named_tuple(ids_pad, mask_ids_pad, replaced_ids_pad, segment_ids_pad, nsp_pad)   
         
 
 if __name__ == '__main__':
     bd = BERT_Dataset('/home/long8v/torch_study/paper/file/bert/bert.txt',
                       '/home/long8v/torch_study/paper/file/bert/vocab.json',
-                     256,
+                     8,
                      0.5)
     def decode_from_tensor(ids):
         print(bd.tokenizer.decode(ids.tolist(), skip_special_tokens=False))
@@ -111,6 +124,15 @@ if __name__ == '__main__':
         decode_from_tensor(replaced_tokens)
         print(segment_ids)
         print(isnext)
+        break
+        
+    print('data loader..')
+    for batch in DataLoader(bd, batch_size=16, collate_fn=pad_collate):
+        print(batch.ids.shape)
+        print(batch.mask_ids.shape)
+        print(batch.replaced_ids.shape)
+        print(batch.segment_ids.shape)
+        print(batch.nsp.shape)
         break
         '''
 [CLS] 현재 사대, 교대 등 교원양성학교들의 예비교사들이 임용절벽에 매우 힘들어 하고 있는 줄로 압니다. [SEP] 정부 부처에서는 영양사의 영양 교사 화, 폭발적인 영양 교사 채용, 기간제 교사, 영전강, 스강의 무기계약직화가 그들의 임용 절벽과는 전혀 무관한 일이라고 주장하고 있지만 조금만 생각해보면 전혀 설득력 없는 말이라고 생각합니다. [SEP]

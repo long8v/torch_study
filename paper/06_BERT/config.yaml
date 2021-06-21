@@ -1,0 +1,18 @@
+data:
+    src: '/home/long8v/torch_study/paper/file/bert/bert.txt'
+    src_valid: '/home/long8v/torch_study/paper/file/bert/bert_valid.txt'
+    vocab:  '/home/long8v/torch_study/paper/file/bert/vocab.json'
+    max_len: 128
+    nsp_prob: 0.5
+    batch_size: 4
+model:
+    hid_dim: 256
+    n_layers: 2
+    n_heads: 8
+    pf_dim: 512
+    dropout: 0.5
+
+train:
+    n_epochs: 100
+    device: 'cuda'
+    lr: 0.0005
