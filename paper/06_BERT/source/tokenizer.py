@@ -38,19 +38,18 @@ class prepare_BERT:
         for file in files:
             print(file)
             corpus = read_pickle(file)
-            for paragraph in corpus:
+            for paragraph in corpus[:1000]: # for dev
+                if random.random() < 0.1:
+                    to_write = f_valid
+                else:
+                    to_write = f
                 for sentence in sent_tokenize(paragraph):
                     sentence = self.cleaner.cleaning(sentence)
                     if sentence.strip():
-                        if random.random() < 0.1:
-                            f_valid.write(f'{sentence}\n')
-                        else:
-                            f.write(f'{sentence.strip()}\n')
-                            sentence = self.get_morphs(sentence.strip())
-                            f_mecab.write(f'{sentence}\n')
-
-                f.write('<EOD>\n')
-                f_valid.write('<EOD>\n')
+                        to_write.write(f'{sentence.strip()}\n')
+                        sentence = self.get_morphs(sentence.strip())
+                        f_mecab.write(f'{sentence}\n')
+                to_write.write('[EOD]\n') # 문단 끝 부분 구분
         f.close()
         f_mecab.close()
         f_valid.close()
@@ -59,7 +58,7 @@ class prepare_BERT:
         print('train tokenizer..')
         self.tokenizer.train(files=files,
                        min_frequency=5)
-        self.tokenizer.add_special_tokens(['[SEP]', '[CLS]', '[MASK]'])
+        self.tokenizer.add_special_tokens(['[SEP]', '[CLS]', '[MASK]', '[EOD]'])
         print('save tokenizer model!')
         self.tokenizer.save(f'{save_path}/vocab.json')     
 

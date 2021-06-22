@@ -30,18 +30,21 @@ class BERT_Dataset(Dataset):
     
     def __getitem__(self, ids):
         tokenizer = self.tokenizer
-        _sep, _cls, _mask = tokenizer.token_to_id('[SEP]'), tokenizer.token_to_id('[CLS]'), tokenizer.token_to_id(self.mask_token)
-        
-        
+        _sep, _cls, _mask = tokenizer.token_to_id('[SEP]'), tokenizer.token_to_id('[CLS]'), tokenizer.token_to_id(self.mask_token)        
         ids = ids + 1
         senA = linecache.getline(self.corpus_path, ids)
+        if senA.strip() == '[EOD]':
+            while 1:
+                ids = random.randint(1, self.num_lines)
+                senA = linecache.getline(self.corpus_path, ids)
+                if senA.strip() != '[EOD]':
+                    break
+                    
         if random.random() > self.nsp_ratio:
             while 1:
                 senB_idx = random.randint(1, self.num_lines)
                 senB = linecache.getline(self.corpus_path, senB_idx)
-                if senB_idx == ids + 1 or senB.strip() == '<EOD>':
-                    pass
-                else:
+                if senB_idx != ids + 1 and senB.strip() != '[EOD]':
                     break
             isNext = 0
         else:
@@ -51,10 +54,12 @@ class BERT_Dataset(Dataset):
         seqA, seqB = seqA.ids, seqB.ids
         len_senA = len(seqA)
         len_senB = len(seqB)
-        if len_senA > self.max_len - 3:
+        # sentence A가 max_len 보다 길 경우
+        if len_senA > self.max_len - 3: 
             len_senA = self.max_len - 3
             seqA = seqA[:self.max_len - 3]
-        token_much = (len_senA + len_senB + 3) - self.max_len
+        # sentence A + sentence B가 max_len보다 긴 경우
+        token_much = (len_senA + len_senB + 3) - self.max_len 
         if token_much > 0:
             len_senB = len_senB - token_much
             seqB = seqB[:-token_much] 
@@ -113,18 +118,19 @@ def pad_collate(batch):
 if __name__ == '__main__':
     bd = BERT_Dataset('/home/long8v/torch_study/paper/file/bert/bert.txt',
                       '/home/long8v/torch_study/paper/file/bert/vocab.json',
-                     8,
-                     0.5)
+                     max_len=128,
+                     nsp_ratio=0.5)
     def decode_from_tensor(ids):
         print(bd.tokenizer.decode(ids.tolist(), skip_special_tokens=False))
         
     for ids, mask_ids, replaced_tokens, segment_ids, isnext in bd:
+#         pass
         decode_from_tensor(ids)
         print(mask_ids)
         decode_from_tensor(replaced_tokens)
         print(segment_ids)
         print(isnext)
-        break
+#         break
         
     print('data loader..')
     for batch in DataLoader(bd, batch_size=16, collate_fn=pad_collate):
@@ -135,17 +141,20 @@ if __name__ == '__main__':
         print(batch.nsp.shape)
         break
         '''
-[CLS] 현재 사대, 교대 등 교원양성학교들의 예비교사들이 임용절벽에 매우 힘들어 하고 있는 줄로 압니다. [SEP] 정부 부처에서는 영양사의 영양 교사 화, 폭발적인 영양 교사 채용, 기간제 교사, 영전강, 스강의 무기계약직화가 그들의 임용 절벽과는 전혀 무관한 일이라고 주장하고 있지만 조금만 생각해보면 전혀 설득력 없는 말이라고 생각합니다. [SEP]
-tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1,
-        0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-        0, 0, 0, 0])
-[CLS] 현재 사대, 교대 등 교원양성학교들의 예비교사들이 임용절벽에 매우 힘들어 하고 있는 줄로 압니다. [SEP] 정부 부처에서는 영양사의 영양 교사 화, 폭발적인 영양 교사 채용, 기간제 교사, 영전강, 스강 [MASK] 무기계약직화가 그들의 [MASK] 절벽 [MASK]는 전혀 [MASK]한 [MASK] [MASK]라고 방글라데시하고 있지만 조금만 생각해보면 전혀 설득력 없는 말이라고 생각합니다 [MASK] [SEP]
+[CLS] 현재 사대, 교대 등 교원양성학교들의 예비교사들이 임용절벽에 매우 힘들어 하고 있는 줄로 압니다. [SEP] 환자 가족들은 간병비 때문에 집을 팔기도 하고 한달에 300이상이 나가는 간병비 때문에 정말 온갖 고통은 다 받고 있습니다. [SEP]
+tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0])
+[CLS] 현재 사대, 교대 등 교원양성학교들의 예비교사들이 임용절벽에 [MASK] 힘들어 하고 있는 줄로 압니다. [SEP] 환자 가족 과하은 간병비 때문에 집을 팔기도 하고 한달에 300이상이 나가는 간병비 때문 [MASK] 정말 [MASK] 고통 임대료 다 받고 [MASK] [MASK]. [SEP]
 tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1])
-tensor([1])
+        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+tensor([0])
+
+data loader..
+torch.Size([16, 102])
+torch.Size([16, 102])
+torch.Size([16, 102])
+torch.Size([16, 102])
+torch.Size([16, 1])
         '''

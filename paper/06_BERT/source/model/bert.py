@@ -15,7 +15,7 @@ class BERT(pl.LightningModule):
                  pad_idx):
         super().__init__()
         self.config = config
-        self.pad_idx  = pad_idx # 하드코딩!
+        self.pad_idx  = pad_idx
         config = self.config['model']
         self._device = self.config['train']['device']
         self.encoder = Encoder(input_dim, config['hid_dim'], 
@@ -49,7 +49,7 @@ class BERT(pl.LightningModule):
         output = self(replaced_ids)
         loss = self.criterion(output, nsp.squeeze(1))
         accuracy = self.multi_acc(output.reshape(-1, 2), nsp.reshape(-1))
-        self.log('train_loss', loss , on_step=True)
+        self.log('train_loss', loss, on_step=True)
         self.log('train_accuracy', accuracy, on_step=True)    
         return loss
     

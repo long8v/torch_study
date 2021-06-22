@@ -23,7 +23,7 @@ class BERT_trainer(pl.LightningModule):
         valid_dataloader = DataLoader(valid_dataset, data_config['batch_size'], collate_fn=pad_collate)
         vocab_size = dataset.tokenizer.get_vocab_size()
         pad_idx = dataset.tokenizer.token_to_id('[PAD]')
-        self.bert = BERT(self.config, vocab_size + 10, pad_idx)
+        self.bert = BERT(self.config, vocab_size + 10, pad_idx) # 하드 코딩 인덱스 에러가 남
         
         device = config['train']['device'] 
         self.bert.to(device)
@@ -35,11 +35,12 @@ class BERT_trainer(pl.LightningModule):
         else:
             gpus = 0
             
-        trainer = pl.Trainer(max_epochs=config['train']['n_epochs'], progress_bar_refresh_rate=10,
-                             gpus=gpus, auto_lr_find = True)
+        trainer = pl.Trainer(max_epochs=config['train']['n_epochs'], 
+                             progress_bar_refresh_rate=10,
+                             gpus=gpus, auto_lr_find= True)
         
 
-#         Auto log all MLflow entities
+        # Auto log all MLflow entities
         mlflow.pytorch.autolog()
         
         # Train the model
@@ -47,7 +48,7 @@ class BERT_trainer(pl.LightningModule):
         with mlflow.start_run() as run:
             mlflow.log_params(config)
             trainer.fit(self.bert, dataloader, valid_dataloader)
-        self.save(f'model/ebert_{get_now()}')
+        self.save(f'model/bert_{get_now()}')
 
 
     def initialize_weights(self, m):

@@ -86,7 +86,7 @@ class Highway(pl.LightningModule):
         return x
     
 
-# https://github.com/GyuminJack/torchstudy/blob/main/05May/ELMo/src/models.py
+
 class LSTM_LM(pl.LightningModule):
     def __init__(self, input_dim, output_dim, hid_dim, n_layers, dropout, bidirectional):
         super().__init__()
