@@ -16,7 +16,7 @@ tokenizers == 0.9.3
 original :    i go to shcool.<BR>
 inference :    i [mask] to **[mask].** 15%<BR>
 input :        **i [mask] to school.**<BR>
-. 선정된 [MASK]들의 prediction을 할 때 그냥 둔 토큰의 임베딩이 들어가는건가?
+. 선정된 [MASK]들의 prediction을 할 때 그냥 둔 토큰의 임베딩이 들어감
 
 **3) 재밌었던 부분**<BR>
 . MLM - transformer아이디어 간단하고 직관적임. <BR>
@@ -43,4 +43,5 @@ input :        **i [mask] to school.**<BR>
   -> max_seq_len은 OOM을 막기 위해 있는거다<br>
 - NSP는 같은 문단에서도 바로 다음 문장이 아니면 0이다 
 - [mask] 중에 10%는 그대로 남기는 이유 : [mask]로 선택된 토큰은 예측을 하는데, input이 [mask]이거나, random이거나 그대로 토큰일 때 맞추는 것
-  
+- bert에서 senA, senB의 단위는 일반적으로 문장임. finetune task에서 QA등을 할때에는 문단이나 단어가 들어갈 수 있음.
+- 데이터가 클 때 리스트에 올리거나 하면 메모리 에러가 남..큰 데이터셋을 다룰 때는 기존의 방법이랑 다르게 해야함 -> `linecache` 
