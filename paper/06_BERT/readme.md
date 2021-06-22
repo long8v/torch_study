@@ -18,7 +18,7 @@ inference :    i [mask] to **[mask].** 15%<BR>
 input :        **i [mask] to school.**<BR>
 . 선정된 [MASK]들의 prediction을 할 때 그냥 둔 토큰의 임베딩이 들어가는건가?
 
-**3) 재밌었던 부분**
+**3) 재밌었던 부분**<BR>
 . MLM - transformer아이디어 간단하고 직관적임. <BR>
 . BERTbase가 GPT랑 파라미터 개수 맞춰서 나온 것인 것..ㅎㅎ<BR>
 . ELMo 얘기 나오는데 왠지 고향친구 만난듯한 반가움..<BR>
