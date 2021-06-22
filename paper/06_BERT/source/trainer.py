@@ -21,9 +21,13 @@ class BERT_trainer(pl.LightningModule):
                                data_config['max_len'], data_config['nsp_prob'])
         dataloader = DataLoader(dataset, data_config['batch_size'], collate_fn=pad_collate)
         valid_dataloader = DataLoader(valid_dataset, data_config['batch_size'], collate_fn=pad_collate)
+        print('before special token', dataset.tokenizer.get_vocab_size())
+        dataset.tokenizer.add_special_tokens(['[SEP]', '[CLS]', '[MASK]', '[EOD]'])
         vocab_size = dataset.tokenizer.get_vocab_size()
+        print('after special token', vocab_size)
         pad_idx = dataset.tokenizer.token_to_id('[PAD]')
-        self.bert = BERT(self.config, vocab_size + 10, pad_idx) # 하드 코딩 인덱스 에러가 남
+        self.bert = BERT(self.config, vocab_size, pad_idx) # 하드 코딩 인덱스 에러가 남
+        # https://keep-steady.tistory.com/37?category=702926 : speical token 에러인것으로 보임 eod추가할것
         
         device = config['train']['device'] 
         self.bert.to(device)

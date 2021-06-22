@@ -61,6 +61,7 @@ class Encoder(nn.Module):
         
         self.tok_embedding = nn.Embedding(input_dim, hid_dim)
         self.pos_embedding = nn.Embedding(input_dim, hid_dim)
+        # segment_embedding
         
         self.layers = nn.ModuleList([EncoderLayer(hid_dim, 
                                                   n_heads, 

@@ -34,18 +34,13 @@ class BERT_Dataset(Dataset):
         ids = ids + 1
         senA = linecache.getline(self.corpus_path, ids)
         if senA.strip() == '[EOD]':
-            while 1:
+            while senA.strip() != '[EOD]':
                 ids = random.randint(1, self.num_lines)
                 senA = linecache.getline(self.corpus_path, ids)
-                if senA.strip() != '[EOD]':
-                    break
-                    
         if random.random() > self.nsp_ratio:
-            while 1:
+            while senB_idx != ids + 1:
                 senB_idx = random.randint(1, self.num_lines)
                 senB = linecache.getline(self.corpus_path, senB_idx)
-                if senB_idx != ids + 1 and senB.strip() != '[EOD]':
-                    break
             isNext = 0
         else:
             senB = linecache.getline(self.corpus_path, ids + 1)
@@ -72,10 +67,8 @@ class BERT_Dataset(Dataset):
         
         mask = random_choice_with_prob(seq_ids, self.mask_ratio)
         mask_mask = random_choice_with_prob(mask, 0.8)
-        mask_remain = set(mask).difference(mask_mask)
-        mask_itself = random_choice_with_prob(list(mask_remain), 0.5)
-        mask_remain = mask_remain.difference(mask_itself)
-        mask_random = random_choice_with_prob(list(mask_remain), 0.5)
+        mask_random = random_choice_with_prob(list(set(mask).difference(mask_mask)), 0.5)
+        mask_itself = set(mask).difference(mask_mask).difference(mask_random)
         
         def get_random_token():
             # random token을 추출하는 코드
@@ -100,6 +93,7 @@ class BERT_Dataset(Dataset):
         ids = [_cls] + tokens[:len_senA] + [_sep] + tokens[len_senA:] + [_sep]
         replaced_tokens = [_cls] + replaced_tokens[:len_senA] + [_sep] + replaced_tokens[len_senA:] + [_sep]
         len_ids = len(ids)
+        mask = [m + 1 if m < len_senA else m + 2 for m in mask] # cls, sep 토큰 추가 돼서
         mask_ids = [1 if ids in mask else 0 for ids in range(len_ids)] 
         segment_ids = [0 for _ in range(len_senA + 2)] + [1 for _ in range(len_senB + 1)] 
         return torch.Tensor(ids).long(), torch.Tensor(mask_ids).long(), torch.Tensor(replaced_tokens).long(), torch.Tensor(segment_ids).long(), torch.Tensor([isNext]).long()
@@ -124,13 +118,20 @@ if __name__ == '__main__':
         print(bd.tokenizer.decode(ids.tolist(), skip_special_tokens=False))
         
     for ids, mask_ids, replaced_tokens, segment_ids, isnext in bd:
-#         pass
+        print('eod', bd.tokenizer.token_to_id('[EOD]'))
+        for _ in list(zip(ids, mask_ids, replaced_tokens)):
+            if _[1] == 0:
+                print(0, _)
+            if _[1] == 1:
+                print(1, _)
+        print(ids)
         decode_from_tensor(ids)
         print(mask_ids)
-        decode_from_tensor(replaced_tokens)
+        print(replaced_tokens)
+#         decode_from_tensor(replaced_tokens)
         print(segment_ids)
         print(isnext)
-#         break
+        break
         
     print('data loader..')
     for batch in DataLoader(bd, batch_size=16, collate_fn=pad_collate):

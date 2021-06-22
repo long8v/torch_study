@@ -12,7 +12,7 @@ import random
 1) 데이터 전처리
     - 문장으로 자르기
     - cleaning
-    - 한 문서가 끝나면 <EOD> 붙이기
+    - 한 문서가 끝나면 [EOD] 붙이기
     - 문장을 mecab으로 자르기
     - ## 붙이기
 2) tokenizers 학습
