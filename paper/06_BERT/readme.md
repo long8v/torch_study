@@ -37,10 +37,10 @@ input :        **i [mask] to school.**<BR>
 
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
  
-- BERT, transformer의 seq_len 차원은 정해져있을 필요가 없고 max_len으로 배치별로 패딩하는거다
-  -> 어차피 마지막 차원은 hid_dim이고 그걸로 연산을 함
-  -> seq_len 차원은 남아있음, transformer의 encoder의 ouput 차원은 [batch size, src len, hid dim]
-  -> max_seq_len은 OOM을 막기 위해 있는거다
+- BERT, transformer의 seq_len 차원은 정해져있을 필요가 없고 max_len으로 배치별로 패딩하는거다<br>
+  -> 어차피 마지막 차원은 hid_dim이고 그걸로 연산을 함<br>
+  -> seq_len 차원은 남아있음, transformer의 encoder의 ouput 차원은 [batch size, src len, hid dim]<br>
+  -> max_seq_len은 OOM을 막기 위해 있는거다<br>
 - NSP는 같은 문단에서도 바로 다음 문장이 아니면 0이다 
 - [mask] 중에 10%는 그대로 남기는 이유 : [mask]로 선택된 토큰은 예측을 하는데, input이 [mask]이거나, random이거나 그대로 토큰일 때 맞추는 것
   
