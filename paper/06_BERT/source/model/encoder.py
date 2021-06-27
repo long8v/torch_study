@@ -49,6 +49,7 @@ class Encoder(nn.Module):
     def __init__(self, 
                  input_dim, # vocabulary 개수
                  hid_dim,   # token의 임베딩 차원
+                 max_len,
                  n_layers,  # self-attention + FCN 레이어를 몇 층 쌓을건지
                  n_heads,   # 몇 개의 multi-head self-attention
                  pf_dim,    # FCN의 dimension
@@ -59,8 +60,9 @@ class Encoder(nn.Module):
 
         self.device = device
         
-        self.tok_embedding = nn.Embedding(input_dim, hid_dim)
-        self.pos_embedding = nn.Embedding(input_dim, hid_dim)
+        self.tok_embedding = nn.Embedding(input_dim + 10, hid_dim)
+        self.pos_embedding = nn.Embedding(max_len, hid_dim)
+        self.seg_embedding = nn.Embedding(3, hid_dim) # senA, senB, padding
         # segment_embedding
         
         self.layers = nn.ModuleList([EncoderLayer(hid_dim, 
@@ -74,7 +76,7 @@ class Encoder(nn.Module):
         
         self.scale = torch.sqrt(torch.FloatTensor([hid_dim])).to(device)
         
-    def forward(self, src, src_mask):
+    def forward(self, src, seg, src_mask):
         
         #src = [batch size, src len]
         #src_mask = [batch size, 1, 1, src len]
@@ -87,7 +89,7 @@ class Encoder(nn.Module):
         
         
         #pos = [batch size, src len]
-        src = self.tok_embedding(src) + self.pos_embedding(src)
+        src = self.tok_embedding(src) + self.pos_embedding(pos) + self.seg_embedding(seg)
 
         for layer in self.layers:
             src = layer(src, src_mask)  # batch_size, seq_len, hid_dim

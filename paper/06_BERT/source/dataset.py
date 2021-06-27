@@ -38,9 +38,11 @@ class BERT_Dataset(Dataset):
                 ids = random.randint(1, self.num_lines)
                 senA = linecache.getline(self.corpus_path, ids)
         if random.random() > self.nsp_ratio:
-            while senB_idx != ids + 1:
+            while 1:
                 senB_idx = random.randint(1, self.num_lines)
                 senB = linecache.getline(self.corpus_path, senB_idx)
+                if senB_idx != ids + 1:
+                    break
             isNext = 0
         else:
             senB = linecache.getline(self.corpus_path, ids + 1)
@@ -101,10 +103,10 @@ class BERT_Dataset(Dataset):
 def pad_collate(batch):
     ids, mask_ids, replaced_ids, segment_ids, nsp = zip(*batch)
     named_tuple = namedtuple('data', ['ids', 'mask_ids', 'replaced_ids', 'segment_ids', 'nsp'])
-    ids_pad = pad_sequence(ids, batch_first=True, padding_value=4)
-    mask_ids_pad = pad_sequence(mask_ids, batch_first=True, padding_value=4)
-    replaced_ids_pad = pad_sequence(replaced_ids, batch_first=True, padding_value=4)
-    segment_ids_pad = pad_sequence(segment_ids, batch_first=True, padding_value=4)
+    ids_pad = pad_sequence(ids, batch_first=True, padding_value=0) # 하드코딩 고쳐야함
+    mask_ids_pad = pad_sequence(mask_ids, batch_first=True, padding_value=0)
+    replaced_ids_pad = pad_sequence(replaced_ids, batch_first=True, padding_value=0)
+    segment_ids_pad = pad_sequence(segment_ids, batch_first=True, padding_value=0)
     nsp_pad = pad_sequence(nsp, batch_first=True, padding_value=4)
     return named_tuple(ids_pad, mask_ids_pad, replaced_ids_pad, segment_ids_pad, nsp_pad)   
         
@@ -117,18 +119,14 @@ if __name__ == '__main__':
     def decode_from_tensor(ids):
         print(bd.tokenizer.decode(ids.tolist(), skip_special_tokens=False))
         
+    print(bd.tokenizer.token_to_id('[PAD]'),bd.tokenizer.token_to_id('[UNK]'),bd.tokenizer.token_to_id('[CLS]'),
+         bd.tokenizer.token_to_id('[SEP]'),bd.tokenizer.token_to_id('[EOD]'))
     for ids, mask_ids, replaced_tokens, segment_ids, isnext in bd:
-        print('eod', bd.tokenizer.token_to_id('[EOD]'))
-        for _ in list(zip(ids, mask_ids, replaced_tokens)):
-            if _[1] == 0:
-                print(0, _)
-            if _[1] == 1:
-                print(1, _)
         print(ids)
         decode_from_tensor(ids)
         print(mask_ids)
-        print(replaced_tokens)
-#         decode_from_tensor(replaced_tokens)
+      #  print(replaced_tokens)
+        decode_from_tensor(replaced_tokens)
         print(segment_ids)
         print(isnext)
         break
@@ -136,7 +134,7 @@ if __name__ == '__main__':
     print('data loader..')
     for batch in DataLoader(bd, batch_size=16, collate_fn=pad_collate):
         print(batch.ids.shape)
-        print(batch.mask_ids.shape)
+        print(torch.sum(batch.mask_ids == 1))
         print(batch.replaced_ids.shape)
         print(batch.segment_ids.shape)
         print(batch.nsp.shape)

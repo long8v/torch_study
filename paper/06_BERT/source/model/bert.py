@@ -7,7 +7,8 @@ import random
 import math
 import time
 import pytorch_lightning as pl
-    
+import yaml
+
 class BERT(pl.LightningModule):
     def __init__(self, 
                  config,
@@ -18,14 +19,15 @@ class BERT(pl.LightningModule):
         self.pad_idx  = pad_idx
         config = self.config['model']
         self._device = self.config['train']['device']
-        self.encoder = Encoder(input_dim, config['hid_dim'], 
+        self.encoder = Encoder(input_dim, config['hid_dim'], self.config['data']['max_len'],
                                config['n_layers'], config['n_heads'], 
                                config['pf_dim'], config['dropout'],
                             self._device)
         self.nsp = nn.Linear(config['hid_dim'], 2)
+        self.mlm = nn.Linear(config['hid_dim'], input_dim)
         self.lr = self.config['train']['lr']
-        self.criterion = nn.CrossEntropyLoss()
-        
+        self.criterion_nsp = nn.CrossEntropyLoss()
+        self.criterion_mlm = nn.CrossEntropyLoss(ignore_index = 0) # 하드코딩 나중에 수정 
         
     def make_src_mask(self, src):
         #src = [batch size, src len]
@@ -33,12 +35,13 @@ class BERT(pl.LightningModule):
         #src_mask = [batch size, 1, 1, src len]
         return src_mask
     
-    def forward(self, src):
+    def forward(self, src, seg):
         src_mask = self.make_src_mask(src)
-        output = self.encoder(src, src_mask)  # batch_size, seq_len, hid_dim
+        output = self.encoder(src, seg, src_mask)  # batch_size, seq_len, hid_dim
         _cls = output[:, 0, :] # batch_size, hid_dim
         _nsp = self.nsp(_cls) # batch_size, 2
-        return _nsp
+        _mlm = self.mlm(output)
+        return _nsp, _mlm
         
     def training_step(self, batch, batch_nb):
         ids = batch.ids.to(self._device)
@@ -46,12 +49,23 @@ class BERT(pl.LightningModule):
         replaced_ids = batch.replaced_ids.to(self._device)
         segment_ids = batch.segment_ids.to(self._device)
         nsp = batch.nsp.to(self._device)
-        output = self(replaced_ids)
-        loss = self.criterion(output, nsp.squeeze(1))
-        accuracy = self.multi_acc(output.reshape(-1, 2), nsp.reshape(-1))
-        self.log('train_loss', loss, on_step=True)
-        self.log('train_accuracy', accuracy, on_step=True)    
-        return loss
+        nsp_output, mlm_output = self(replaced_ids, segment_ids)
+        tmpmask = torch.zeros_like(mlm_output)
+        for i, j in mask_ids.nonzero():
+            tmpmask[i][j] = torch.ones(mlm_output.shape[-1])
+        masked_mlm = torch.masked_select(mlm_output, tmpmask == 1)
+        masked_mlm = masked_mlm.reshape(-1, mlm_output.shape[-1])
+        target_mlm = torch.masked_select(ids, mask_ids == 1)
+        nsp_loss = self.criterion_nsp(nsp_output, nsp.squeeze(1))
+        mlm_loss = self.criterion_mlm(masked_mlm, target_mlm)
+        
+#        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
+#        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
+        self.log('train_nsp_loss', nsp_loss, on_step=True)
+        self.log('train_mlm_loss', mlm_loss, on_step=True)
+#        self.log('train_nsp_accuracy', nsp_accuracy, on_step=True)
+#        self.log('train_mlm_accuracy', mlm_accuracy, on_step=True)
+        return nsp_loss + mlm_loss
     
     def validation_step(self, batch, batch_nb):
         ids = batch.ids.to(self._device)
@@ -59,12 +73,22 @@ class BERT(pl.LightningModule):
         replaced_ids = batch.replaced_ids.to(self._device)
         segment_ids = batch.segment_ids.to(self._device)
         nsp = batch.nsp.to(self._device)
-        output = self(replaced_ids)
-        loss = self.criterion(output, nsp.squeeze(1))
-        accuracy = self.multi_acc(output.reshape(-1, 2), nsp.reshape(-1))
-        self.log('valid_loss', loss, on_step=True)
-        self.log('valid_accuracy', accuracy, on_step=True)    
-        return loss
+        nsp_output, mlm_output = self(replaced_ids, segment_ids)
+        tmpmask = torch.zeros_like(mlm_output)
+        for i, j in mask_ids.nonzero():
+            tmpmask[i][j] = torch.ones(mlm_output.shape[-1])
+        masked_mlm = torch.masked_select(mlm_output, tmpmask == 1)
+        masked_mlm = masked_mlm.reshape(-1, mlm_output.shape[-1])
+        target_mlm = torch.masked_select(ids, mask_ids == 1)
+        nsp_loss = self.criterion_nsp(nsp_output, nsp.squeeze(1))
+        mlm_loss = self.criterion_mlm(masked_mlm, target_mlm)
+        
+#        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
+#        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
+        self.log('valid_nsp_loss', nsp_loss, on_step=True)
+        self.log('valid_mlm_loss', mlm_loss, on_step=True)
+#        self.log('valid_nsp_accuracy', nsp_accuracy, on_step=True)
+#        self.log('valid_mlm_accuracy', mlm_accuracy, on_step=True)
     
     def multi_acc(self, y_pred, y_test):
         _, y_pred_tags = torch.max(y_pred, dim = 1)
@@ -94,11 +118,17 @@ if __name__ == '__main__':
     n_heads = 8
     pf_dim = 512
     dropout = 0.5
+    output_dim = 100
     device = 'cpu'
-    bert = BERT(input_dim, hid_dim, n_layers, n_heads, pf_dim, dropout, device)
+    config_file = '/home/long8v/torch_study/paper/06_BERT/config.yaml'
+    config = yaml.safe_load(open(config_file, 'r', encoding='utf8'))
+    bert = BERT(config, input_dim, output_dim, 0)
+    bert.to(device)
 
     src = torch.tensor([[1, 2, 3, 4], [0, 5, 6, 7]])
     nsp = torch.tensor([1, 0]).long()
-    output = bert(src)
+    seg = torch.tensor([[0, 0, 1, 1], [0, 0,0 ,1]])
+    output, output2 = bert(src.to(device), seg.to(device))
+    
     loss = bert.criterion(output, nsp)
     print(loss)
