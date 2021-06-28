@@ -125,35 +125,20 @@ if __name__ == '__main__':
         print(ids)
         decode_from_tensor(ids)
         print(mask_ids)
-      #  print(replaced_tokens)
         decode_from_tensor(replaced_tokens)
         print(segment_ids)
         print(isnext)
+        for i, mi, rep in zip(ids, mask_ids, replaced_tokens):
+            if mi:
+                print(f'''{bd.tokenizer.decode([i], skip_special_tokens=False)}-> {bd.tokenizer.decode([rep], skip_special_tokens=False)}''')
         break
         
     print('data loader..')
     for batch in DataLoader(bd, batch_size=16, collate_fn=pad_collate):
         print(batch.ids.shape)
+        print(batch.ids)
         print(torch.sum(batch.mask_ids == 1))
         print(batch.replaced_ids.shape)
         print(batch.segment_ids.shape)
         print(batch.nsp.shape)
         break
-        '''
-[CLS] 현재 사대, 교대 등 교원양성학교들의 예비교사들이 임용절벽에 매우 힘들어 하고 있는 줄로 압니다. [SEP] 환자 가족들은 간병비 때문에 집을 팔기도 하고 한달에 300이상이 나가는 간병비 때문에 정말 온갖 고통은 다 받고 있습니다. [SEP]
-tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-        0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0])
-[CLS] 현재 사대, 교대 등 교원양성학교들의 예비교사들이 임용절벽에 [MASK] 힘들어 하고 있는 줄로 압니다. [SEP] 환자 가족 과하은 간병비 때문에 집을 팔기도 하고 한달에 300이상이 나가는 간병비 때문 [MASK] 정말 [MASK] 고통 임대료 다 받고 [MASK] [MASK]. [SEP]
-tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
-tensor([0])
-
-data loader..
-torch.Size([16, 102])
-torch.Size([16, 102])
-torch.Size([16, 102])
-torch.Size([16, 102])
-torch.Size([16, 1])
-        '''

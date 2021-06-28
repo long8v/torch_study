@@ -88,7 +88,6 @@ class BERT(pl.LightningModule):
 #        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
 #        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
         self.log('valid_nsp_loss', nsp_loss, on_step=True)
-
         self.log('valid_mlm_loss', mlm_loss, on_step=True)
 #        self.log('valid_nsp_accuracy', nsp_accuracy, on_step=True)
 #        self.log('valid_mlm_accuracy', mlm_accuracy, on_step=True)
