@@ -1,7 +1,10 @@
 ## 🤗 Result
 ### Environment
 ```
-
+mlflow == 1.15.0
+torch == 1.7.1
+torchtext == 0.8.1
+pytorch-lightning == 1.2.8
 tokenizers == 0.9.3
 ```
 
