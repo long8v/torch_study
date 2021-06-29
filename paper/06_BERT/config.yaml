@@ -4,7 +4,7 @@ data:
     vocab:  '/home/long8v/torch_study/paper/file/bert/vocab.json'
     max_len: 128
     nsp_prob: 0.5
-    batch_size: 128
+    batch_size: 4
 model:
     hid_dim: 256
     n_layers: 2

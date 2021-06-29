@@ -51,20 +51,17 @@ class BERT(pl.LightningModule):
         nsp = batch.nsp.to(self._device)
         nsp_output, mlm_output = self(replaced_ids, segment_ids)
         tmpmask = torch.zeros_like(mlm_output)
-        for i, j in mask_ids.nonzero():
-            tmpmask[i][j] = torch.ones(mlm_output.shape[-1])
-        masked_mlm = torch.masked_select(mlm_output, tmpmask == 1)
-        masked_mlm = masked_mlm.reshape(-1, mlm_output.shape[-1])
+        masked_mlm = mlm_output[mask_ids.bool()]
         target_mlm = torch.masked_select(ids, mask_ids == 1)
         nsp_loss = self.criterion_nsp(nsp_output, nsp.squeeze(1))
         mlm_loss = self.criterion_mlm(masked_mlm, target_mlm)
         if not torch.isnan(mlm_loss):
-    #        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
-    #        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
+            nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
+            mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
             self.log('train_nsp_loss', nsp_loss, on_step=True)
             self.log('train_mlm_loss', mlm_loss, on_step=True)
-    #        self.log('train_nsp_accuracy', nsp_accuracy, on_step=True)
-    #        self.log('train_mlm_accuracy', mlm_accuracy, on_step=True)
+            self.log('train_nsp_accuracy', nsp_accuracy, on_step=True)
+            self.log('train_mlm_accuracy', mlm_accuracy, on_step=True)
             return nsp_loss + mlm_loss
         else:
             print(masked_mlm, target_mlm)
@@ -76,29 +73,28 @@ class BERT(pl.LightningModule):
         segment_ids = batch.segment_ids.to(self._device)
         nsp = batch.nsp.to(self._device)
         nsp_output, mlm_output = self(replaced_ids, segment_ids)
-        tmpmask = torch.zeros_like(mlm_output)
-        for i, j in mask_ids.nonzero():
-            tmpmask[i][j] = torch.ones(mlm_output.shape[-1])
-        masked_mlm = torch.masked_select(mlm_output, tmpmask == 1)
+        masked_mlm = mlm_output[mask_ids.bool()]
         masked_mlm = masked_mlm.reshape(-1, mlm_output.shape[-1])
         target_mlm = torch.masked_select(ids, mask_ids == 1)
         nsp_loss = self.criterion_nsp(nsp_output, nsp.squeeze(1))
         mlm_loss = self.criterion_mlm(masked_mlm, target_mlm)
         
-#        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
-#        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
+        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
+        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
         self.log('valid_nsp_loss', nsp_loss, on_step=True)
         self.log('valid_mlm_loss', mlm_loss, on_step=True)
-#        self.log('valid_nsp_accuracy', nsp_accuracy, on_step=True)
-#        self.log('valid_mlm_accuracy', mlm_accuracy, on_step=True)
+        self.log('valid_nsp_accuracy', nsp_accuracy, on_step=True)
+        self.log('valid_mlm_accuracy', mlm_accuracy, on_step=True)
         return nsp_loss + mlm_loss
     
     def multi_acc(self, y_pred, y_test):
-        _, y_pred_tags = torch.max(y_pred, dim = 1)
-        correct_pred = (y_pred_tags == y_test).float()
-        acc = correct_pred.sum() / len(correct_pred)
-        acc = torch.round(acc * 100)
-        return acc
+        if y_pred.numel():
+            _, y_pred_tags = torch.max(y_pred, dim = 1)
+            correct_pred = (y_pred_tags == y_test).float()
+            acc = correct_pred.sum() / len(correct_pred)
+            acc = torch.round(acc * 100)
+            return acc
+        return 0
     
     
     def print_auto_logged_info(r):
@@ -111,7 +107,7 @@ class BERT(pl.LightningModule):
         print("tags: {}".format(tags))
         
     def configure_optimizers(self):
-        optimizer = optim.Adam(self.parameters(), lr = self.lr)
+        optimizer = optim.AdamW(self.parameters(), lr = self.lr)
         return optimizer
         
 if __name__ == '__main__':
