@@ -54,13 +54,19 @@ class BERT_trainer(pl.LightningModule):
             trainer.fit(self.bert, dataloader, valid_dataloader)
         self.save(f'model/bert_{get_now()}')
 
-
+# https://github.com/GyuminJack/torchstudy/blob/main/06Jun/BERT/src/trainer.py
     def initialize_weights(self, m):
-        if hasattr(m, 'weight'):
-            if m.weight is None:
-                print(m)  # weight가 None인 것들이 있음 -> crossentropy loss
-            elif m.weight.dim() > 1:
-                nn.init.xavier_uniform_(m.weight.data)
+        for name, param in m.named_parameters():
+            if ("fc" in name) or ('embedding' in name):
+                if 'bias' in name:
+                    torch.nn.init.zeros_(param.data)
+                else:
+                    torch.nn.init.normal_(param.data, mean=0.0, std=0.02)
+            elif "layer_norm" in name:
+                if 'bias' in name:
+                    torch.nn.init.zeros_(param.data)
+                else:
+                    torch.nn.init.constant_(param.data, 1.0)
     
     def save(self, path):
         mkdir(path)

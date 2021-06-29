@@ -64,7 +64,7 @@ class BERT(pl.LightningModule):
             self.log('train_mlm_accuracy', mlm_accuracy, on_step=True)
             return nsp_loss + mlm_loss
         else:
-            print(masked_mlm, target_mlm)
+            pass
     
     def validation_step(self, batch, batch_nb):
         ids = batch.ids.to(self._device)
