@@ -16,7 +16,7 @@ class BERT_trainer(pl.LightningModule):
         self.config = config
         data_config = config['data']
         dataset = BERT_Dataset(data_config['src'], data_config['vocab'],
-                               data_config['max_len'], data_config['nsp_prob'])
+                               data_config['max_len'], data_config['nsp_prob'], data_config['mask_ratio'])
         valid_dataset = BERT_Dataset(data_config['src_valid'], data_config['vocab'],
                                data_config['max_len'], data_config['nsp_prob'])
         dataloader = DataLoader(dataset, data_config['batch_size'], collate_fn=pad_collate)
@@ -50,7 +50,8 @@ class BERT_trainer(pl.LightningModule):
         # Train the model
         mlflow.end_run() # 이전에 돌아가고 있던거 끄기
         with mlflow.start_run() as run:
-            mlflow.log_params(config)
+            for key, value in config.items():
+                mlflow.log_param(key, value)
             trainer.fit(self.bert, dataloader, valid_dataloader)
         self.save(f'model/bert_{get_now()}')
 
