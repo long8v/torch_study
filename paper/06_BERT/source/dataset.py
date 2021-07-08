@@ -116,6 +116,7 @@ if __name__ == '__main__':
                       '/home/long8v/torch_study/paper/file/bert/vocab.json',
                      max_len=128,
                      nsp_ratio=0.5)
+    
     def decode_from_tensor(ids):
         print(bd.tokenizer.decode(ids.tolist(), skip_special_tokens=False))
         
