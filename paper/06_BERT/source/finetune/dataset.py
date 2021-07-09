@@ -34,12 +34,10 @@ class NER_Dataset(Dataset):
                              for char, bio in corpus 
                              if bio[:2] in ['B-', 'I-', 'O']] 
                             for corpus in splitted_corpus]
-#         print(corpus_bio)
         self.corpus_char = [''.join([char for char, bio in corpus]) 
                        for corpus in corpus_pair]
         self.corpus_bio = [[bio for char, bio in corpus] 
                       for corpus in corpus_pair]
-#         print(self.corpus_bio)
         self.unk_token = unk_token
         self.all_labels = ['O'] + [f'{bio}-{cat}' 
                                    for bio in ['B', 'I']
