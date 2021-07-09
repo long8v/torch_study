@@ -32,12 +32,14 @@ class NER_Dataset(Dataset):
                                 for sentence in splitted_corpus]
         corpus_pair = [[[char, bio] 
                              for char, bio in corpus 
-                             if bio[0] in ['B', 'I', 'O']] 
+                             if bio[:2] in ['B-', 'I-', 'O']] 
                             for corpus in splitted_corpus]
+#         print(corpus_bio)
         self.corpus_char = [''.join([char for char, bio in corpus]) 
                        for corpus in corpus_pair]
         self.corpus_bio = [[bio for char, bio in corpus] 
                       for corpus in corpus_pair]
+#         print(self.corpus_bio)
         self.unk_token = unk_token
         self.all_labels = ['O'] + [f'{bio}-{cat}' 
                                    for bio in ['B', 'I']
@@ -54,38 +56,25 @@ class NER_Dataset(Dataset):
         label = self.get_token_labels(text, label, self.tokenizer)
         text = self.tokenizer.encode(text).ids
         label = self.label_field.process(label)
-        return text, label
+        return torch.tensor(text).long(), torch.tensor(label).long()
     
     def get_token_labels(self, text, label, tokenizer):
-        def decode_spm(tokens):
-            return ''.join(
-                [token.replace('##', '')
-                 if token.startswith('##') else f' {token}'
-                 for token in tokens
-                 if token not in [',', '.', '?', "'"]])
-        token_word = tokenizer.encode(text).tokens
+        tokenized = tokenizer.encode(text)
+        token_word = tokenized.tokens
+        offset = tokenized.offsets
         index = 0
         token_labels = []
-        label_clean = [lbl for txt, lbl in list(zip(text, label)) if txt.strip()]
-        print(token_word, label_clean)
-        for token_idx, token in enumerate(token_word):
-            if token != self.unk_token:
-                token_clean = token.replace('##', '')
-                len_token_clean = len(token_clean)
-            else: # [UNK] 토큰 일 때, 원래 토큰 길이를 찾아야 함
-                token_clean = decode_spm(token_word[token_idx + 1:])
-                token_clean_before = decode_spm(token_word[:token_idx])
-                find_text = text.find(''.join(token_clean))
-                print(text, ''.join(token_clean))
-                if find_text > 0 :
-                    len_token_clean = text.find(''.join(token_clean)) - len(token_clean_before)
-                else: 
-                    len_token_clean = len(decode_spm(text)) - len(token_clean_before)
-            print('len token clean', len_token_clean)
-            token_labels.append(label_clean[index:index+len_token_clean][0]) # 가장 첫번째 bio 태그를 태그로 사용
-            index += len_token_clean
+        label_clean = [lbl for txt, lbl in list(zip(text, label))
+                       if txt.strip()]
+        try:
+            for token_off, token in zip(offset, token_word):
+                len_token_clean = token_off[1] - token_off[0] 
+                token_labels.append(label_clean[index:index+len_token_clean][0]) # 가장 첫번째 bio 태그를 태그로 사용
+                index += len_token_clean
+        except:
+            print(token_word, label_clean)
         return token_labels
-        
+
 def pad_collate(batch):
     text, label = zip(*batch)
     named_tuple = namedtuple('data', ['text', 'label'])
