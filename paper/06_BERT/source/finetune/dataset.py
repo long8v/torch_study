@@ -69,7 +69,8 @@ class NER_Dataset(Dataset):
         try:
             for token_off, token in zip(offset, token_word):
                 len_token_clean = token_off[1] - token_off[0] 
-                token_labels.append(label_clean[index:index+len_token_clean][0]) # 가장 첫번째 bio 태그를 태그로 사용
+                token_labels.append(label_clean[index:index+len_token_clean][0]) 
+                # 가장 첫번째 bio 태그를 태그로 사용
                 index += len_token_clean
         except:
             print(token_word, label_clean)
@@ -93,3 +94,4 @@ if __name__ == '__main__':
     for _ in dl:
         print(_.text.shape)
         print(_.label.shape)
+        break
