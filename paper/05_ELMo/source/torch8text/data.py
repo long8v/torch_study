@@ -115,9 +115,9 @@ class Field:
 
     
 class LabelField:
-    def __init__(self, dtype):
-        self.dtype = dtype        
-    
+    def __init__(self):
+        pass
+        
     def build_vocab(self, data):
         self.vocab = Vocab()
         category = set(data)

@@ -26,7 +26,7 @@ class BERT_Dataset(Dataset):
         self.mask_token = mask_token
     
     def __len__(self):
-        return self.num_lines
+        return self.num_lines - 1 # because it is pair
     
     def __getitem__(self, ids):
         tokenizer = self.tokenizer
@@ -107,7 +107,7 @@ def pad_collate(batch):
     mask_ids_pad = pad_sequence(mask_ids, batch_first=True, padding_value=0)
     replaced_ids_pad = pad_sequence(replaced_ids, batch_first=True, padding_value=0)
     segment_ids_pad = pad_sequence(segment_ids, batch_first=True, padding_value=0)
-    nsp_pad = pad_sequence(nsp, batch_first=True, padding_value=4)
+    nsp_pad = pad_sequence(nsp, batch_first=True, padding_value=0)
     return named_tuple(ids_pad, mask_ids_pad, replaced_ids_pad, segment_ids_pad, nsp_pad)   
         
 
