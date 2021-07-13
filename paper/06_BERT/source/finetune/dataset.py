@@ -16,22 +16,21 @@ sys.path.append('/home/long8v/torch_study/paper/05_ELMo/source/')
 from torch8text.data import *
 
 class NER_Dataset(Dataset):
-    def __init__(self, corpus_path, tokenizer_path, categories = ['QT', 'LC', 'PS', 'OG', 'DT', 'TI']):
+    def __init__(self, corpus_path, tokenizer_path, categories=['QT', 'LC', 'PS', 'OG', 'DT', 'TI'],
+                pad_token='[PAD]'):
         self.corpus_path = corpus_path
         with open(self.corpus_path, 'r') as f:
             corpus = f.read()
         corpus = corpus.split('\n\n')
         self.tokenizer = Tokenizer.from_file(tokenizer_path)
         splitted_corpus = [[sen.split('\t') 
-                                for sen in sentence.split('\n')] 
-                                for sentence in corpus 
-                                if '\t' in sentence]
-        splitted_corpus = [[sen for sen in sentence 
-                                 if len(sen) > 1] 
-                                for sentence in splitted_corpus]
-        corpus_pair = [[[char, bio] 
-                        for char, bio in corpus 
-                        if bio[:2] in ['B-', 'I-', 'O']] 
+                            for sen in sentence.split('\n')
+                           if '##' not in sen and sen.strip()] 
+                            for sentence in corpus]
+        splitted_corpus = [[sen for sen in sentence]
+                            for sentence in splitted_corpus]
+        corpus_pair = [[(char, bio) 
+                        for char, bio in corpus] 
                         for corpus in splitted_corpus]
         self.corpus_char = [''.join([char for char, bio in corpus]) 
                        for corpus in corpus_pair]
@@ -40,7 +39,7 @@ class NER_Dataset(Dataset):
         self.all_labels = ['O'] + [f'{bio}-{cat}' 
                                    for bio in ['B', 'I']
                                    for cat in categories]
-        self.label_field = LabelField()
+        self.label_field = LabelField(pad_token=pad_token)
         self.label_field.build_vocab(self.all_labels)
         print(self.label_field.vocab.itos_dict)
         
@@ -50,9 +49,9 @@ class NER_Dataset(Dataset):
     def __getitem__(self, ids):
         text, label = self.corpus_char[ids], self.corpus_bio[ids]
         label = self.get_token_labels(text, label, self.tokenizer)
-        text = self.tokenizer.encode(text).ids
         label = self.label_field.process(label)
-        return torch.tensor(text).long(), torch.tensor(label).long()
+        tokens = self.tokenizer.encode(text).ids
+        return torch.tensor(tokens).long(), torch.tensor(label).long()
     
     def get_token_labels(self, text, label, tokenizer):
         tokenized = tokenizer.encode(text)
@@ -62,14 +61,10 @@ class NER_Dataset(Dataset):
         token_labels = []
         label_clean = [lbl for txt, lbl in list(zip(text, label))
                        if txt.strip()]
-        try:
-            for token_off, token in zip(offset, token_word):
-                len_token_clean = token_off[1] - token_off[0] 
-                token_labels.append(label_clean[index:index+len_token_clean][0]) 
-                # 가장 첫번째 bio 태그를 태그로 사용
-                index += len_token_clean
-        except:
-            print(token_word, label_clean)
+        for token_off, token in zip(offset, token_word):
+            len_token_clean = token_off[1] - token_off[0] 
+            token_labels.append(label_clean[index:index+len_token_clean][0]) # 가장 첫번째 bio 태그를 태그로 사용
+            index += len_token_clean
         return token_labels
 
 def pad_collate(batch):

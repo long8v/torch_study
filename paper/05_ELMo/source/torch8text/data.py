@@ -115,14 +115,17 @@ class Field:
 
     
 class LabelField:
-    def __init__(self):
-        pass
+    def __init__(self, pad_token=None):
+        self.pad_token = pad_token
         
     def build_vocab(self, data):
         self.vocab = Vocab()
         category = set(data)
         idx = 0
         category_dict = {}
+        if self.pad_token:
+            category_dict[idx] = self.pad_token
+            idx += 1
         for cat in category:
             category_dict[idx] = cat
             idx += 1
