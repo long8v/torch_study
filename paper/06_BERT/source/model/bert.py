@@ -75,10 +75,10 @@ class BERT(pl.LightningModule):
             self.log('train_mlm_loss', mlm_loss, on_step=True)
             self.log('train_nsp_accuracy', nsp_accuracy, on_step=True)
             self.log('train_mlm_accuracy', mlm_accuracy, on_step=True)
+            self.log('lr', self.scheduler.get_last_lr()[0])
             return nsp_loss + mlm_loss
-        else:
-            pass
-    
+        
+
     def validation_step(self, batch, batch_nb):
         ids = batch.ids.to(self._device)
         mask_ids = batch.mask_ids.to(self._device)
@@ -91,15 +91,15 @@ class BERT(pl.LightningModule):
         target_mlm = torch.masked_select(ids, mask_ids == 1)
         nsp_loss = self.criterion_nsp(nsp_output, nsp.squeeze(1))
         mlm_loss = self.criterion_mlm(masked_mlm, target_mlm)
+        if not torch.isnan(mlm_loss):
+            nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
+            mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
+            self.log('valid_nsp_loss', nsp_loss, on_step=True)
+            self.log('valid_mlm_loss', mlm_loss, on_step=True)
+            self.log('valid_nsp_accuracy', nsp_accuracy, on_step=True)
+            self.log('valid_mlm_accuracy', mlm_accuracy, on_step=True)
+            return nsp_loss + mlm_loss
         
-        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
-        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
-        self.log('valid_nsp_loss', nsp_loss, on_step=True)
-        self.log('valid_mlm_loss', mlm_loss, on_step=True)
-        self.log('valid_nsp_accuracy', nsp_accuracy, on_step=True)
-        self.log('valid_mlm_accuracy', mlm_accuracy, on_step=True)
-        return nsp_loss + mlm_loss
-    
     def multi_acc(self, y_pred, y_test):
         if y_pred.numel():
             _, y_pred_tags = torch.max(y_pred, dim = 1)
@@ -120,12 +120,12 @@ class BERT(pl.LightningModule):
         print("tags: {}".format(tags))
         
     def configure_optimizers(self):
-        optimizer = optim.AdamW(self.parameters(), lr = self.lr)
+        self.optimizer = optim.AdamW(self.parameters(), lr = self.lr)
         if self.config['train']['scheduler']:
-            scheduler = WarmupConstantSchedule(optimizer, d_model=self.config['model']['hid_dim'],
+            self.scheduler = WarmupConstantSchedule(self.optimizer, d_model=self.config['model']['hid_dim'],
                                                warmup_steps=self.config['train']['warmup_steps'])
-            return [optimizer], [scheduler]
-        return optimizer
+            return [self.optimizer], [self.scheduler]
+        return self.optimizer
         
 if __name__ == '__main__':
     input_dim = 100
