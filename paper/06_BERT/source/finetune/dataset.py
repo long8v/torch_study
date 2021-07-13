@@ -1,6 +1,3 @@
-# https://keep-steady.tistory.com/37#recentEntries
-# https://huggingface.co/docs/tokenizers/python/latest/api/reference.html#tokenizer
-
 from torch.utils.data import Dataset, DataLoader
 import random
 import numpy.random

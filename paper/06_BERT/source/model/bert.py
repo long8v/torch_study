@@ -9,6 +9,19 @@ import time
 import pytorch_lightning as pl
 import yaml
 
+class WarmupConstantSchedule(torch.optim.lr_scheduler.LambdaLR):
+    """ Linear warmup and then constant.
+        Linearly increases learning rate schedule from 0 to 1 over `warmup_steps` training steps.
+        Keeps learning rate schedule equal to 1. after warmup_steps.
+    """
+    def __init__(self, optimizer, d_model, warmup_steps):
+        def lr_lambda(step):
+            if step < warmup_steps:
+                return 1
+            lrate = (d_model ** -0.5) * min(step ** -0.5, step * (warmup_steps ** -1.5))
+            return lrate
+        super(WarmupConstantSchedule, self).__init__(optimizer, lr_lambda)
+
 class BERT(pl.LightningModule):
     def __init__(self, 
                  config,
@@ -108,6 +121,10 @@ class BERT(pl.LightningModule):
         
     def configure_optimizers(self):
         optimizer = optim.AdamW(self.parameters(), lr = self.lr)
+        if self.config['train']['scheduler']:
+            scheduler = WarmupConstantSchedule(optimizer, d_model=self.config['model']['hid_dim'],
+                                               warmup_steps=self.config['train']['warmup_steps'])
+            return [optimizer], [scheduler]
         return optimizer
         
 if __name__ == '__main__':

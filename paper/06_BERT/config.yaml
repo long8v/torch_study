@@ -17,3 +17,5 @@ train:
     n_epochs: 1000
     device: 'cuda'
     lr: 0.0005
+    scheduler: True
+    warmup_steps: 20
