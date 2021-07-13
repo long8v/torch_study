@@ -16,8 +16,7 @@ sys.path.append('/home/long8v/torch_study/paper/05_ELMo/source/')
 from torch8text.data import *
 
 class NER_Dataset(Dataset):
-    def __init__(self, corpus_path, tokenizer_path,
-                 unk_token='[UNK]', categories = ['QT', 'LC', 'PS', 'OG', 'DT', 'TI']):
+    def __init__(self, corpus_path, tokenizer_path, categories = ['QT', 'LC', 'PS', 'OG', 'DT', 'TI']):
         self.corpus_path = corpus_path
         with open(self.corpus_path, 'r') as f:
             corpus = f.read()
@@ -31,14 +30,13 @@ class NER_Dataset(Dataset):
                                  if len(sen) > 1] 
                                 for sentence in splitted_corpus]
         corpus_pair = [[[char, bio] 
-                             for char, bio in corpus 
-                             if bio[:2] in ['B-', 'I-', 'O']] 
-                            for corpus in splitted_corpus]
+                        for char, bio in corpus 
+                        if bio[:2] in ['B-', 'I-', 'O']] 
+                        for corpus in splitted_corpus]
         self.corpus_char = [''.join([char for char, bio in corpus]) 
                        for corpus in corpus_pair]
         self.corpus_bio = [[bio for char, bio in corpus] 
                       for corpus in corpus_pair]
-        self.unk_token = unk_token
         self.all_labels = ['O'] + [f'{bio}-{cat}' 
                                    for bio in ['B', 'I']
                                    for cat in categories]
@@ -84,12 +82,28 @@ def pad_collate(batch):
 
 if __name__ == '__main__':
     ds = NER_Dataset('/home/long8v/torch_study/paper/file/klue-ner-v1_train.tsv',
-                       '/home/long8v/torch_study/paper/file/bert/vocab.json',
-                    '[UNK]')
-    print(ds[0])
+                       '/home/long8v/torch_study/paper/file/bert/vocab.json')
+    def decode_from_tensor(ids):
+        print(ds.tokenizer.decode(ids.tolist(), skip_special_tokens=False))
+    decode_from_tensor(ds[0][0])
+    print(ds.label_field.vocab.itos(ds[0][1].tolist()))
+    print(ds[0][0])
+    print(ds[0][1])
+    
     
     dl = DataLoader(ds, batch_size=16, collate_fn=pad_collate)
     for _ in dl:
         print(_.text.shape)
         print(_.label.shape)
         break
+        
+# {0: 'I-OG', 1: 'I-DT', 2: 'I-QT', 3: 'I-TI', 4: 'O', 5: 'B-LC', 6: 'B-DT', 7: 'B-PS', 8: 'I-PS', 9: 'B-TI', 10: 'B-QT', 11: 'B-OG', 12: 'I-LC'}
+# 특히 영동고속도로 [UNK] 방향 문막휴게소에서 만종분기점까지 [UNK] 구간에는 승용차 전용 임시 [UNK] 운영하기로 했다.
+# O B-LC I-LC B-LC O B-LC I-LC I-LC I-LC I-LC O O B-LC I-LC I-LC I-LC I-LC O O B-QT O O O O O O O O O O O O O O O O
+# tensor([2195, 8395, 8105,    1, 2627,  426, 1261, 1458, 1414, 1134, 1102, 1010,
+#          383, 1123, 1011, 1023, 1108, 1197, 1128,    1, 2910, 1102, 1375,  573,
+#         1191, 1255, 2983, 3786,    1, 2003, 1053, 1023, 1092,  952, 1025,    8])
+# tensor([ 4,  5, 12,  5,  4,  5, 12, 12, 12, 12,  4,  4,  5, 12, 12, 12, 12,  4,
+#          4, 10,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4])
+# torch.Size([16, 112])
+# torch.Size([16, 112])
