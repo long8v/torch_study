@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 from .attention import *
 from .encoder import *
 import random
@@ -75,9 +76,11 @@ class BERT(pl.LightningModule):
             self.log('train_mlm_loss', mlm_loss, on_step=True)
             self.log('train_nsp_accuracy', nsp_accuracy, on_step=True)
             self.log('train_mlm_accuracy', mlm_accuracy, on_step=True)
-            self.log('lr', self.scheduler.get_last_lr()[0])
+            self.log('train_total_loss', nsp_loss + mlm_loss, on_step=True)
+            self.log('lr', self.optimizer.param_groups[0]['lr'])
             return nsp_loss + mlm_loss
-        
+        else:
+            print(ids, mask_ids, nsp)
 
     def validation_step(self, batch, batch_nb):
         ids = batch.ids.to(self._device)
@@ -98,7 +101,10 @@ class BERT(pl.LightningModule):
             self.log('valid_mlm_loss', mlm_loss, on_step=True)
             self.log('valid_nsp_accuracy', nsp_accuracy, on_step=True)
             self.log('valid_mlm_accuracy', mlm_accuracy, on_step=True)
+            self.log('valid_total_loss', nsp_loss + mlm_loss, on_step=True)
             return nsp_loss + mlm_loss
+        else:
+            print(ids, mask_ids, nsp)
         
     def multi_acc(self, y_pred, y_test):
         if y_pred.numel():
@@ -122,9 +128,10 @@ class BERT(pl.LightningModule):
     def configure_optimizers(self):
         self.optimizer = optim.AdamW(self.parameters(), lr = self.lr)
         if self.config['train']['scheduler']:
-            self.scheduler = WarmupConstantSchedule(self.optimizer, d_model=self.config['model']['hid_dim'],
-                                               warmup_steps=self.config['train']['warmup_steps'])
-            return [self.optimizer], [self.scheduler]
+#             self.scheduler = WarmupConstantSchedule(self.optimizer, d_model=self.config['model']['hid_dim'],
+#                                                warmup_steps=self.config['train']['warmup_steps'])
+            self.scheduler = ReduceLROnPlateau(self.optimizer, 'min')
+            return  {"optimizer": self.optimizer, "lr_scheduler": self.scheduler, "monitor": "valid_total_loss"}
         return self.optimizer
         
 if __name__ == '__main__':

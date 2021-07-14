@@ -18,4 +18,4 @@ train:
     device: 'cuda'
     lr: 0.0005
     scheduler: True
-    warmup_steps: 32500
+    warmup_steps: 100
