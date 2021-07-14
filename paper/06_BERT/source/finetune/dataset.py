@@ -66,7 +66,7 @@ class NER_Dataset(Dataset):
 
 def pad_collate(batch):
     text, label = zip(*batch)
-    named_tuple = namedtuple('data', ['text', 'label'])
+    named_tuple = namedtuple('data', ['token', 'label'])
     text_pad = pad_sequence(text, batch_first=True, padding_value=0) # 하드코딩 고쳐야함
     label_pad = pad_sequence(label, batch_first=True, padding_value=0)
     return named_tuple(text_pad, label_pad)   
