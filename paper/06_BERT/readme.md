@@ -14,18 +14,10 @@ pytorch-crf == 0.7.2
 ![image](https://user-images.githubusercontent.com/46675408/124102640-81f47600-da9b-11eb-86e8-18f7897fae89.png)
 ![image](https://user-images.githubusercontent.com/46675408/124102899-bb2ce600-da9b-11eb-814f-30b2761b0f5c.png)
 
-mask ratio 0.5
-
-![image](https://user-images.githubusercontent.com/46675408/124528588-7f9b6e80-de43-11eb-93f7-bd1fdda171c5.png)
-
 
 **NSP**
 ![image](https://user-images.githubusercontent.com/46675408/124102824-a7817f80-da9b-11eb-8217-a6dff6d797dd.png)
 ![image](https://user-images.githubusercontent.com/46675408/124103027-d992e180-da9b-11eb-8246-83efdb01650d.png)
-
-mask ratio 0.5
-
-![image](https://user-images.githubusercontent.com/46675408/124528644-a5287800-de43-11eb-857e-272c9bd16945.png)
 
 
 ## 🤔 Paper review
