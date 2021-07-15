@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.optim.lr_scheduler import ReduceLROnPlateau
+from torch.optim.lr_scheduler import ReduceLROnPlateau, LambdaLR, CosineAnnealingLR
 from .attention import *
 from .encoder import *
 import random
@@ -10,7 +10,7 @@ import time
 import pytorch_lightning as pl
 import yaml
 
-class WarmupConstantSchedule(torch.optim.lr_scheduler.LambdaLR):
+class WarmupConstantSchedule(LambdaLR):
     """ Linear warmup and then constant.
         Linearly increases learning rate schedule from 0 to 1 over `warmup_steps` training steps.
         Keeps learning rate schedule equal to 1. after warmup_steps.
@@ -130,7 +130,8 @@ class BERT(pl.LightningModule):
         if self.config['train']['scheduler']:
 #             self.scheduler = WarmupConstantSchedule(self.optimizer, d_model=self.config['model']['hid_dim'],
 #                                                warmup_steps=self.config['train']['warmup_steps'])
-            self.scheduler = ReduceLROnPlateau(self.optimizer, 'min')
+#             self.scheduler = ReduceLROnPlateau(self.optimizer, 'min')
+            self.scheduler = CosineAnnealingLR(self.optimizer, T_max=5)
             return  {"optimizer": self.optimizer, "lr_scheduler": self.scheduler, "monitor": "valid_total_loss"}
         return self.optimizer
         
