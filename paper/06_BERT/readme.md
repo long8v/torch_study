@@ -50,7 +50,11 @@ input :        **i [mask] to school.**<BR>
 - 허깅페이스 트랜스포머 한 주 보고 가자!
 
 ## 🤫 논문과 다르게 구현한 부분
-
+  
+- 한국어 데이터
+- optimizer : 
+- 문장이 길 때 max_seq_len을 자르는 부분 ? senB를 먼저 자르도록 했는데 논문에선 어떻게 자르는지 나와있진 않음
+  
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
  
 - BERT, transformer의 seq_len 차원은 정해져있을 필요가 없고 max_len으로 배치별로 패딩하는거다<br>
@@ -62,3 +66,4 @@ input :        **i [mask] to school.**<BR>
 - bert에서 senA, senB의 단위는 일반적으로 문장임. finetune task에서 QA등을 할때에는 문단이나 단어가 들어갈 수 있음.
 - 데이터가 클 때 리스트에 올리거나 하면 메모리 에러가 남..큰 데이터셋을 다룰 때는 기존의 방법이랑 다르게 해야함 -> linecache 사용해봄
 - finetuning을 할 때, token embedding만 사용한다고 생각했었는데 그게 아닌 attention 값(batch_size, seq_len, hidden_dim)을 사용함!
+- AdamW의 위력..initialize의 위력..
