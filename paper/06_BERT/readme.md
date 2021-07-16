@@ -61,3 +61,4 @@ input :        **i [mask] to school.**<BR>
 - [mask] 중에 10%는 그대로 남기는 이유 : [mask]로 선택된 토큰은 예측을 하는데, input이 [mask]이거나, random이거나 그대로 토큰일 때 맞추는 것
 - bert에서 senA, senB의 단위는 일반적으로 문장임. finetune task에서 QA등을 할때에는 문단이나 단어가 들어갈 수 있음.
 - 데이터가 클 때 리스트에 올리거나 하면 메모리 에러가 남..큰 데이터셋을 다룰 때는 기존의 방법이랑 다르게 해야함 -> linecache 사용해봄
+- finetuning을 할 때, token embedding만 사용한다고 생각했었는데 그게 아닌 attention 값(batch_size, seq_len, hidden_dim)을 사용함!
