@@ -51,8 +51,10 @@ class NER_BERT(pl.LightningModule):
     def forward(self, tokens, labels):
         seg = torch.zeros_like(tokens) # seg는 아무래도 상관없음
         token_mask = self.make_src_mask(tokens).to(self._device)
-        output = self.encoder(tokens, seg, ~token_mask)  # batch_size, seq_len, hid_dim
+        output = self.encoder(tokens, seg, token_mask)  # batch_size, seq_len, hid_dim
         output = self.fcn(output)
+        # mask일 경우 True여서 ~붙여서 반대로 만들어줌
+        print(~token_mask.squeeze(1).squeeze(1))
         loss = self.crf(output, labels, token_mask.squeeze(1).squeeze(1))
         output = torch.tensor(self.crf.decode(output))
         return loss, output
