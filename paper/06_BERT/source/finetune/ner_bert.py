@@ -82,7 +82,7 @@ class NER_BERT(pl.LightningModule):
         self.log('valid_accuracy', accuracy, on_step=True)
         self.log('valid_micro_f1', f1['micro'])
         self.log('valid_macro_f1', f1['macro'])
-        return loss
+        return oss
     
     
     def f1(self, y_pred, y_test):
