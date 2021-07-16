@@ -31,15 +31,16 @@ class NER_BERT(pl.LightningModule):
         print(f'load pretrained model from {pretrained_path}..')
         pretrained_config = read_yaml(f'{pretrained_path}/model_config.yaml')
         pretrained_model = f'{pretrained_path}/model.pt'
+        self.pad_idx = pretrained_config['data']['pad_idx']
         self.bert = BERT(self.config, pretrained_config['data']['input_dim'],
-                        pretrained_config['data']['pad_idx'])
+                        self.pad_idx)
         self.bert.load_state_dict(torch.load(pretrained_model))
         self.lr = self.config['train']['lr']
         self.encoder = self.bert.encoder
         self.output_dim = output_dim
         self.fcn = nn.Linear(config['hid_dim'], output_dim)
         self.crf = CRF(output_dim, batch_first=True)
-        self.criteiron = nn.CrossEntropyLoss(ignore_index=pretrained_config['data']['pad_idx'])
+#         self.criteiron = nn.CrossEntropyLoss(ignore_index=pretrained_config['data']['pad_idx'])
         
     def make_src_mask(self, src):
         #src = [batch size, src len]
@@ -61,7 +62,7 @@ class NER_BERT(pl.LightningModule):
         label = batch.label.to(self._device)
         loss, output = self(token, label)
         loss = - loss
-        accuracy = self.acc(output.to(self._device).view(-1), label.view(-1))
+        accuracy = self.acc(output.to(self._device), label)
         self.log('train_loss', loss, on_step=True)
         self.log('train_accuracy', accuracy, on_step=True)
         self.log('lr', self.optimizer.param_groups[0]['lr'])
@@ -72,13 +73,17 @@ class NER_BERT(pl.LightningModule):
         label = batch.label.to(self._device)
         loss, output = self(token, label)
         loss = - loss
-        accuracy = self.acc(output.to(self._device).view(-1), label.view(-1))
+        accuracy = self.acc(output.to(self._device), label)
         self.log('valid_loss', loss, on_step=True)
         self.log('valid_accuracy', accuracy, on_step=True)
         self.log('lr', self.optimizer.param_groups[0]['lr'])
         return loss
         
     def acc(self, y_pred, y_test):
+        y_pred, y_test = y_pred.view(-1), y_test.view(-1)
+        # 실제 값이 패딩인걸 패딩으로 예측한건 빼줘야하지 않을까..고민해보야할듯
+        y_pred = y_pred[y_test != self.pad_idx] 
+        y_test = y_test[y_test != self.pad_idx]
         correct_pred = (y_pred == y_test).float()
         acc = correct_pred.sum() / len(correct_pred)
         acc = torch.round(acc * 100)
