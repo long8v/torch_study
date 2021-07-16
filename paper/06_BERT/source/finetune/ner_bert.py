@@ -60,7 +60,8 @@ class NER_BERT(pl.LightningModule):
         token = batch.token.to(self._device)
         label = batch.label.to(self._device)
         loss, output = self(token, label)
-        accuracy = self.acc(output.to(self._device), label)
+        loss = - loss
+        accuracy = self.acc(output.to(self._device).view(-1), label.view(-1))
         self.log('train_loss', loss, on_step=True)
         self.log('train_accuracy', accuracy, on_step=True)
         self.log('lr', self.optimizer.param_groups[0]['lr'])
@@ -70,7 +71,8 @@ class NER_BERT(pl.LightningModule):
         token = batch.token.to(self._device)
         label = batch.label.to(self._device)
         loss, output = self(token, label)
-        accuracy = self.acc(output.to(self._device), label)
+        loss = - loss
+        accuracy = self.acc(output.to(self._device).view(-1), label.view(-1))
         self.log('valid_loss', loss, on_step=True)
         self.log('valid_accuracy', accuracy, on_step=True)
         self.log('lr', self.optimizer.param_groups[0]['lr'])

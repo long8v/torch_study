@@ -15,8 +15,8 @@ model:
     dropout: 0.5
 
 train:
-    n_epochs: 1000
+    n_epochs: 100
     device: 'cuda'
-    lr: 0.0005
+    lr: 0.005
     scheduler: True
     warmup_steps: 100
