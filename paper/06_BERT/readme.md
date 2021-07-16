@@ -67,3 +67,5 @@ input :        **i [mask] to school.**<BR>
 - 데이터가 클 때 리스트에 올리거나 하면 메모리 에러가 남..큰 데이터셋을 다룰 때는 기존의 방법이랑 다르게 해야함 -> linecache 사용해봄
 - finetuning을 할 때, token embedding만 사용한다고 생각했었는데 그게 아닌 attention 값(batch_size, seq_len, hidden_dim)을 사용함!
 - AdamW의 위력..initialize의 위력..
+- tokenizers 사용법
+- tokenizers 사용하여 chr-level NER input/output 만드는 코드!
