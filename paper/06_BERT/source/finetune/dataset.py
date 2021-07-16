@@ -29,7 +29,7 @@ class NER_Dataset(Dataset):
         corpus_pair = [[(char, bio) 
                         for char, bio in corpus] 
                         for corpus in splitted_corpus
-                        if corpus.strip()]
+                        if corpus]
         self.corpus_char = [''.join([char for char, bio in corpus]) 
                        for corpus in corpus_pair]
         self.corpus_bio = [[bio for char, bio in corpus] 

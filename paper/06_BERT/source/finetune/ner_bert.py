@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from sklearn.metrics import f1_score
 import torch.optim as optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import sys
@@ -51,11 +52,10 @@ class NER_BERT(pl.LightningModule):
     def forward(self, tokens, labels):
         seg = torch.zeros_like(tokens) # seg는 아무래도 상관없음
         token_mask = self.make_src_mask(tokens).to(self._device)
-        output = self.encoder(tokens, seg, token_mask)  # batch_size, seq_len, hid_dim
+        output = self.encoder(tokens, seg, token_mask) # batch_size, seq_len, hid_dim  
         output = self.fcn(output)
-        # mask일 경우 True여서 ~붙여서 반대로 만들어줌
-        print(~token_mask.squeeze(1).squeeze(1))
-        loss = self.crf(output, labels, token_mask.squeeze(1).squeeze(1))
+        loss = - self.crf(output, labels) # log likelihood -> neg log likelihood
+#         loss = self.crf(output, labels, token_mask.squeeze(1).squeeze(1))
         output = torch.tensor(self.crf.decode(output))
         return loss, output
         
@@ -63,10 +63,12 @@ class NER_BERT(pl.LightningModule):
         token = batch.token.to(self._device)
         label = batch.label.to(self._device)
         loss, output = self(token, label)
-        loss = - loss
-        accuracy = self.acc(output.to(self._device), label)
+        accuracy = self.acc(output, label)
+        f1 = self.f1(output, label)
         self.log('train_loss', loss, on_step=True)
         self.log('train_accuracy', accuracy, on_step=True)
+        self.log('train_micro_f1', f1['micro'])
+        self.log('train_macro_f1', f1['macro'])
         self.log('lr', self.optimizer.param_groups[0]['lr'])
         return loss
 
@@ -74,15 +76,25 @@ class NER_BERT(pl.LightningModule):
         token = batch.token.to(self._device)
         label = batch.label.to(self._device)
         loss, output = self(token, label)
-        loss = - loss
-        accuracy = self.acc(output.to(self._device), label)
+        accuracy = self.acc(output, label)
+        f1 = self.f1(output, label)
         self.log('valid_loss', loss, on_step=True)
         self.log('valid_accuracy', accuracy, on_step=True)
-        self.log('lr', self.optimizer.param_groups[0]['lr'])
+        self.log('valid_micro_f1', f1['micro'])
+        self.log('valid_macro_f1', f1['macro'])
         return loss
-        
-    def acc(self, y_pred, y_test):
+    
+    
+    def f1(self, y_pred, y_test):
         y_pred, y_test = y_pred.view(-1), y_test.view(-1)
+        y_pred = y_pred[y_test != self.pad_idx] 
+        y_test = y_test[y_test != self.pad_idx]
+        micro_score = f1_score(y_pred.cpu(), y_test.cpu(), average='micro')
+        macro_score = f1_score(y_pred.cpu(), y_test.cpu(), average='macro')
+        return {'micro': micro_score, 'macro': macro_score}
+    
+    def acc(self, y_pred, y_test):
+        y_pred, y_test = y_pred.view(-1).to(self._device), y_test.view(-1).to(self._device)
         # 실제 값이 패딩인걸 패딩으로 예측한건 빼줘야하지 않을까..고민해보야할듯
         y_pred = y_pred[y_test != self.pad_idx] 
         y_test = y_test[y_test != self.pad_idx]
