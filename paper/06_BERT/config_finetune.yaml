@@ -1,12 +1,13 @@
 data:
-    src: '/home/long8v/torch_study/paper/file/bert/bert.txt'
-    src_valid: '/home/long8v/torch_study/paper/file/bert/bert_valid.txt'
+    src: '/home/long8v/torch_study/paper/file/klue-ner-v1_train.tsv'
+    src_valid: '/home/long8v/torch_study/paper/file/klue-ner-v1_dev.tsv'
     vocab:  '/home/long8v/torch_study/paper/file/bert/vocab.json'
     max_len: 128
     nsp_prob: 0.5
     mask_ratio: 0.1
     batch_size: 64
 model:
+    pretrained_path: '/home/long8v/torch_study/paper/06_BERT/model/bert_16071339'
     hid_dim: 256
     n_layers: 2
     n_heads: 8
@@ -14,7 +15,7 @@ model:
     dropout: 0.5
 
 train:
-    n_epochs: 1
+    n_epochs: 1000
     device: 'cuda'
     lr: 0.0005
     scheduler: True

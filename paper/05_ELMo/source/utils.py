@@ -1,5 +1,6 @@
 import os
 import yaml
+import dill
 import datetime
 
 def read_yaml(file):
@@ -14,3 +15,7 @@ def mkdir(path):
     
 def get_now():
     return datetime.datetime.now().strftime("%d%m%H%M")
+
+def save_defaultdict(obj, file):
+    with open(file, 'wb') as f:
+        dill.dump(obj, f, protocol=dill.HIGHEST_PROTOCOL)

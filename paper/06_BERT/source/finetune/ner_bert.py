@@ -2,8 +2,12 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-from .attention import *
-from .encoder import *
+import sys
+sys.path.append('/home/long8v/torch_study/paper/06_BERT/source/')
+from model.attention import *
+from model.encoder import *
+from model.bert import *
+from utils import *
 import random
 import math
 import time
@@ -12,7 +16,7 @@ import yaml
 from torchcrf import CRF
 
 
-class NER_ERT(pl.LightningModule):
+class NER_BERT(pl.LightningModule):
     def __init__(self, 
                  config,
                  input_dim,
@@ -23,12 +27,19 @@ class NER_ERT(pl.LightningModule):
         self.pad_idx  = pad_idx
         config = self.config['model']
         self._device = self.config['train']['device']
-        self.encoder = Encoder(input_dim, config['hid_dim'], self.config['data']['max_len'],
-                               config['n_layers'], config['n_heads'], 
-                               config['pf_dim'], config['dropout'], self._device)
-        self.fcn = nn.Linear(config['hid_dim'], output_dim) # pretrained 가져오는 부분 구현해야함
+        pretrained_path = self.config['model']['pretrained_path']
+        print(f'load pretrained model from {pretrained_path}..')
+        pretrained_config = read_yaml(f'{pretrained_path}/model_config.yaml')
+        pretrained_model = f'{pretrained_path}/model.pt'
+        self.bert = BERT(self.config, pretrained_config['data']['input_dim'],
+                        pretrained_config['data']['pad_idx'])
+        self.bert.load_state_dict(torch.load(pretrained_model))
+        self.lr = self.config['train']['lr']
+        self.encoder = self.bert.encoder
+        self.output_dim = output_dim
+        self.fcn = nn.Linear(config['hid_dim'], output_dim)
         self.crf = CRF(output_dim, batch_first=True)
-        self.criteiron = nn.CrossEntropyLoss(ignore_index = 0) # 하드 코딩 고쳐야 함
+        self.criteiron = nn.CrossEntropyLoss(ignore_index=pretrained_config['data']['pad_idx'])
         
     def make_src_mask(self, src):
         #src = [batch size, src len]
@@ -36,29 +47,40 @@ class NER_ERT(pl.LightningModule):
         #src_mask = [batch size, 1, 1, src len]
         return src_mask
     
-    def forward(self, tokens):
+    def forward(self, tokens, labels):
         seg = torch.zeros_like(tokens) # seg는 아무래도 상관없음
         token_mask = self.make_src_mask(tokens)
-        output = self.encoder(token, seg, token_mask)  # batch_size, seq_len, hid_dim
+        output = self.encoder(tokens, seg, token_mask)  # batch_size, seq_len, hid_dim
         output = self.fcn(output)
-        output = self.crf(output)
-        return output
+        loss = self.crf(output, labels)
+        output = torch.tensor(self.crf.decode(output))
+        return loss, output
         
     def training_step(self, batch, batch_nb):
         token = batch.token.to(self._device)
         label = batch.label.to(self._device)
-        output = self(token)
-        ### wip ###
-        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
-        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
-        self.log('train_loss', nsp_loss, on_step=True)
-        self.log('train_accuracy', mlm_accuracy, on_step=True)
-        self.log('train_total_loss', nsp_loss + mlm_loss, on_step=True)
+        loss, output = self(token, label)
+        accuracy = self.acc(output.to(self._device), label)
+        self.log('train_loss', loss, on_step=True)
+        self.log('train_accuracy', accuracy, on_step=True)
         self.log('lr', self.optimizer.param_groups[0]['lr'])
         return loss
 
     def validation_step(self, batch, batch_nb):
-        pass
+        token = batch.token.to(self._device)
+        label = batch.label.to(self._device)
+        loss, output = self(token, label)
+        accuracy = self.acc(output.to(self._device), label)
+        self.log('valid_loss', loss, on_step=True)
+        self.log('valid_accuracy', accuracy, on_step=True)
+        self.log('lr', self.optimizer.param_groups[0]['lr'])
+        return loss
+        
+    def acc(self, y_pred, y_test):
+        correct_pred = (y_pred == y_test).float()
+        acc = correct_pred.sum() / len(correct_pred)
+        acc = torch.round(acc * 100)
+        return acc
         
     def multi_acc(self, y_pred, y_test):
         if y_pred.numel():
@@ -83,7 +105,7 @@ class NER_ERT(pl.LightningModule):
         self.optimizer = optim.AdamW(self.parameters(), lr = self.lr)
         if self.config['train']['scheduler']:
             self.scheduler = ReduceLROnPlateau(self.optimizer, 'min')
-            return  {"optimizer": self.optimizer, "lr_scheduler": self.scheduler, "monitor": "valid_total_loss"}
+            return  {"optimizer": self.optimizer, "lr_scheduler": self.scheduler, "monitor": "valid_loss"}
         return self.optimizer
         
 if __name__ == '__main__':
@@ -95,9 +117,8 @@ if __name__ == '__main__':
     dropout = 0.5
     output_dim = 13 
     device = 'cpu'
-    config_file = '/home/long8v/torch_study/paper/06_BERT/config.yaml'
+    config_file = '/home/long8v/torch_study/paper/06_BERT/config_finetune.yaml'
     config = yaml.safe_load(open(config_file, 'r', encoding='utf8'))
-    bert = BERT(config, input_dim, output_dim, 0)
+    bert = NER_BERT(config, input_dim, output_dim, 0)
     bert.to(device)
-
-    print(loss)
+    

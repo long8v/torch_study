@@ -38,7 +38,7 @@ class NER_Dataset(Dataset):
                                    for cat in categories]
         self.label_field = LabelField(pad_token=pad_token)
         self.label_field.build_vocab(self.all_labels)
-        print(self.label_field.vocab.itos_dict)
+        self.output_dim = len(self.label_field.vocab.itos_dict)
         
     def __len__(self):
         return len(self.corpus_char)

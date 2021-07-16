@@ -18,6 +18,7 @@ runs/
 *.swp
 paper/01_CNN/.vector_cache/
 paper/05_ELMo/model/*
+paper/06_BERT/model/*
 
 
 **/mlruns/*

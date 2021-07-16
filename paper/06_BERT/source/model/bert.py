@@ -10,18 +10,6 @@ import time
 import pytorch_lightning as pl
 import yaml
 
-class WarmupConstantSchedule(LambdaLR):
-    """ Linear warmup and then constant.
-        Linearly increases learning rate schedule from 0 to 1 over `warmup_steps` training steps.
-        Keeps learning rate schedule equal to 1. after warmup_steps.
-    """
-    def __init__(self, optimizer, d_model, warmup_steps):
-        def lr_lambda(step):
-            if step < warmup_steps:
-                return 1
-            lrate = (d_model ** -0.5) * min(step ** -0.5, step * (warmup_steps ** -1.5))
-            return lrate
-        super(WarmupConstantSchedule, self).__init__(optimizer, lr_lambda)
 
 class BERT(pl.LightningModule):
     def __init__(self, 
@@ -134,6 +122,19 @@ class BERT(pl.LightningModule):
             self.scheduler = CosineAnnealingLR(self.optimizer, T_max=5)
             return  {"optimizer": self.optimizer, "lr_scheduler": self.scheduler, "monitor": "valid_total_loss"}
         return self.optimizer
+        
+class WarmupConstantSchedule(LambdaLR):
+    """ Linear warmup and then constant.
+        Linearly increases learning rate schedule from 0 to 1 over `warmup_steps` training steps.
+        Keeps learning rate schedule equal to 1. after warmup_steps.
+    """
+    def __init__(self, optimizer, d_model, warmup_steps):
+        def lr_lambda(step):
+            if step < warmup_steps:
+                return 1
+            lrate = (d_model ** -0.5) * min(step ** -0.5, step * (warmup_steps ** -1.5))
+            return lrate
+        super(WarmupConstantSchedule, self).__init__(optimizer, lr_lambda)
         
 if __name__ == '__main__':
     input_dim = 100

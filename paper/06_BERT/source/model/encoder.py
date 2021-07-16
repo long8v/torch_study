@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
-from .attention import *
+import sys
+sys.path.append('/home/long8v/torch_study/paper/06_BERT/source/')
+from model.attention import *
 import random
 import math
 import time

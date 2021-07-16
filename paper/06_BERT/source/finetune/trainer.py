@@ -1,7 +1,9 @@
 import mlflow
-from .utils import *
-from .model.bert import *
-from .dataset import *
+import sys
+sys.path.append('/home/long8v/torch_study/paper/06_BERT/source')
+from utils import *
+from finetune.ner_bert import *
+from finetune.dataset import *
 import torch
 import dill
 import pytorch_lightning as pl
@@ -11,15 +13,13 @@ from torch.utils.data import Dataset, DataLoader
 
 
 
-class BERT_trainer(pl.LightningModule):
+class NER_BERT_trainer(pl.LightningModule):
     def __init__(self, config):
-        super(BERT_trainer, self).__init__()
+        super(NER_BERT_trainer, self).__init__()
         self.config = config
         data_config = config['data']
-        dataset = BERT_Dataset(data_config['src'], data_config['vocab'],
-                               data_config['max_len'], data_config['nsp_prob'], data_config['mask_ratio'])
-        valid_dataset = BERT_Dataset(data_config['src_valid'], data_config['vocab'],
-                               data_config['max_len'], data_config['nsp_prob'])
+        dataset = NER_Dataset(data_config['src'], data_config['vocab'])
+        valid_dataset = NER_Dataset(data_config['src_valid'], data_config['vocab'])
         dataloader = DataLoader(dataset, data_config['batch_size'], collate_fn=pad_collate)
         valid_dataloader = DataLoader(valid_dataset, data_config['batch_size'], collate_fn=pad_collate)
         print('before special token', dataset.tokenizer.get_vocab_size())
@@ -27,14 +27,15 @@ class BERT_trainer(pl.LightningModule):
         self.vocab_size = dataset.tokenizer.get_vocab_size()
         print('after special token', self.vocab_size)
         self.pad_idx = dataset.tokenizer.token_to_id('[PAD]')
-        self.bert = BERT(self.config, self.vocab_size, self.pad_idx) # 하드 코딩 인덱스 에러가 남
-        # https://keep-steady.tistory.com/37?category=702926 : speical token 에러인것으로 보임 eod추가할것
+        self.output_dim = dataset.output_dim
+        print(self.output_dim)
+        self.ner_bert = NER_BERT(self.config, self.vocab_size, self.output_dim, self.pad_idx) 
         
         device = config['train']['device'] 
-        self.bert.to(device)
-        self.bert.train()
-        self.bert.zero_grad()
-        self.bert.apply(self.initialize_weights);
+        self.ner_bert.to(device)
+        self.ner_bert.train()
+        self.ner_bert.zero_grad()
+        self.ner_bert.apply(self.initialize_weights);
         if device == 'cuda':
             gpus = 1
         else:
@@ -53,8 +54,8 @@ class BERT_trainer(pl.LightningModule):
         with mlflow.start_run() as run:
             for key, value in config.items():
                 mlflow.log_param(key, value)
-            trainer.fit(self.bert, dataloader, valid_dataloader)
-        self.save(f'model/bert_{get_now()}')
+            trainer.fit(self.ner_bert, dataloader, valid_dataloader)
+        self.save(f'model/ner_bert_{get_now()}')
 
 # https://github.com/GyuminJack/torchstudy/blob/main/06Jun/BERT/src/trainer.py
     def initialize_weights(self, m):
@@ -73,19 +74,9 @@ class BERT_trainer(pl.LightningModule):
     def save(self, path):
         mkdir(path)
         torch.save(self.bert.state_dict(), f'{path}/model.pt')
-        model_config = \
-        {
-            'data':
-            {
-                'input_dim': self.vocab_size,
-                'pad_idx': self.pad_idx,
-            }
-        }
-        self.config.update(model_config)
-        save_yaml(self.config, f'{path}/model_config.yaml')
+
 if __name__ == '__main__':
-    config_file = '/home/long8v/torch_study/paper/06_BERT/config.yaml'
+    config_file = '/home/long8v/torch_study/paper/06_BERT/config_finetune.yaml'
     config = read_yaml(config_file)
     print('train started..')
-    trainer = BERT_trainer(config)
-    trainer.train()
+    trainer = NER_BERT_trainer(config)
