@@ -9,7 +9,7 @@ WIP
 
 = 우리의 objective function는 ? 
 
-계속 말하고 있는 perplexity가 모든 t시점의 softmax 결과값인 logSoftmax loss를 다 더한것이겠지? → ㅇㅇ 맞다
+계속 말하고 있는 perplexity가 모든 t시점의 softmax 결과값인 logSoftmax loss를 다 더한것이겠지? → ㅇㅇ 맞다<br>
 = 논문에서 임베딩 시각화한 것 : Thus the deep LSTM uses 8000 real number to represnt a sentence에서 8000은 1000(=hidden cell dim) * 4(=num layers of LSTM)  * 2(=hidden, cell state) 인건 알겠는데 PCA할때 그냥 concat했으려나 아님 (1000 by 4 by 2) 를 PCA? 후자일듯?
 
 = SMT에서 rescore?
