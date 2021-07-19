@@ -118,8 +118,8 @@ class BERT(pl.LightningModule):
         if self.config['train']['scheduler']:
 #             self.scheduler = WarmupConstantSchedule(self.optimizer, d_model=self.config['model']['hid_dim'],
 #                                                warmup_steps=self.config['train']['warmup_steps'])
-#             self.scheduler = ReduceLROnPlateau(self.optimizer, 'min')
-            self.scheduler = CosineAnnealingLR(self.optimizer, T_max=5)
+            self.scheduler = ReduceLROnPlateau(self.optimizer, 'min')
+#             self.scheduler = CosineAnnealingLR(self.optimizer, T_max=5)
             return  {"optimizer": self.optimizer, "lr_scheduler": self.scheduler, "monitor": "valid_total_loss"}
         return self.optimizer
         

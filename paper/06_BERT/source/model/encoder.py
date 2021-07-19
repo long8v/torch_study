@@ -65,8 +65,7 @@ class Encoder(nn.Module):
         self.tok_embedding = nn.Embedding(input_dim + 10, hid_dim)
         self.pos_embedding = nn.Embedding(max_len, hid_dim)
         self.seg_embedding = nn.Embedding(3, hid_dim) # senA, senB, padding
-        # segment_embedding
-        self.layer_norm = nn.LayerNorm(hid_dim)
+#         self.layer_norm = nn.LayerNorm(hid_dim) # 성능이 더 안좋아짐
         self.layers = nn.ModuleList([EncoderLayer(hid_dim, 
                                                   n_heads, 
                                                   pf_dim,
@@ -92,7 +91,7 @@ class Encoder(nn.Module):
         
         #pos = [batch size, src len]
         src = self.tok_embedding(src) + self.pos_embedding(pos) + self.seg_embedding(seg)
-        src = self.layer_norm(src)
+#         src = self.layer_norm(src)
         
         for layer in self.layers:
             src = layer(src, src_mask)  # batch_size, seq_len, hid_dim

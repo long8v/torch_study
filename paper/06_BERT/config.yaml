@@ -14,7 +14,7 @@ model:
     dropout: 0.5
 
 train:
-    n_epochs: 1
+    n_epochs: 1000
     device: 'cuda'
     lr: 0.0005
     scheduler: True
