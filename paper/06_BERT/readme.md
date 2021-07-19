@@ -7,7 +7,6 @@ torchtext == 0.8.1
 pytorch-lightning == 1.2.8
 tokenizers == 0.9.3
 pytorch-crf == 0.7.2
-dill == 0.3.4
 ```
 
 ### pretraining
