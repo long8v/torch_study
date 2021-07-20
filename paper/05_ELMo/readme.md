@@ -104,7 +104,7 @@ including ELMo at both the input and output layers for SNLI and SQuAD improves o
 - `nn.LSTM`의 `bidirectional=True` argument에 대한 고찰
 - pretraining - finetuning으로 넘길때 vocab, 토크나이저 저장 등이 왜 필요한지 알게 됨
 - 학습이 너무 안되면 하이퍼파라미터 튜닝을 할게 아니라 모델 아키텍쳐나 데이터 인풋을 확인하자
-- 그냥 전체 합쳐서 디버깅하지말고 dataset, model, trainer 하나하나씩 디버깅하자
+- 그냥 전체 합쳐서 디버깅하지말고 dataset, model, trainer 하나하나씩 디버깅하자(유닛테스트)
 - `.pt`파일로 저장하면 모델 구조를 저장할 필요 없음(torch권장사항은 아님)
 - 학습 초기에는 0 0 0 0 0 하나로 예측하는 경향성이 있음. 모델의 잘못이 아님
 - 한국어 데이터에 chr로 padding까지 하니 CNN이 그렇게 효과가 있지는 않았음
