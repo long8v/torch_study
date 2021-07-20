@@ -100,7 +100,7 @@ including ELMo at both the input and output layers for SNLI and SQuAD improves o
 - 한국어 데이터로 나름(!) 대형 모델을 학습한 경험
 - token으로 한번, char로 한번 잘라야하는 CNN input을 만들기 위한 고군분투(torchtext의 nestedField 쓰면 된다고 하더라)
 - 사용자 torchtext인 `torch8text`에서 Field 개선, labelField 만듦
-- `mlflow`와 `pytorch-lightning`사용을 맞보고 신세계를 경험함
+- `mlflow`와 `pytorch-lightning`사용을 맛보고 신세계를 경험함
 - `nn.LSTM`의 `bidirectional=True` argument에 대한 고찰
 - pretraining - finetuning으로 넘길때 vocab, 토크나이저 저장 등이 왜 필요한지 알게 됨
 - 학습이 너무 안되면 하이퍼파라미터 튜닝을 할게 아니라 모델 아키텍쳐나 데이터 인풋을 확인하자
