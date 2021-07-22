@@ -9,6 +9,7 @@ from model.attention import *
 from model.encoder import *
 from model.bert import *
 from utils import *
+import numpy as np
 import random
 import math
 import time
@@ -70,7 +71,6 @@ class NER_BERT(pl.LightningModule):
         self.log('train_accuracy', accuracy, on_step=True)
         self.log('train_micro_f1', f1['micro'])
         self.log('train_macro_f1', f1['macro'])
-        self.log('train_f1_no_pad', f1_no_pad)
         self.log('lr', self.optimizer.param_groups[0]['lr'])
         return loss
 
@@ -85,31 +85,16 @@ class NER_BERT(pl.LightningModule):
         self.log('valid_accuracy', accuracy, on_step=True)
         self.log('valid_micro_f1', f1['micro'])
         self.log('valid_macro_f1', f1['macro'])
-        self.log('valid_f1_no_pad', f1_no_pad)
         return loss
     
-    def cal_f1_acc(self, label, pred):
-        _l, _st = label.reshape(-1).cpu(), pred.reshape(-1).cpu()
-        _condition = _l != 0
-
-        _l = _l[_condition]
-        _st = _st[_condition]
-
-        _f1 = 0
-        for i in range(1, 13):
-            if sum((_l == i).long()) == 0:
-                _f1 += 0
-            else:
-                _f1 += f1_score((_l == i).long(), (_st == i).long())
-        _f1 = _f1 / 12
-        return _f1
     
     def f1(self, y_pred, y_test):
         y_pred, y_test = y_pred.view(-1), y_test.view(-1)
         y_pred = y_pred[y_test != self.pad_idx] 
         y_test = y_test[y_test != self.pad_idx]
         micro_score = f1_score(y_pred.cpu(), y_test.cpu(), average='micro')
-        macro_score = f1_score(y_pred.cpu(), y_test.cpu(), average='macro')
+        macro_score = f1_score(y_pred.cpu(), y_test.cpu(), average=None)
+        macro_score = np.mean([score for idx, score in enumerate(macro_score) if idx != self.pad_idx])
         return {'micro': micro_score, 'macro': macro_score}
     
     def acc(self, y_pred, y_test):
