@@ -35,7 +35,7 @@ class NER_BERT_trainer(pl.LightningModule):
         self.ner_bert.to(device)
         self.ner_bert.train()
         self.ner_bert.zero_grad()
-        self.ner_bert.apply(self.initialize_weights);
+        self.ner_bert.fcn.apply(self.initialize_weights);
         if device == 'cuda':
             gpus = 1
         else:

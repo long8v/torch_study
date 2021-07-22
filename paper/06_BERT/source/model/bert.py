@@ -57,18 +57,15 @@ class BERT(pl.LightningModule):
         target_mlm = torch.masked_select(ids, mask_ids == 1)
         nsp_loss = self.criterion_nsp(nsp_output, nsp.squeeze(1))
         mlm_loss = self.criterion_mlm(masked_mlm, target_mlm)
-        if not torch.isnan(mlm_loss):
-            nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
-            mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
-            self.log('train_nsp_loss', nsp_loss, on_step=True)
-            self.log('train_mlm_loss', mlm_loss, on_step=True)
-            self.log('train_nsp_accuracy', nsp_accuracy, on_step=True)
-            self.log('train_mlm_accuracy', mlm_accuracy, on_step=True)
-            self.log('train_total_loss', nsp_loss + mlm_loss, on_step=True)
-            self.log('lr', self.optimizer.param_groups[0]['lr'])
-            return nsp_loss + mlm_loss
-        else:
-            print(ids, mask_ids, nsp)
+        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
+        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
+        self.log('train_nsp_loss', nsp_loss, on_step=True)
+        self.log('train_mlm_loss', mlm_loss, on_step=True)
+        self.log('train_nsp_accuracy', nsp_accuracy, on_step=True)
+        self.log('train_mlm_accuracy', mlm_accuracy, on_step=True)
+        self.log('train_total_loss', nsp_loss + mlm_loss, on_step=True)
+        self.log('lr', self.optimizer.param_groups[0]['lr'])
+        return nsp_loss + mlm_loss
 
     def validation_step(self, batch, batch_nb):
         ids = batch.ids.to(self._device)
@@ -82,17 +79,16 @@ class BERT(pl.LightningModule):
         target_mlm = torch.masked_select(ids, mask_ids == 1)
         nsp_loss = self.criterion_nsp(nsp_output, nsp.squeeze(1))
         mlm_loss = self.criterion_mlm(masked_mlm, target_mlm)
-        if not torch.isnan(mlm_loss):
-            nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
-            mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
-            self.log('valid_nsp_loss', nsp_loss, on_step=True)
-            self.log('valid_mlm_loss', mlm_loss, on_step=True)
-            self.log('valid_nsp_accuracy', nsp_accuracy, on_step=True)
-            self.log('valid_mlm_accuracy', mlm_accuracy, on_step=True)
-            self.log('valid_total_loss', nsp_loss + mlm_loss, on_step=True)
-            return nsp_loss + mlm_loss
-        else:
-            print(ids, mask_ids, nsp)
+#         if not torch.isnan(mlm_loss):
+        nsp_accuracy = self.multi_acc(nsp_output.reshape(-1, 2), nsp.reshape(-1))
+        mlm_accuracy = self.multi_acc(masked_mlm, target_mlm.reshape(-1))
+        self.log('valid_nsp_loss', nsp_loss, on_step=True)
+        self.log('valid_mlm_loss', mlm_loss, on_step=True)
+        self.log('valid_nsp_accuracy', nsp_accuracy, on_step=True)
+        self.log('valid_mlm_accuracy', mlm_accuracy, on_step=True)
+        self.log('valid_total_loss', nsp_loss + mlm_loss, on_step=True)
+        return nsp_loss + mlm_loss
+
         
     def multi_acc(self, y_pred, y_test):
         if y_pred.numel():

@@ -42,21 +42,18 @@ class BERT_trainer(pl.LightningModule):
             self.gpus = 0
             
 
-        
-# https://github.com/GyuminJack/torchstudy/blob/main/06Jun/BERT/src/trainer.py
     def initialize_weights(self, m):
         for name, param in m.named_parameters():
-            if 'bert' not in name:
-                if ("fc" in name) or ('embedding' in name):
-                    if 'bias' in name:
-                        torch.nn.init.zeros_(param.data)
-                    else:
-                        torch.nn.init.normal_(param.data, mean=0.0, std=0.02)
-                elif "layer_norm" in name:
-                    if 'bias' in name:
-                        torch.nn.init.zeros_(param.data)
-                    else:
-                        torch.nn.init.constant_(param.data, 1.0)
+            if ("fc" in name) or ('embedding' in name):
+                if 'bias' in name:
+                    torch.nn.init.zeros_(param.data)
+                else:
+                    torch.nn.init.normal_(param.data, mean=0.0, std=0.02)
+            elif "layer_norm" in name:
+                if 'bias' in name:
+                    torch.nn.init.zeros_(param.data)
+                else:
+                    torch.nn.init.constant_(param.data, 1.0)
     
         
     def train(self):

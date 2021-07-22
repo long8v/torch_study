@@ -54,8 +54,9 @@ class NER_BERT(pl.LightningModule):
         token_mask = self.make_src_mask(tokens).to(self._device)
         output = self.encoder(tokens, seg, token_mask) # batch_size, seq_len, hid_dim  
         output = self.fcn(output)
-        loss = - self.crf(output, labels) # log likelihood -> neg log likelihood
-#         loss = self.crf(output, labels, token_mask.squeeze(1).squeeze(1))
+#         print(output[0, 0, :])
+#         loss = - self.crf(output, labels) # log likelihood -> neg log likelihood
+        loss = - self.crf(output, labels, token_mask.squeeze(1).squeeze(1))
         output = torch.tensor(self.crf.decode(output))
         return loss, output
         
@@ -82,7 +83,7 @@ class NER_BERT(pl.LightningModule):
         self.log('valid_accuracy', accuracy, on_step=True)
         self.log('valid_micro_f1', f1['micro'])
         self.log('valid_macro_f1', f1['macro'])
-        return oss
+        return loss
     
     
     def f1(self, y_pred, y_test):

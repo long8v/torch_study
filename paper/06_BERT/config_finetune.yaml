@@ -7,7 +7,7 @@ data:
     mask_ratio: 0.1
     batch_size: 64
 model:
-    pretrained_path: '/home/long8v/torch_study/paper/06_BERT/model/bert_16071339'
+    pretrained_path: '/home/long8v/torch_study/paper/06_BERT/model/bert_14070851'
     hid_dim: 256
     n_layers: 2
     n_heads: 8
