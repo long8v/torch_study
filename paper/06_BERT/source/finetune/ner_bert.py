@@ -54,7 +54,6 @@ class NER_BERT(pl.LightningModule):
         token_mask = self.make_src_mask(tokens).to(self._device)
         output = self.encoder(tokens, seg, token_mask) # batch_size, seq_len, hid_dim  
         output = self.fcn(output)
-#         print(output[0, 0, :])
 #         loss = - self.crf(output, labels) # log likelihood -> neg log likelihood
         loss = - self.crf(output, labels, token_mask.squeeze(1).squeeze(1))
         output = torch.tensor(self.crf.decode(output))
@@ -66,10 +65,12 @@ class NER_BERT(pl.LightningModule):
         loss, output = self(token, label)
         accuracy = self.acc(output, label)
         f1 = self.f1(output, label)
+        f1_no_pad = self.cal_f1_acc(output, label)
         self.log('train_loss', loss, on_step=True)
         self.log('train_accuracy', accuracy, on_step=True)
         self.log('train_micro_f1', f1['micro'])
         self.log('train_macro_f1', f1['macro'])
+        self.log('train_f1_no_pad', f1_no_pad)
         self.log('lr', self.optimizer.param_groups[0]['lr'])
         return loss
 
@@ -79,12 +80,29 @@ class NER_BERT(pl.LightningModule):
         loss, output = self(token, label)
         accuracy = self.acc(output, label)
         f1 = self.f1(output, label)
+        f1_no_pad = self.cal_f1_acc(output,label)
         self.log('valid_loss', loss, on_step=True)
         self.log('valid_accuracy', accuracy, on_step=True)
         self.log('valid_micro_f1', f1['micro'])
         self.log('valid_macro_f1', f1['macro'])
+        self.log('valid_f1_no_pad', f1_no_pad)
         return loss
     
+    def cal_f1_acc(self, label, pred):
+        _l, _st = label.reshape(-1).cpu(), pred.reshape(-1).cpu()
+        _condition = _l != 0
+
+        _l = _l[_condition]
+        _st = _st[_condition]
+
+        _f1 = 0
+        for i in range(1, 13):
+            if sum((_l == i).long()) == 0:
+                _f1 += 0
+            else:
+                _f1 += f1_score((_l == i).long(), (_st == i).long())
+        _f1 = _f1 / 12
+        return _f1
     
     def f1(self, y_pred, y_test):
         y_pred, y_test = y_pred.view(-1), y_test.view(-1)
