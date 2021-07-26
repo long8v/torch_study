@@ -15,6 +15,10 @@ pytorch-crf == 0.7.2
 run.py
 ```
 
+- data
+[petetion data](https://github.com/lovit/petitions_archive), [namu-wiki data](https://github.com/lovit/namuwikitext)
+
+- result
 **MLM**
 ![image](https://user-images.githubusercontent.com/46675408/124102640-81f47600-da9b-11eb-86e8-18f7897fae89.png)
 ![image](https://user-images.githubusercontent.com/46675408/124102899-bb2ce600-da9b-11eb-814f-30b2761b0f5c.png)
