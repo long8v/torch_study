@@ -28,7 +28,22 @@ run.py
 run_finetune.py
 ```
 
-- model
+- model size
+```
+  | Name          | Type             | Params
+---------------------------------------------------
+0 | encoder       | Encoder          | 4.1 M 
+1 | nsp           | Linear           | 514   
+2 | mlm           | Linear           | 3.0 M 
+3 | criterion_nsp | CrossEntropyLoss | 0     
+4 | criterion_mlm | CrossEntropyLoss | 0     
+---------------------------------------------------
+7.0 M     Trainable params
+0         Non-trainable params
+7.0 M     Total params
+28.101    Total estimated model params size (MB)
+```
+
 
 - result
 
