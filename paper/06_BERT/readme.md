@@ -83,11 +83,6 @@ run_finetune.py
 |micro F1|0.991|0.922|
 |macro F1|0.931|0.791|
 
-![image](https://user-images.githubusercontent.com/46675408/126965442-5f68a412-de4b-487b-b757-3e075253a2e8.png)
-
-***macro f1***
-![image](https://user-images.githubusercontent.com/46675408/126965914-a7b5b037-c093-4ce6-a10f-bfedf35db152.png)
-
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
