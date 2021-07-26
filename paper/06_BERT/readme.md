@@ -19,6 +19,13 @@ pytorch-crf == 0.7.2
 ![image](https://user-images.githubusercontent.com/46675408/124102824-a7817f80-da9b-11eb-8217-a6dff6d797dd.png)
 ![image](https://user-images.githubusercontent.com/46675408/124103027-d992e180-da9b-11eb-8246-83efdb01650d.png)
 
+### finetuning
+***micro f1***
+![image](https://user-images.githubusercontent.com/46675408/126965442-5f68a412-de4b-487b-b757-3e075253a2e8.png)
+
+***macro f1***
+![image](https://user-images.githubusercontent.com/46675408/126965914-a7b5b037-c093-4ce6-a10f-bfedf35db152.png)
+
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
