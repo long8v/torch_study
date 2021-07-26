@@ -31,7 +31,13 @@ run_finetune.py
 - model
 
 - metric
-***micro f1***
+*** result
+|제목|train|valid|
+|:---:|:---:|:---:|
+|loss|13.49|61.15|
+|micro F1|0.991|0.922|
+|macro F1|0.931|0.791|
+
 ![image](https://user-images.githubusercontent.com/46675408/126965442-5f68a412-de4b-487b-b757-3e075253a2e8.png)
 
 ***macro f1***
