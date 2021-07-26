@@ -37,9 +37,16 @@ run.py
 ```
 - result
 
+|metric|train|valid|
+|:---:|:---:|:---:|
+|MLM loss|2.892|4.854|
+|NSP loss|0.221|1.067|
+|MLM accuracy|0.46|0.40|
+|NSP accuracy|0.88|0.55|
 
 ### finetuning
 - task
+
 NER(BERT + crf)
 
 - run 
