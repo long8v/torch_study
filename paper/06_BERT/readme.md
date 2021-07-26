@@ -30,9 +30,9 @@ run_finetune.py
 
 - model
 
-- metric
-*** result
-|제목|train|valid|
+- result
+
+|metric|train|valid|
 |:---:|:---:|:---:|
 |loss|13.49|61.15|
 |micro F1|0.991|0.922|
