@@ -55,7 +55,7 @@ run_finetune.py
 ```
 
 - data
-- 
+
 [KLUE NER](https://github.com/KLUE-benchmark/KLUE/tree/main/klue_benchmark/klue-ner-v1)
 
 - model size
