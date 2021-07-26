@@ -19,16 +19,8 @@ run.py
 
 [petetion data](https://github.com/lovit/petitions_archive), [namu-wiki data](https://github.com/lovit/namuwikitext)
 
-- result
-
-
-### finetuning
-- run 
-```
-run_finetune.py
-```
-
 - model size
+
 ```
   | Name          | Type             | Params
 ---------------------------------------------------
@@ -43,6 +35,37 @@ run_finetune.py
 7.0 M     Total params
 28.101    Total estimated model params size (MB)
 ```
+- result
+
+
+### finetuning
+- task
+NER(BERT + crf)
+
+- run 
+```
+run_finetune.py
+```
+
+- data
+[KLUE NER](https://github.com/KLUE-benchmark/KLUE/tree/main/klue_benchmark/klue-ner-v1)
+
+- model size
+
+```
+  | Name    | Type    | Params
+------------------------------------
+0 | bert    | BERT    | 7.0 M 
+1 | encoder | Encoder | 4.1 M 
+2 | fcn     | Linear  | 3.6 K 
+3 | crf     | CRF     | 224   
+------------------------------------
+7.0 M     Trainable params
+0         Non-trainable params
+7.0 M     Total params
+28.116    Total estimated model params size (MB)
+```
+
 
 
 - result
