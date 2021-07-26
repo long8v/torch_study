@@ -10,6 +10,11 @@ pytorch-crf == 0.7.2
 ```
 
 ### pretraining
+- run 
+```
+run.py
+```
+
 **MLM**
 ![image](https://user-images.githubusercontent.com/46675408/124102640-81f47600-da9b-11eb-86e8-18f7897fae89.png)
 ![image](https://user-images.githubusercontent.com/46675408/124102899-bb2ce600-da9b-11eb-814f-30b2761b0f5c.png)
@@ -20,6 +25,14 @@ pytorch-crf == 0.7.2
 ![image](https://user-images.githubusercontent.com/46675408/124103027-d992e180-da9b-11eb-8246-83efdb01650d.png)
 
 ### finetuning
+- run 
+```
+run_finetune.py
+```
+
+- model
+
+- metric
 ***micro f1***
 ![image](https://user-images.githubusercontent.com/46675408/126965442-5f68a412-de4b-487b-b757-3e075253a2e8.png)
 
@@ -66,7 +79,8 @@ input :        **i [mask] to school.**<BR>
 ## 🤫 논문과 다르게 구현한 부분
   
 - 한국어 데이터
-- optimizer : 
+- optimizer : AdamW
+- scheduler : 
 - 문장이 길 때 max_seq_len을 자르는 부분 ? senB를 먼저 자르도록 했는데 논문에선 어떻게 자르는지 나와있진 않음
   
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
