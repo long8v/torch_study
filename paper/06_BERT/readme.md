@@ -20,14 +20,7 @@ run.py
 [petetion data](https://github.com/lovit/petitions_archive), [namu-wiki data](https://github.com/lovit/namuwikitext)
 
 - result
-**MLM**
-![image](https://user-images.githubusercontent.com/46675408/124102640-81f47600-da9b-11eb-86e8-18f7897fae89.png)
-![image](https://user-images.githubusercontent.com/46675408/124102899-bb2ce600-da9b-11eb-814f-30b2761b0f5c.png)
 
-
-**NSP**
-![image](https://user-images.githubusercontent.com/46675408/124102824-a7817f80-da9b-11eb-8217-a6dff6d797dd.png)
-![image](https://user-images.githubusercontent.com/46675408/124103027-d992e180-da9b-11eb-8246-83efdb01650d.png)
 
 ### finetuning
 - run 
