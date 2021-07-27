@@ -10,26 +10,92 @@ pytorch-crf == 0.7.2
 ```
 
 ### pretraining
-**MLM**
-![image](https://user-images.githubusercontent.com/46675408/124102640-81f47600-da9b-11eb-86e8-18f7897fae89.png)
-![image](https://user-images.githubusercontent.com/46675408/124102899-bb2ce600-da9b-11eb-814f-30b2761b0f5c.png)
+- run 
+```
+run.py
+```
+
+- data
+
+[petetion data](https://github.com/lovit/petitions_archive), [namu-wiki data](https://github.com/lovit/namuwikitext)
+
+- model size
+
+```
+  | Name          | Type             | Params
+---------------------------------------------------
+0 | encoder       | Encoder          | 4.1 M 
+1 | nsp           | Linear           | 514   
+2 | mlm           | Linear           | 3.0 M 
+3 | criterion_nsp | CrossEntropyLoss | 0     
+4 | criterion_mlm | CrossEntropyLoss | 0     
+---------------------------------------------------
+7.0 M     Trainable params
+0         Non-trainable params
+7.0 M     Total params
+28.101    Total estimated model params size (MB)
+```
+- result
+
+|metric|train|valid|
+|:---:|:---:|:---:|
+|MLM loss|2.892|4.854|
+|NSP loss|0.221|1.067|
+|MLM accuracy|0.46|0.40|
+|NSP accuracy|0.88|0.55|
+
+### finetuning
+- task
+
+NER(BERT + crf)
+
+- run 
+```
+run_finetune.py
+```
+
+- data
+
+[KLUE NER](https://github.com/KLUE-benchmark/KLUE/tree/main/klue_benchmark/klue-ner-v1)
+
+- model size
+
+```
+  | Name    | Type    | Params
+------------------------------------
+0 | bert    | BERT    | 7.0 M 
+1 | encoder | Encoder | 4.1 M 
+2 | fcn     | Linear  | 3.6 K 
+3 | crf     | CRF     | 224   
+------------------------------------
+7.0 M     Trainable params
+0         Non-trainable params
+7.0 M     Total params
+28.116    Total estimated model params size (MB)
+```
 
 
-**NSP**
-![image](https://user-images.githubusercontent.com/46675408/124102824-a7817f80-da9b-11eb-8217-a6dff6d797dd.png)
-![image](https://user-images.githubusercontent.com/46675408/124103027-d992e180-da9b-11eb-8246-83efdb01650d.png)
+
+- result
+
+|metric|train|valid|
+|:---:|:---:|:---:|
+|loss|13.49|61.15|
+|micro F1|0.991|0.922|
+|macro F1|0.931|0.791|
 
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
 
 
+
 **2) (슬랙으로 이미 토론을 했지만 그래도) 이해가 안 가는 부분, 이해가 안 가는 이유(논문 본문 복붙)**<BR>
-. 지난 달 토론 주제 : BERT는 문맥에 따라 같은 **토큰의 임베딩**이 달라지는가?<br>
+. 지난 달 토론 주제 : BERT는 문맥에 따라 같은 **토큰의 표현 값**이 달라지는가?<br>
 token embedding → 같겠죠<br>
 positonal embedding → 달라지겠죠<br>
 segment embedding → 달라지겠죠<br>
-=============<br>
+======================<br>
 attention 하고 난 뒤에는 → 달라지겠죠
 
 달라진다.
@@ -53,13 +119,14 @@ input :        **i [mask] to school.**<BR>
 **4) 논문 구현 시 주의해야할 것 같은 부분(논문 본문 복붙)**<BR>
 - input 을 만드는 것(segment token, mask, CLS, SEP 등.. **최소 1주 걸림..**)
 - MLM 
-- transformer 구조..
+- transformer 구조
 - 모델이 복잡한건 아닌데 이것저것 디테일이 많아서 처음에 구조를 잘 짜놓으면 편할것 같다
 
 ## 🤫 논문과 다르게 구현한 부분
   
 - 한국어 데이터
-- optimizer : 
+- optimizer : AdamW
+- scheduler : 
 - 문장이 길 때 max_seq_len을 자르는 부분 ? senB를 먼저 자르도록 했는데 논문에선 어떻게 자르는지 나와있진 않음
   
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
