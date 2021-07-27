@@ -181,13 +181,13 @@ ner 카테고리 개수로 fcn을 하고, crf
 
 **6) experiment**
 - train macro F1
-![image](https://user-images.githubusercontent.com/46675408/127137053-6bcb2176-3862-44f0-821b-0127b00caff1.png)
+![image](https://user-images.githubusercontent.com/46675408/127164990-0d24a8c8-9c74-4aa8-bd1e-80077cfa33b4.png)
 
 - valid macro F1
-![image](https://user-images.githubusercontent.com/46675408/127128705-32bca8f5-f099-492d-85be-d5bd7b51d3e6.png)
+![image](https://user-images.githubusercontent.com/46675408/127164897-f18aa712-98ca-4798-884c-4895259bf2e6.png)
 
 - bert + crf : 기본 모델(fine-tuning)
-- bert + lstm + crf : bert output을 lstm을 한번 더 통과한 뒤 fcn + crf를 진행 기본모델과 비슷했음
+- bert + lstm + crf : bert output을 lstm을 한번 더 통과한 뒤 fcn + crf. 일부 bio tag가 일관적으로 나오지 못하는 부분 때문에 시도해
 - fixed bert + lstm + crf : bert 파라미터는 고정시키고 LSTM을 통과함 
 
 ## 🤔 Paper review
