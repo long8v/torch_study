@@ -75,7 +75,7 @@ mlflow ui
 Korpora에서 제공하는 한국어데이터를 사용했습니다.
 [petetion data](https://github.com/lovit/petitions_archive), [namu-wiki data](https://github.com/lovit/namuwikitext)
 
-**3) model size**
+**3) model**
 
 ```
   | Name          | Type             | Params
@@ -91,6 +91,8 @@ Korpora에서 제공하는 한국어데이터를 사용했습니다.
 7.0 M     Total params
 28.101    Total estimated model params size (MB)
 ```
+transformer 구조 자체는 4월 레퍼런스 코드였던 [transformer](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)
+
 **4) result**
 
 |metric|train|valid|
@@ -106,20 +108,23 @@ Korpora에서 제공하는 한국어데이터를 사용했습니다.
 ![image](https://user-images.githubusercontent.com/46675408/127120275-6b6dc8d4-1d85-4a80-afe6-28bf65db5906.png)
 
 ### finetuning
-1) task
+**1) task**
 
-NER(BERT + crf)
+BERT의 성능을 측정하기 위한 finetune-task로 NER를 선택하였습니다
 
-2) run 
+**2) run **
+2-1) 
 ```
-run_finetune.py
+python run_finetune.py
 ```
 
-3) data
+**3) data**
+
+KLUE 벤치마크의 NER 데이터를 사용했습니다
 
 [KLUE NER](https://github.com/KLUE-benchmark/KLUE/tree/main/klue_benchmark/klue-ner-v1)
 
-4) model size
+**4) model size**
 
 ```
   | Name    | Type    | Params
@@ -134,7 +139,7 @@ run_finetune.py
 16.222    Total estimated model params size (MB)
 ```
 
-5) result
+**5) result**
 
 |metric|train|valid|
 |:---:|:---:|:---:|
@@ -142,7 +147,7 @@ run_finetune.py
 |micro F1|0.991|0.922|
 |macro F1|0.931|0.791|
 
-6) experiment
+**6) experiment**
 
 ![image](https://user-images.githubusercontent.com/46675408/127128705-32bca8f5-f099-492d-85be-d5bd7b51d3e6.png)
 
