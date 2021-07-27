@@ -11,7 +11,7 @@ def save_yaml(obj, file):
         return yaml.dump(obj, f)
     
 def mkdir(path):
-    os.mkdir(path)
+    os.mkdir(path, exist_ok=True)
     
 def get_now():
     return datetime.datetime.now().strftime("%d%m%H%M")

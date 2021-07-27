@@ -16,7 +16,7 @@ import time
 import pytorch_lightning as pl
 import yaml
 from torchcrf import CRF
-
+from glob import glob
 
 class NER_BERT(pl.LightningModule):
     def __init__(self, 
@@ -31,15 +31,13 @@ class NER_BERT(pl.LightningModule):
         self._device = self.config['train']['device']
         pretrained_path = self.config['model']['pretrained_path']
         print(f'load pretrained model from {pretrained_path}..')
-        pretrained_config = read_yaml(f'{pretrained_path}/model_config.yaml')
-        pretrained_model = f'{pretrained_path}/model.pt'
-        self.pad_idx = pretrained_config['data']['pad_idx']
-        self.bert = BERT(self.config, pretrained_config['data']['input_dim'],
+        pretrained_model = glob(f'{pretrained_path}/*.ckpt')[0]
+        self.bert = BERT(self.config, input_dim,
                         self.pad_idx)
-        self.bert.load_state_dict(torch.load(pretrained_model))
+        self.bert.load_state_dict(torch.load(pretrained_model)['state_dict'])
         self.lr = self.config['train']['lr']
         self.encoder = self.bert.encoder
-        self.output_dim = output_dim
+        self.output_dim = output_dim 
         self.fcn = nn.Linear(config['hid_dim'], output_dim)
         self.crf = CRF(output_dim, batch_first=True)
 #         self.criteiron = nn.CrossEntropyLoss(ignore_index=pretrained_config['data']['pad_idx'])
@@ -66,7 +64,6 @@ class NER_BERT(pl.LightningModule):
         loss, output = self(token, label)
         accuracy = self.acc(output, label)
         f1 = self.f1(output, label)
-        f1_no_pad = self.cal_f1_acc(output, label)
         self.log('train_loss', loss, on_step=True)
         self.log('train_accuracy', accuracy, on_step=True)
         self.log('train_micro_f1', f1['micro'])
@@ -80,7 +77,6 @@ class NER_BERT(pl.LightningModule):
         loss, output = self(token, label)
         accuracy = self.acc(output, label)
         f1 = self.f1(output, label)
-        f1_no_pad = self.cal_f1_acc(output,label)
         self.log('valid_loss', loss, on_step=True)
         self.log('valid_accuracy', accuracy, on_step=True)
         self.log('valid_micro_f1', f1['micro'])
@@ -94,12 +90,13 @@ class NER_BERT(pl.LightningModule):
         y_test = y_test[y_test != self.pad_idx]
         micro_score = f1_score(y_pred.cpu(), y_test.cpu(), average='micro')
         macro_score = f1_score(y_pred.cpu(), y_test.cpu(), average=None)
+        # macro에서 pad_idx에 대한 값은 평균 구할 때 빼줌
         macro_score = np.mean([score for idx, score in enumerate(macro_score) if idx != self.pad_idx])
         return {'micro': micro_score, 'macro': macro_score}
     
     def acc(self, y_pred, y_test):
         y_pred, y_test = y_pred.view(-1).to(self._device), y_test.view(-1).to(self._device)
-        # 실제 값이 패딩인걸 패딩으로 예측한건 빼줘야하지 않을까..고민해보야할듯
+        # 실제 값이 pad_idx인건 정확도에서 빼줌
         y_pred = y_pred[y_test != self.pad_idx] 
         y_test = y_test[y_test != self.pad_idx]
         correct_pred = (y_pred == y_test).float()
@@ -107,15 +104,6 @@ class NER_BERT(pl.LightningModule):
         acc = torch.round(acc * 100)
         return acc
         
-    def multi_acc(self, y_pred, y_test):
-        if y_pred.numel():
-            _, y_pred_tags = torch.max(y_pred, dim = 1)
-            correct_pred = (y_pred_tags == y_test).float()
-            acc = correct_pred.sum() / len(correct_pred)
-            acc = torch.round(acc * 100)
-            return acc
-        return 0
-    
     
     def print_auto_logged_info(r):
         tags = {k: v for k, v in r.data.tags.items() if not k.startswith("mlflow.")}

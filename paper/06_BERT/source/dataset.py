@@ -100,14 +100,14 @@ class BERT_Dataset(Dataset):
         segment_ids = [0 for _ in range(len_senA + 2)] + [1 for _ in range(len_senB + 1)] 
         return torch.Tensor(ids).long(), torch.Tensor(mask_ids).long(), torch.Tensor(replaced_tokens).long(), torch.Tensor(segment_ids).long(), torch.Tensor([isNext]).long()
     
-def pad_collate(batch):
+def pad_collate(batch, pad_idx=0):
     ids, mask_ids, replaced_ids, segment_ids, nsp = zip(*batch)
     named_tuple = namedtuple('data', ['ids', 'mask_ids', 'replaced_ids', 'segment_ids', 'nsp'])
-    ids_pad = pad_sequence(ids, batch_first=True, padding_value=0) # 하드코딩 고쳐야함
-    mask_ids_pad = pad_sequence(mask_ids, batch_first=True, padding_value=0)
-    replaced_ids_pad = pad_sequence(replaced_ids, batch_first=True, padding_value=0)
-    segment_ids_pad = pad_sequence(segment_ids, batch_first=True, padding_value=0)
-    nsp_pad = pad_sequence(nsp, batch_first=True, padding_value=0)
+    ids_pad = pad_sequence(ids, batch_first=True, padding_value=pad_idx) 
+    mask_ids_pad = pad_sequence(mask_ids, batch_first=True, padding_value=pad_idx)
+    replaced_ids_pad = pad_sequence(replaced_ids, batch_first=True, padding_value=pad_idx)
+    segment_ids_pad = pad_sequence(segment_ids, batch_first=True, padding_value=pad_idx)
+    nsp_pad = pad_sequence(nsp, batch_first=True, padding_value=pad_idx)
     return named_tuple(ids_pad, mask_ids_pad, replaced_ids_pad, segment_ids_pad, nsp_pad)   
         
 
@@ -122,6 +122,7 @@ if __name__ == '__main__':
         
     print(bd.tokenizer.token_to_id('[PAD]'),bd.tokenizer.token_to_id('[UNK]'),bd.tokenizer.token_to_id('[CLS]'),
          bd.tokenizer.token_to_id('[SEP]'),bd.tokenizer.token_to_id('[EOD]'))
+    
     for ids, mask_ids, replaced_tokens, segment_ids, isnext in bd:
         print(ids)
         decode_from_tensor(ids)
@@ -134,8 +135,9 @@ if __name__ == '__main__':
                 print(f'''{bd.tokenizer.decode([i], skip_special_tokens=False)}-> {bd.tokenizer.decode([rep], skip_special_tokens=False)}''')
         break
         
+    pad_idx = bd.tokenizer.token_to_id('[PAD]')
     print('data loader..')
-    for batch in DataLoader(bd, batch_size=16, collate_fn=pad_collate):
+    for batch in DataLoader(bd, batch_size=16, collate_fn=lambda batch: pad_collate(batch, pad_idx)):
         print(batch.ids.shape)
         print(batch.ids)
         print(torch.sum(batch.mask_ids == 1))
@@ -143,3 +145,38 @@ if __name__ == '__main__':
         print(batch.segment_ids.shape)
         print(batch.nsp.shape)
         break
+        
+        
+# 0 1 2 3 11567
+# tensor([   2, 1990,  514, 1091,    7, 3092,  278, 2348, 1146, 1031, 2453, 1216,
+#         1284, 2744, 1428, 1039, 6551, 2177, 1422, 1145, 1102, 2148, 2166, 1077,
+#         5255,  703, 1375,  744, 1092,  607, 1922,    8,    3, 1938,  247, 1106,
+#         1512,    1, 2265, 8367, 1167,  603, 1023, 1942, 1102, 3914, 1014, 2293,
+#         1073, 9000,    8,    3])
+# [CLS] 현재 사대, 교대 등 교원양성학교들의 예비교사들이 임용절벽에 매우 힘들어 하고 있는 줄로 압니다. [SEP] 라고 도장을 [UNK] 거의 써먹질 않기 때문에 활약할 기회도 없다. [SEP]
+# tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+#         0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#         0, 0, 0, 0])
+# [CLS] 현재 사대, 교대 등 교원양성학교들의 [MASK]교사들이 임용절벽에 매우 끊 [MASK] 하고 있는 줄로 압니다 [MASK] [SEP] 라고 도장을 [UNK] 거의 써먹질 않기 때문에 활약할 기회도 없다. [SEP]
+# tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#         0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+#         1, 1, 1, 1])
+# tensor([0])
+# 예비-> [MASK]
+# 매우-> 매우
+# 힘들-> 끊
+# ##어-> [MASK]
+# .-> [MASK]
+# data loader..
+# torch.Size([16, 128])
+# tensor([[   2, 1990,  514,  ...,    0,    0,    0],
+#         [   2, 1944, 3248,  ...,    0,    0,    0],
+#         [   2, 1988, 5740,  ...,    0,    0,    0],
+#         ...,
+#         [   2, 2552, 2304,  ...,    0,    0,    0],
+#         [   2, 3602, 1936,  ...,    0,    0,    0],
+#         [   2, 1948,  112,  ...,    0,    0,    0]])
+# tensor(160)
+# torch.Size([16, 128])
+# torch.Size([16, 128])
+# torch.Size([16, 1])

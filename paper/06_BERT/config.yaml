@@ -19,3 +19,5 @@ train:
     lr: 0.0005
     scheduler: True
     warmup_steps: 100
+    train_mlm: True
+    train_nsp: False
