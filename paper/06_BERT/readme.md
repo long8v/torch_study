@@ -187,7 +187,7 @@ ner 카테고리 개수로 fcn을 하고, crf
 ![image](https://user-images.githubusercontent.com/46675408/127164897-f18aa712-98ca-4798-884c-4895259bf2e6.png)
 
 - bert + crf : 기본 모델(fine-tuning)
-- bert + lstm + crf : bert output을 lstm을 한번 더 통과한 뒤 fcn + crf. 일부 bio tag가 일관적으로 나오지 못하는 부분 때문에 시도해
+- bert + lstm + crf : bert output을 lstm을 한번 더 통과한 뒤 fcn + crf. 일부 bio tag가 일관적으로 나오지 못하는 부분 때문에 시도해 
 - fixed bert + lstm + crf : bert 파라미터는 고정시키고 LSTM을 통과함 
 
 ## 🤔 Paper review
