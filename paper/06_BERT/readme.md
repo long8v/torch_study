@@ -115,7 +115,7 @@ transformer 구조 자체는 4월 레퍼런스 코드였던 [transformer](https:
 
 BERT의 성능을 측정하기 위한 finetune-task로 NER를 선택하였습니다
 
-**2) run **
+**2) run**
 2-1) config 수정
 ```
 data:
@@ -230,8 +230,8 @@ input :        **i [mask] to school.**<BR>
   
 - 한국어 데이터
 - optimizer : AdamW
-- scheduler : 
 - 문장이 길 때 max_seq_len을 자르는 부분 ? senB를 먼저 자르도록 했는데 논문에선 어떻게 자르는지 나와있진 않음
+- ...외 한국어 다수
   
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
  
