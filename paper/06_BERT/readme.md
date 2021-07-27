@@ -12,6 +12,7 @@ Korpora == 0.2
 
 ### pretraining
 1) run
+
 1-1) data loading 
 
 Korpora에서 데이터를 다운 받아 문서 단위의 list로 피클링하는 코드입니다
