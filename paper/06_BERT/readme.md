@@ -92,7 +92,7 @@ Korpora에서 제공하는 한국어데이터를 사용했습니다.
 7.0 M     Total params
 28.101    Total estimated model params size (MB)
 ```
-transformer 구조 자체는 4월 레퍼런스 코드였던 [transformer](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)
+transformer 구조 자체는 4월 [레퍼런스 코드](https://github.com/bentrevett/pytorch-seq2seq/blob/master/6%20-%20Attention%20is%20All%20You%20Need.ipynb)참고
 
 **4) result**
 
