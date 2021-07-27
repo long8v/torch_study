@@ -108,7 +108,7 @@ transformer 구조 자체는 4월 레퍼런스 코드였던 [transformer](https:
 5-1) scheduler
 ![image](https://user-images.githubusercontent.com/46675408/127120275-6b6dc8d4-1d85-4a80-afe6-28bf65db5906.png)
 
-스케쥴러를 이것저것 사용으나 ELMo때 사용한 스케쥴러가 valid accuracy가 가장 높았
+스케쥴러를 이것저것 사용으나 ELMo 논문에서 제시했던 스케쥴러가 valid accuracy가 가장 높았
 
 ### finetuning
 **1) task**
