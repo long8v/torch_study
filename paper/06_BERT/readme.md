@@ -235,19 +235,19 @@ input :        **i [mask] to school.**<BR>
   
 ## 🤭 논문 구현하면서 배운 점 / 느낀 점
  
-** bert 구조 관련 **
+**bert 구조 관련**
 - BERT, transformer의 seq_len 차원은 정해져있을 필요가 없고 max_len으로 배치별로 패딩하는거다<br>
   -> 어차피 마지막 차원은 hid_dim이고 그걸로 연산을 함<br>
   -> seq_len 차원은 남아있음, transformer의 encoder의 ouput 차원은 [batch size, src len, hid dim]<br>
   -> max_seq_len은 OOM을 막기 위해 있는거다<br>
 - finetuning을 할 때, token embedding만 사용한다고 생각했었는데 그게 아닌 attention 값(batch_size, seq_len, hidden_dim)을 사용함!
    
-** bert i/o관련 **
+**bert i/o관련**
 - NSP는 같은 문단에서도 바로 다음 문장이 아니면 0이다 
 - [mask] 중에 10%는 그대로 남기는 이유 : [mask]로 선택된 토큰은 예측을 하는데, input이 [mask]이거나, random이거나 그대로 토큰일 때 맞추는 것
 - bert에서 senA, senB의 단위는 일반적으로 문장임. finetune task에서 QA등을 할때에는 문단이나 단어가 들어갈 수 있음.
 
-** 기타 **
+**기타**
 - 데이터가 클 때 리스트에 올리거나 하면 메모리 에러가 나므로 주의해야함..큰 데이터셋을 다룰 때는 기존의 방법이랑 다르게 해야함 -> linecache 사용해봄
 - AdamW의 위력..initialize의 위력..
 - tokenizers 사용법 -> encode, offset 등 -> finetuning할 때 pretraining 파라미터들 가져오는 것이 훨씬 편해짐
