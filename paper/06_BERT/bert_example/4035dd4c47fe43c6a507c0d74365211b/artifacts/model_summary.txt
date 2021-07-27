@@ -1,0 +1,45 @@
+   | Name                                              | Type                         | Params
+----------------------------------------------------------------------------------------------------
+0  | encoder                                           | Encoder                      | 4.1 M 
+1  | encoder.tok_embedding                             | Embedding                    | 3.0 M 
+2  | encoder.pos_embedding                             | Embedding                    | 32.8 K
+3  | encoder.seg_embedding                             | Embedding                    | 768   
+4  | encoder.layers                                    | ModuleList                   | 1.1 M 
+5  | encoder.layers.0                                  | EncoderLayer                 | 527 K 
+6  | encoder.layers.0.self_attn_layer_norm             | LayerNorm                    | 512   
+7  | encoder.layers.0.ff_layer_norm                    | LayerNorm                    | 512   
+8  | encoder.layers.0.self_attention                   | MultiHeadAttentionLayer      | 263 K 
+9  | encoder.layers.0.self_attention.fc_q              | Linear                       | 65.8 K
+10 | encoder.layers.0.self_attention.fc_k              | Linear                       | 65.8 K
+11 | encoder.layers.0.self_attention.fc_v              | Linear                       | 65.8 K
+12 | encoder.layers.0.self_attention.fc_o              | Linear                       | 65.8 K
+13 | encoder.layers.0.self_attention.dropout           | Dropout                      | 0     
+14 | encoder.layers.0.positionwise_feedforward         | PositionwiseFeedforwardLayer | 262 K 
+15 | encoder.layers.0.positionwise_feedforward.fc_1    | Linear                       | 131 K 
+16 | encoder.layers.0.positionwise_feedforward.fc_2    | Linear                       | 131 K 
+17 | encoder.layers.0.positionwise_feedforward.dropout | Dropout                      | 0     
+18 | encoder.layers.0.dropout                          | Dropout                      | 0     
+19 | encoder.layers.1                                  | EncoderLayer                 | 527 K 
+20 | encoder.layers.1.self_attn_layer_norm             | LayerNorm                    | 512   
+21 | encoder.layers.1.ff_layer_norm                    | LayerNorm                    | 512   
+22 | encoder.layers.1.self_attention                   | MultiHeadAttentionLayer      | 263 K 
+23 | encoder.layers.1.self_attention.fc_q              | Linear                       | 65.8 K
+24 | encoder.layers.1.self_attention.fc_k              | Linear                       | 65.8 K
+25 | encoder.layers.1.self_attention.fc_v              | Linear                       | 65.8 K
+26 | encoder.layers.1.self_attention.fc_o              | Linear                       | 65.8 K
+27 | encoder.layers.1.self_attention.dropout           | Dropout                      | 0     
+28 | encoder.layers.1.positionwise_feedforward         | PositionwiseFeedforwardLayer | 262 K 
+29 | encoder.layers.1.positionwise_feedforward.fc_1    | Linear                       | 131 K 
+30 | encoder.layers.1.positionwise_feedforward.fc_2    | Linear                       | 131 K 
+31 | encoder.layers.1.positionwise_feedforward.dropout | Dropout                      | 0     
+32 | encoder.layers.1.dropout                          | Dropout                      | 0     
+33 | encoder.dropout                                   | Dropout                      | 0     
+34 | nsp                                               | Linear                       | 514   
+35 | mlm                                               | Linear                       | 3.0 M 
+36 | criterion_nsp                                     | CrossEntropyLoss             | 0     
+37 | criterion_mlm                                     | CrossEntropyLoss             | 0     
+----------------------------------------------------------------------------------------------------
+7.0 M     Trainable params
+0         Non-trainable params
+7.0 M     Total params
+28.101    Total estimated model params size (MB)

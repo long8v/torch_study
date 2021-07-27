@@ -1,0 +1,15 @@
+artifact_uri: file:///home/long8v/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 4035dd4c47fe43c6a507c0d74365211b
+run_uuid: 4035dd4c47fe43c6a507c0d74365211b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1627371853136
+status: 1
+tags: []
+user_id: long8v
