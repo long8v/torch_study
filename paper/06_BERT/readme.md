@@ -25,8 +25,7 @@ python source/load_korpora.py
 1-2) bert 학습을 위한 데이터셋 / tokenizer 학습
 
 문서 단위로 train / valid를 나누고 NSP prediction을 할 때 문서 맨 끝 문장과 다음 문서 맨 첫 문장이 NSP=1으로 예측되면 안되므로, 문장 끝에 [EOD]라는 토큰을 추가합니다. <br>
-토크나이저의 경우 wordpiece로만 학습하게되면 한국어의 경우 조사 등 다빈도 토큰이 붙는 경우가 많아 mecab으로 형태소로 자르고 잘린 부분에 ##을 붙인 다음에  <br>
-tokenizers의 BertWordPieceTokenizer(wordpieces_prefix='##', strip_accents=False)로 학습을 진행하면 이를 막을 수 있게 됩니다.
+토크나이저의 경우 wordpiece로만 학습하게되면 한국어의 경우 조사 등 다빈도 토큰이 붙는 경우가 많아 mecab으로 형태소로 자르고 잘린 부분에 ##을 붙인 다음 tokenizers의 `wordpieces_prefix='##'`  argument로 학습을 진행하면 이를 막을 수 있게 됩니다.
 ```
 python source/tokenizer.py
 ```
