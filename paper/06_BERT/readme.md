@@ -249,6 +249,7 @@ input :        **i [mask] to school.**<BR>
 ** 기타 **
 - 데이터가 클 때 리스트에 올리거나 하면 메모리 에러가 나므로 주의해야함..큰 데이터셋을 다룰 때는 기존의 방법이랑 다르게 해야함 -> linecache 사용해봄
 - AdamW의 위력..initialize의 위력..
-- tokenizers/ pytorch crf사용법
+- tokenizers 사용법 -> encode, offset 등 -> finetuning할 때 pretraining 파라미터들 가져오는 것이 훨씬 편해짐
+- crf 개념과 pytorch crf사용법
 - tokenizers offset사용하여 chr-level NER input/output 만드는 코드
 - `pytorch_lightning.callbacks.ModelCheckpoint` 활용해서 저장하는 법
