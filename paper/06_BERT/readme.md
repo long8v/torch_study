@@ -11,9 +11,9 @@ Korpora == 0.2
 ```
 
 ### pretraining
-1) run
+**1) run**
 
-1-1) data loading 
+1-1) data loading
 
 Korpora에서 데이터를 다운 받아 문서 단위의 list로 피클링하는 코드입니다
 코드 내에 소스 파일 저장하는 경로를 바꿔주어야 합니다 
@@ -72,11 +72,11 @@ mlflow ui
 모델 학습 metric, checkpoint는 `mlruns/0`폴더 내에서 볼 수 있습니다. [예시](https://github.com/long8v/torch_study/tree/master/paper/06_BERT/bert_example/4035dd4c47fe43c6a507c0d74365211b)
 
 
-2) data
+**2) data**
 Korpora에서 제공하는 한국어데이터를 사용했습니다.
 [petetion data](https://github.com/lovit/petitions_archive), [namu-wiki data](https://github.com/lovit/namuwikitext)
 
-3) model size
+**3) model size**
 
 ```
   | Name          | Type             | Params
@@ -92,7 +92,7 @@ Korpora에서 제공하는 한국어데이터를 사용했습니다.
 7.0 M     Total params
 28.101    Total estimated model params size (MB)
 ```
-4) result
+**4) result**
 
 |metric|train|valid|
 |:---:|:---:|:---:|
@@ -101,7 +101,7 @@ Korpora에서 제공하는 한국어데이터를 사용했습니다.
 |MLM accuracy|0.46|0.40|
 |NSP accuracy|0.88|0.55|
 
-5) experiment
+**5) experiment**
 
 5-1) scheduler
 ![image](https://user-images.githubusercontent.com/46675408/127120275-6b6dc8d4-1d85-4a80-afe6-28bf65db5906.png)
