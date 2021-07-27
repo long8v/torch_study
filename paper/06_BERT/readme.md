@@ -72,6 +72,7 @@ mlflow ui
 
 
 **2) data**
+
 Korpora에서 제공하는 한국어데이터를 사용했습니다.
 [petetion data](https://github.com/lovit/petitions_archive), [namu-wiki data](https://github.com/lovit/namuwikitext)
 
