@@ -59,7 +59,7 @@ train:
     train_nsp: False  # nsp 학습 여부
 ```
 
-1-3) 실행
+1-4) 실행
 ```
 python run.py
 ```
