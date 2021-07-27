@@ -251,4 +251,4 @@ input :        **i [mask] to school.**<BR>
 - AdamW의 위력..initialize의 위력..
 - tokenizers/ pytorch crf사용법
 - tokenizers offset사용하여 chr-level NER input/output 만드는 코드
-- `pytorch_lightning.callbacks.ModelCheckpoint`  
+- `pytorch_lightning.callbacks.ModelCheckpoint` 활용해서 저장하는 법
