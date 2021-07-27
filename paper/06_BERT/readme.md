@@ -113,16 +113,42 @@ transformer 구조 자체는 4월 레퍼런스 코드였던 [transformer](https:
 BERT의 성능을 측정하기 위한 finetune-task로 NER를 선택하였습니다
 
 **2) run **
-2-1) 
+2-1) config 수정
+```
+data:
+    src: '/home/long8v/torch_study/paper/file/klue-ner-v1_train.tsv'
+    src_valid: '/home/long8v/torch_study/paper/file/klue-ner-v1_dev.tsv'
+    vocab:  '/home/long8v/torch_study/paper/file/bert/vocab.json'
+    max_len: 128
+    nsp_prob: 0.5
+    mask_ratio: 0.1
+    batch_size: 128
+model:
+    pretrained_path: '/home/long8v/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts' # BERT pretraining path
+    hid_dim: 256
+    n_layers: 2
+    n_heads: 8
+    pf_dim: 512
+    dropout: 0.5
+
+train:
+    n_epochs: 20
+    device: 'cuda'
+    lr: 0.0005
+    scheduler: True
+    warmup_steps: 100
+    train_nsp: False
+    train_mlm: False
+```
+
+2-2) run 
 ```
 python run_finetune.py
 ```
 
 **3) data**
 
-KLUE 벤치마크의 NER 데이터를 사용했습니다
-
-[KLUE NER](https://github.com/KLUE-benchmark/KLUE/tree/main/klue_benchmark/klue-ner-v1)
+KLUE 벤치마크의 NER 데이터를 사용했습니다([KLUE NER](https://github.com/KLUE-benchmark/KLUE/tree/main/klue_benchmark/klue-ner-v1))
 
 **4) model size**
 
@@ -138,6 +164,8 @@ KLUE 벤치마크의 NER 데이터를 사용했습니다
 4.1 M     Total params
 16.222    Total estimated model params size (MB)
 ```
+bert를 ckpt로 불러오고 encoder만 가져와서 사용합니다(모델 initialize할 때 같이 initialize하지 않을 것에 주의)
+ner 카테고리 개수로 fcn을 하고, crf
 
 **5) result**
 
