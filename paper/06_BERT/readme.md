@@ -116,6 +116,7 @@ transformer 구조 자체는 4월 레퍼런스 코드였던 [transformer](https:
 BERT의 성능을 측정하기 위한 finetune-task로 NER를 선택함
 
 **2) run**
+
 2-1) config 수정
 ```
 data:
@@ -127,7 +128,7 @@ data:
     mask_ratio: 0.1
     batch_size: 128
 model:
-    pretrained_path: '/home/long8v/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts' # BERT pretraining path
+    pretrained_path: '/home/long8v/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts' 
     hid_dim: 256
     n_layers: 2
     n_heads: 8
