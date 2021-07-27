@@ -7,16 +7,72 @@ torchtext == 0.8.1
 pytorch-lightning == 1.2.8
 tokenizers == 0.9.3
 pytorch-crf == 0.7.2
+Korpora == 0.2
 ```
 
 ### pretraining
-1) run 
+1) run
+1-1) data loading 
+
+Korpora에서 데이터를 다운 받아 문서 단위의 list로 피클링하는 코드입니다
+코드 내에 소스 파일 저장하는 경로를 바꿔주어야 합니다 
 ```
-run.py
+python source/load_korpora.py
+>>> yes (혹은 원하는 문서 개수만큼의 숫자)
 ```
+
+1-2) bert 학습을 위한 데이터셋 / tokenizer 학습
+
+문서 단위로 train / valid를 나누고 NSP prediction을 할 때 문서 맨 끝 문장과 다음 문서 맨 첫 문장이 NSP=1으로 예측되면 안되므로, 문장 끝에 [EOD]라는 토큰을 추가합니다. 
+토크나이저의 경우 wordpiece로만 학습하게되면 한국어의 경우 조사 등 다빈도 토큰이 붙는 경우가 많아 mecab으로 형태소로 자르고 잘린 부분에 ##을 붙인 다음에 
+tokenizers의 BertWordPieceTokenizer(wordpieces_prefix='##', strip_accents=False)로 학습을 진행하면 이를 막을 수 있게 됩니다.
+```
+python source/tokenizer.py
+```
+저장 경로에 tokenizer 모델이 저장되고 이 파일이 vocab 수, 문장->인덱스 딕셔너리, 인덱스->문장 딕셔너리, 스페셜 토큰등을 담고 있기 때문에 이후 간편하게 진행할 수 있습니다.
+
+1-3) config.yaml 수정
+```
+data:
+    src: '/home/long8v/torch_study/paper/file/bert/bert.txt' # 학습데이터
+    src_valid: '/home/long8v/torch_study/paper/file/bert/bert_valid.txt' # validataion 데이터
+    vocab:  '/home/long8v/torch_study/paper/file/bert/vocab.json' # vocab 객체
+    max_len: 128 # 최대 토큰 개수
+    nsp_prob: 0.5   # nsp = 1일 확률(0.5이면 nsp=1, 0 비율이 1:1이라는 것) 
+    mask_ratio: 0.1 # MLM을 위한 마스킹 토큰 비율
+    batch_size: 64 
+model:
+    hid_dim: 256
+    n_layers: 2
+    n_heads: 8
+    pf_dim: 512
+    dropout: 0.5
+
+train:
+    n_epochs: 1000
+    device: 'cuda'
+    lr: 0.0005
+    scheduler: True
+    warmup_steps: 100
+    train_mlm: True   # mlm 학습 여부 
+    train_nsp: False  # nsp 학습 여부
+```
+
+1-3) 실행
+```
+python run.py
+```
+실행을 하게 되면 mlflow + pytorch-lightning 프레임워크에서 학습이 됩니다. 
+위 파일 실행 경로에서 아래 코드를 실행하면 학습 결과들을 웹으로 볼 수 있습니다.
+```
+mlflow ui
+```
+
+모델 학습 metric, checkpoint는 `mlruns/0`폴더 내에서 볼 수 있습니다. [예시](https://github.com/long8v/torch_study/tree/master/paper/06_BERT/bert_example/4035dd4c47fe43c6a507c0d74365211b)
+
 
 2) data
-
+Korpora에서 제공하는 한국어데이터를 사용했습니다.
 [petetion data](https://github.com/lovit/petitions_archive), [namu-wiki data](https://github.com/lovit/namuwikitext)
 
 3) model size
