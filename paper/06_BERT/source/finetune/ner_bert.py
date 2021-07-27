@@ -32,11 +32,10 @@ class NER_BERT(pl.LightningModule):
         pretrained_path = self.config['model']['pretrained_path']
         print(f'load pretrained model from {pretrained_path}..')
         pretrained_model = glob(f'{pretrained_path}/*.ckpt')[0]
-        bert = BERT(self.config, input_dim,
-                        self.pad_idx)
-        bert.load_state_dict(torch.load(pretrained_model)['state_dict'])
+#         bert = BERT(self.config, input_dim, self.pad_idx)
+#         bert.load_state_dict(torch.load(pretrained_model)['state_dict'])
         self.lr = self.config['train']['lr']
-        self.encoder = bert.encoder
+#         self.encoder = bert.encoder
         self.encoder = nn.Embedding(config['input_dim'], config['hid_dim'])
         self.output_dim = output_dim 
         self.fcn = nn.Linear(config['hid_dim'], output_dim)
@@ -52,8 +51,8 @@ class NER_BERT(pl.LightningModule):
     def forward(self, tokens, labels):
         seg = torch.zeros_like(tokens) # seg는 아무래도 상관없음
         token_mask = self.make_src_mask(tokens).to(self._device)
-        with torch.no_grad():
-            output = self.encoder(tokens, seg, token_mask) # batch_size, seq_len, hid_dim 
+#         with torch.no_grad():
+        output = self.encoder(tokens, seg, token_mask) # batch_size, seq_len, hid_dim 
         output = self.fcn(output)
 #         loss = - self.crf(output, labels) # log likelihood -> neg log likelihood
         loss = - self.crf(output, labels, token_mask.squeeze(1).squeeze(1))
