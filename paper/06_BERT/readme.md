@@ -107,7 +107,7 @@ transformer 구조 자체는 4월 레퍼런스 코드였던 [transformer](https:
 5-1) scheduler
 ![image](https://user-images.githubusercontent.com/46675408/127120275-6b6dc8d4-1d85-4a80-afe6-28bf65db5906.png)
 
-스케쥴러를 이것 저것 사용했으나 ELMo때 사용한 스케쥴러가 valid accuracy가 가장 높았음
+스케쥴러를 이것저것 사용으나 ELMo때 사용한 스케쥴러가 valid accuracy가 가장 높았음
 
 ### finetuning
 **1) task**
@@ -178,9 +178,16 @@ ner 카테고리 개수로 fcn을 하고, crf
 |macro F1|0.931|0.791|
 
 **6) experiment**
+- train macro F1
+![image](https://user-images.githubusercontent.com/46675408/127137053-6bcb2176-3862-44f0-821b-0127b00caff1.png)
 
+- valid macro F1
 ![image](https://user-images.githubusercontent.com/46675408/127128705-32bca8f5-f099-492d-85be-d5bd7b51d3e6.png)
 
+- bert + crf : 기본 모델(fine-tuning)
+- bert + lstm + crf : bert output을 lstm을 한번 더 통과한 뒤 fcn + crf를 진행 기본모델과 비슷했음
+- fixed bert + crf : feature-based model 성능이 가장 안좋음. fcn의 차원이 크지 않아서 모델이 학습할만한 파라미터가 없어서 인듯함
+- plain embedding + crf : `nn.Embedding`이후 fcn + crf을 거침. 
 
 ## 🤔 Paper review
 **1) PPT 한 장 분량으로 자유롭게 논문 정리 뒤 이미지로 첨부**
