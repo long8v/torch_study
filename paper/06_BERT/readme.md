@@ -10,16 +10,16 @@ pytorch-crf == 0.7.2
 ```
 
 ### pretraining
-- run 
+1) run 
 ```
 run.py
 ```
 
-- data
+2) data
 
 [petetion data](https://github.com/lovit/petitions_archive), [namu-wiki data](https://github.com/lovit/namuwikitext)
 
-- model size
+3) model size
 
 ```
   | Name          | Type             | Params
@@ -35,7 +35,7 @@ run.py
 7.0 M     Total params
 28.101    Total estimated model params size (MB)
 ```
-- result
+4) result
 
 |metric|train|valid|
 |:---:|:---:|:---:|
@@ -44,26 +44,26 @@ run.py
 |MLM accuracy|0.46|0.40|
 |NSP accuracy|0.88|0.55|
 
-- experiment
+5) experiment
 
-***scheduler***
+5-1) scheduler
 ![image](https://user-images.githubusercontent.com/46675408/127120275-6b6dc8d4-1d85-4a80-afe6-28bf65db5906.png)
 
 ### finetuning
-- task
+1) task
 
 NER(BERT + crf)
 
-- run 
+2) run 
 ```
 run_finetune.py
 ```
 
-- data
+3) data
 
 [KLUE NER](https://github.com/KLUE-benchmark/KLUE/tree/main/klue_benchmark/klue-ner-v1)
 
-- model size
+4) model size
 
 ```
   | Name    | Type    | Params
@@ -78,7 +78,7 @@ run_finetune.py
 16.222    Total estimated model params size (MB)
 ```
 
-- result
+5) result
 
 |metric|train|valid|
 |:---:|:---:|:---:|
@@ -86,7 +86,8 @@ run_finetune.py
 |micro F1|0.991|0.922|
 |macro F1|0.931|0.791|
 
-- experiment
+6) experiment
+
 ![image](https://user-images.githubusercontent.com/46675408/127128705-32bca8f5-f099-492d-85be-d5bd7b51d3e6.png)
 
 
