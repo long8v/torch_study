@@ -175,8 +175,8 @@ ner 카테고리 개수로 fcn을 하고, crf
 |metric|train|valid|
 |:---:|:---:|:---:|
 |loss|13.49|61.15|
-|micro F1|0.991|0.922|
-|macro F1|0.931|0.791|
+|micro F1|0.991|0.915|
+|macro F1|0.981|0.770|
 
 **6) experiment**
 - train macro F1
