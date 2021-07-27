@@ -68,18 +68,15 @@ run_finetune.py
 ```
   | Name    | Type    | Params
 ------------------------------------
-0 | bert    | BERT    | 7.0 M 
-1 | encoder | Encoder | 4.1 M 
-2 | fcn     | Linear  | 3.6 K 
-3 | crf     | CRF     | 224   
+0 | encoder | Encoder | 4.1 M 
+1 | fcn     | Linear  | 3.6 K 
+2 | crf     | CRF     | 224   
 ------------------------------------
-7.0 M     Trainable params
+4.1 M     Trainable params
 0         Non-trainable params
-7.0 M     Total params
-28.116    Total estimated model params size (MB)
+4.1 M     Total params
+16.222    Total estimated model params size (MB)
 ```
-
-
 
 - result
 
@@ -88,6 +85,9 @@ run_finetune.py
 |loss|13.49|61.15|
 |micro F1|0.991|0.922|
 |macro F1|0.931|0.791|
+
+- experiment
+![image](https://user-images.githubusercontent.com/46675408/127128705-32bca8f5-f099-492d-85be-d5bd7b51d3e6.png)
 
 
 ## 🤔 Paper review
