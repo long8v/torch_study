@@ -6,7 +6,7 @@ torch == 1.7.1
 torchtext == 0.8.1
 ```
 
-## **Paper(완료)**
+## ***Paper(완료)***
 🍟 [스터디 끝!](https://www.notion.so/kickoff-6634847c450741a68c1be736f102ecdd) 
 
 🍕 `torch`, `torchtext`만 사용하여 패키지 형태로 논문 재현하기  
