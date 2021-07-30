@@ -204,13 +204,13 @@ attention 하고 난 뒤에는 → 달라지겠죠
 
 달라진다.
   
-. MLM을 정확히 어떻게 하는건지 모르겠음 mask 토큰 넣은채로 인풋에 넣은 뒤에 mask 토큰에 대해서만 predict 하게 하려면 어떻게 구현해야하지?<br>
-. [MASK] 토큰을 15% 선정하고 80%은 바꾸고 10%은 치환하고 **10%는 그냥 둔거..** 10% 그냥 두는게 의미가 뭐지 걍 둔건가..<BR>
-
+. MLM을 정확히 어떻게 하는건지 모르겠음 mask 토큰 넣은채로 인풋에 넣은 뒤에 mask 토큰에 대해서만 predict 하게 하려면 어떻게 구현해야하지? 
+    <br> -> 다 예측하고 loss에서 mask 토큰만 계산함<br>
+. [MASK] 토큰을 15% 선정하고 80%은 바꾸고 10%은 치환하고 **10%는 그냥 둔 이유  
+    <br> ->  선정된 [MASK]들의 prediction을 할 때 그냥 둔 토큰의 임베딩이 들어감
 original :    i go to shcool.<BR>
 inference :    i [mask] to **[mask].** 15%<BR>
 input :        **i [mask] to school.**<BR>
-. 선정된 [MASK]들의 prediction을 할 때 그냥 둔 토큰의 임베딩이 들어감
 
 **3) 재밌었던 부분**<BR>
 . MLM 아이디어 간단하고 직관적임. <BR>
