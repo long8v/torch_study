@@ -39,7 +39,7 @@ In our model, we share the **same weight matrix between the two embedding layers
 2) 가장 큰 logit과 작은 logit의 차이를 크게 만들면, 모델이 adapt할 능력을 줄임
 
 **3) 재밌었던 부분**
-. ****additive attention보다 dot-product가 행렬연산이기 때문에 더 효율적이라는 점....생각지도 못함...
+. additive attention보다 dot-product가 행렬연산이기 때문에 더 효율적이라는 점....생각지도 못함...
 . self attention 이 여기서 처음 나온 건 아니구나 이 논문이 나오기 전에 나왔던 유사한 시도를 한 무수히 많은 논문이 있구나..
 . stack은 높이로 올라가는거고, multi-head는 두께라고 생각하면 이 모델은 참 높이도 쌓았고 두껍게도 쌓았구나 여러 차원으로 많이 쌓았네 어떻게 보면 CNN 쌓는 느낌이랑도 비슷하다
 . self attention의 장점을 논리적으로 쓴 부분
