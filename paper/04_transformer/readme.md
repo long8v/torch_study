@@ -47,6 +47,55 @@ In our model, we share the **same weight matrix between the two embedding layers
 - self attention 이 여기서 처음 나온 건 아니구나 이 논문이 나오기 전에 나왔던 유사한 시도를 한 무수히 많은 논문이 있구나..
 - stack은 높이로 올라가는거고, multi-head는 두께라고 생각하면 이 모델은 참 높이도 쌓았고 두껍게도 쌓았구나 여러 차원으로 많이 쌓았네 어떻게 보면 CNN 쌓는 느낌이랑도 비슷하다
 - self attention의 장점을 논리적으로 쓴 부분
+- attention layer의 구현. 
+```python
+    def forward(self, query, key, value, mask = None):
+        
+        batch_size = query.shape[0]
+        
+        #query = [batch size, query len, hid dim]
+        #key = [batch size, key len, hid dim]
+        #value = [batch size, value len, hid dim]
+                
+        Q = self.fc_q(query)
+        K = self.fc_k(key)
+        V = self.fc_v(value)
+        
+        #Q = [batch size, query len, hid dim]
+        #K = [batch size, key len, hid dim]
+        #V = [batch size, value len, hid dim]
+                
+        Q = Q.view(batch_size, -1, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
+        K = K.view(batch_size, -1, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
+        V = V.view(batch_size, -1, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
+        
+        #Q = [batch size, n heads, query len, head dim]
+        #K = [batch size, n heads, key len, head dim]
+        #V = [batch size, n heads, value len, head dim]
+                
+        # k.permute(0, 1, 3, 2) = [batch size, n heads, head dim, key len]
+        energy = torch.matmul(Q, K.permute(0, 1, 3, 2)) / self.scale
+        #energy = [batch size, n heads, query len, key len]
+        
+        attention = torch.softmax(energy, dim = -1)
+        #attention = [batch size, n heads, query len, key len]
+                
+        x = torch.matmul(self.dropout(attention), V)
+        #x = [batch size, n heads, query len, head dim]
+        
+        x = x.permute(0, 2, 1, 3).contiguous()
+        #x = [batch size, query len, n heads, head dim]
+        
+        # n_heads * head_dim을 hid dim으로 합치는 부분
+        x = x.view(batch_size, -1, self.hid_dim)
+        
+        #x = [batch size, query len, hid dim]
+        
+        x = self.fc_o(x)
+        
+        #x = [batch size, query len, hid dim]
+```
+
 
 **4) 논문 구현 시 주의해야할 것 같은 부분(논문 본문 복붙)**
 
