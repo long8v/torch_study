@@ -20,6 +20,7 @@ self-attention + FFN이 몇층으로 쌓는건데 한 layer의 output이 어떻�
 ㄴ. Encoder에서도 stack layer가 N = 6 이고 decoder 에서도 stack layer가 N = 6인데 우리의 역사적인 토론 주제인 인코더 디코더는 각 stack에서 히든벡터로 연결되는가 아님 인코더의 마지막 stack만 가는가 가 궁금하네요 wikidocs는 후자처럼 그려지네용
 
 → 맨 위 stack만 가는게 맞다
+
 ㄷ.  3.2.3 마이너스 무한대로 뭘 어떻게 바꿨다는건지..? attention 값을 바꾼건가..? [MASK] 이런 토큰으로 바꾸면 왜 안될까?
 
 Similarly, self-attention layers in the decoder allow each position in the decoder to attend to all positions in the decoder up to and including that position. We need to prevent leftward information flow in the decoder to preserve the auto-regressive property. We implement this inside of **scaled dot-product attention by masking out (setting to −∞)** all values in the input of the softmax which correspond to illegal connections. See Figure 2.
@@ -33,9 +34,12 @@ Similarly, self-attention layers in the decoder allow each position in the decod
 In our model, we share the **same weight matrix between the two embedding layers** and the pre-softmax linear transformation, similar to [30]. In the embedding layers, we multiply those weights by √dmodel. ...?
 
 ㅁ. label smoothing 
+
 크로스 엔트로피에서 정답 레이블을 1, 0 으로 두는게 아니고  1 - 엡실론, 0 + 엡실론으로 두는 것
+
 1) 오버피팅을 방지할 수 있음
 모델이 트레이닝 데이터의 GT 레이블에 full probability를 할당하면, 일반화하기 어려울 수 있음
+
 2) 가장 큰 logit과 작은 logit의 차이를 크게 만들면, 모델이 adapt할 능력을 줄임
 
 **3) 재밌었던 부분**
