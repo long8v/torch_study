@@ -15,7 +15,7 @@ The encoder contains self-attention layers. In a self-attention layer all of the
 
 self-attention + FFN이 몇층으로 쌓는건데 한 layer의 output이 어떻게 되는거지? d_k원 짜리로 벡터가 그 자체로 또 K, V, Q가 되는건가?
 
-→ FFN 후의 (seq_len, d_model)의 MATRIX을 각 K, V, Q로 LINEAR PROJECTION해서 재사용
+-> FFN 후의 (batch_size, seq_len, d_model)의 MATRIX을 각 K, V, Q로 LINEAR PROJECTION해서 재사용
 
 ㄴ. Encoder에서도 stack layer가 N = 6 이고 decoder 에서도 stack layer가 N = 6인데 우리의 역사적인 토론 주제인 인코더 디코더는 각 stack에서 히든벡터로 연결되는가 아님 인코더의 마지막 stack만 가는가 가 궁금하네요 wikidocs는 후자처럼 그려지네용
 
