@@ -1,13 +1,13 @@
 data:
-    src: '/home/long8v/torch_study/paper/file/klue-ner-v1_train.tsv'
-    src_valid: '/home/long8v/torch_study/paper/file/klue-ner-v1_dev.tsv'
-    vocab:  '/home/long8v/torch_study/paper/file/bert/vocab.json'
+    src: '~/torch_study/paper/file/klue-ner-v1_train.tsv'
+    src_valid: '~/torch_study/paper/file/klue-ner-v1_dev.tsv'
+    vocab:  '~/torch_study/paper/file/bert/vocab.json'
     max_len: 128
     nsp_prob: 0.5
     mask_ratio: 0.1
     batch_size: 128
 model:
-    pretrained_path: '/home/long8v/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts'
+    pretrained_path: '~/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts'
     hid_dim: 256
     n_layers: 2
     n_heads: 8

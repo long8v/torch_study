@@ -11,71 +11,85 @@ from mlflow.tracking import MlflowClient
 from torch.utils.data import Dataset, DataLoader
 
 
-
 class BERT_trainer(pl.LightningModule):
     def __init__(self, config):
         super(BERT_trainer, self).__init__()
         self.config = config
-        data_config = config['data']
-        dataset = BERT_Dataset(data_config['src'], data_config['vocab'],
-                               data_config['max_len'], data_config['nsp_prob'], data_config['mask_ratio'])
-        valid_dataset = BERT_Dataset(data_config['src_valid'], data_config['vocab'],
-                               data_config['max_len'], data_config['nsp_prob'])
-        self.pad_idx = dataset.tokenizer.token_to_id('[PAD]')
-        
-        self.dataloader = DataLoader(dataset, data_config['batch_size'], 
-                                     collate_fn=lambda batch: pad_collate(batch, self.pad_idx))
-        self.valid_dataloader = DataLoader(valid_dataset, data_config['batch_size'], 
-                                           collate_fn=lambda batch: pad_collate(batch, self.pad_idx))
-        
-        print('before special token', dataset.tokenizer.get_vocab_size())
-        dataset.tokenizer.add_special_tokens(['[SEP]', '[CLS]', '[MASK]', '[EOD]'])
+        data_config = config["data"]
+        dataset = BERT_Dataset(
+            data_config["src"],
+            data_config["vocab"],
+            data_config["max_len"],
+            data_config["nsp_prob"],
+            data_config["mask_ratio"],
+        )
+        valid_dataset = BERT_Dataset(
+            data_config["src_valid"],
+            data_config["vocab"],
+            data_config["max_len"],
+            data_config["nsp_prob"],
+        )
+        self.pad_idx = dataset.tokenizer.token_to_id("[PAD]")
+
+        self.dataloader = DataLoader(
+            dataset,
+            data_config["batch_size"],
+            collate_fn=lambda batch: pad_collate(batch, self.pad_idx),
+        )
+        self.valid_dataloader = DataLoader(
+            valid_dataset,
+            data_config["batch_size"],
+            collate_fn=lambda batch: pad_collate(batch, self.pad_idx),
+        )
+
+        print("before special token", dataset.tokenizer.get_vocab_size())
+        dataset.tokenizer.add_special_tokens(["[SEP]", "[CLS]", "[MASK]", "[EOD]"])
         self.vocab_size = dataset.tokenizer.get_vocab_size()
-        print('after special token', self.vocab_size)
-        
-        self.bert = BERT(self.config, self.vocab_size, self.pad_idx) 
-        device = config['train']['device'] 
+        print("after special token", self.vocab_size)
+
+        self.bert = BERT(self.config, self.vocab_size, self.pad_idx)
+        device = config["train"]["device"]
         self.bert.to(device)
         self.bert.train()
         self.bert.zero_grad()
-        self.bert.apply(self.initialize_weights);
-        if device == 'cuda':
+        self.bert.apply(self.initialize_weights)
+        if device == "cuda":
             self.gpus = 1
         else:
             self.gpus = 0
-            
 
     def initialize_weights(self, m):
         for name, param in m.named_parameters():
-            if ("fc" in name) or ('embedding' in name):
-                if 'bias' in name:
+            if ("fc" in name) or ("embedding" in name):
+                if "bias" in name:
                     torch.nn.init.zeros_(param.data)
                 else:
                     torch.nn.init.normal_(param.data, mean=0.0, std=0.02)
             elif "layer_norm" in name:
-                if 'bias' in name:
+                if "bias" in name:
                     torch.nn.init.zeros_(param.data)
                 else:
                     torch.nn.init.constant_(param.data, 1.0)
-    
-        
+
     def train(self):
         # Auto log all MLflow entities
         mlflow.pytorch.autolog()
-        mlflow.end_run() # 이전에 돌아가고 있던거 끄기
+        mlflow.end_run()  # 이전에 돌아가고 있던거 끄기
         with mlflow.start_run() as run:
-            artifact_path = mlflow.mlflow.get_artifact_uri() 
-            artifact_path = artifact_path.replace('file://','')
-            print('////////////////arftifact_path', artifact_path)
-            checkpoint_callback = ModelCheckpoint(dirpath=artifact_path,
-                                                  monitor='valid_total_loss')
+            artifact_path = mlflow.mlflow.get_artifact_uri()
+            artifact_path = artifact_path.replace("file://", "")
+            print("////////////////arftifact_path", artifact_path)
+            checkpoint_callback = ModelCheckpoint(
+                dirpath=artifact_path, monitor="valid_total_loss"
+            )
 
             # Add your callback to the callbacks list
-            trainer = pl.Trainer(callbacks=[checkpoint_callback],
-                                max_epochs=self.config['train']['n_epochs'], 
-                                 progress_bar_refresh_rate=10,
-                                 gpus=self.gpus,
-                                )  
+            trainer = pl.Trainer(
+                callbacks=[checkpoint_callback],
+                max_epochs=self.config["train"]["n_epochs"],
+                progress_bar_refresh_rate=10,
+                gpus=self.gpus,
+            )
 
             # Train the model
 
@@ -83,9 +97,10 @@ class BERT_trainer(pl.LightningModule):
                 mlflow.log_param(key, value)
             trainer.fit(self.bert, self.dataloader, self.valid_dataloader)
 
-if __name__ == '__main__':
-    config_file = '/home/long8v/torch_study/paper/06_BERT/config.yaml'
+
+if __name__ == "__main__":
+    config_file = "~/torch_study/paper/06_BERT/config.yaml"
     config = read_yaml(config_file)
-    print('train started..')
+    print("train started..")
     trainer = BERT_trainer(config)
     trainer.train()

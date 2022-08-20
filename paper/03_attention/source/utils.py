@@ -10,41 +10,55 @@ def epoch_time(start_time, end_time):
     elapsed_secs = int(elapsed_time - (elapsed_mins * 60))
     return elapsed_mins, elapsed_secs
 
+
 def logging_model(model):
     logging.info(model)
+
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
+
 def logging_count_parameters(model):
-    print(f'The model has {count_parameters(model):,} trainable parameters')
-    logging.info(f'The model has {count_parameters(model):,} trainable parameters')
+    print(f"The model has {count_parameters(model):,} trainable parameters")
+    logging.info(f"The model has {count_parameters(model):,} trainable parameters")
+
 
 def get_today():
     return datetime.today().strftime("%Y%m%d_%H_%M")
 
+
 def logging_time():
     logging.info(get_today())
 
+
 def read_json(path):
-    with open(path, 'r', encoding='utf-8') as json_file:
+    with open(path, "r", encoding="utf-8") as json_file:
         json_data = json.load(json_file)
     return json_data
 
-            
+
 def get_speical_token(field):
     def get_stoi(idx):
         return field.vocab.stoi[idx]
-    return [get_stoi(field.pad_token), get_stoi(field.unk_token), 
-            get_stoi(field.eos_token)]
+
+    return [
+        get_stoi(field.pad_token),
+        get_stoi(field.unk_token),
+        get_stoi(field.eos_token),
+    ]
+
 
 def get_itos_str(tokens, field):
     ignore_idx = get_speical_token(field)
-    return ' '.join([field.vocab.itos[token] for token in tokens
-                    if token not in ignore_idx])
+    return " ".join(
+        [field.vocab.itos[token] for token in tokens if token not in ignore_idx]
+    )
+
 
 def get_itos_batch(tokens_batch, field):
     return [get_itos_str(batch, field) for batch in tokens_batch]
+
 
 def get_bleu_score(output, trg, trg_field):
     with torch.no_grad():

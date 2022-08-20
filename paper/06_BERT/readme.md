@@ -34,9 +34,9 @@ python source/tokenizer.py
 1-3) config.yaml 수정
 ```
 data:
-    src: '/home/long8v/torch_study/paper/file/bert/bert.txt' # 학습데이터
-    src_valid: '/home/long8v/torch_study/paper/file/bert/bert_valid.txt' # validataion 데이터
-    vocab:  '/home/long8v/torch_study/paper/file/bert/vocab.json' # vocab 객체
+    src: '~/torch_study/paper/file/bert/bert.txt' # 학습데이터
+    src_valid: '~/torch_study/paper/file/bert/bert_valid.txt' # validataion 데이터
+    vocab:  '~/torch_study/paper/file/bert/vocab.json' # vocab 객체
     max_len: 128 # 최대 토큰 개수
     nsp_prob: 0.5   # nsp = 1일 확률(0.5이면 nsp=1, 0 비율이 1:1이라는 것) 
     mask_ratio: 0.1 # MLM을 위한 마스킹 토큰 비율
@@ -120,15 +120,15 @@ BERT의 성능을 측정하기 위한 finetune-task로 NER를 선택함
 2-1) config 수정
 ```
 data:
-    src: '/home/long8v/torch_study/paper/file/klue-ner-v1_train.tsv'
-    src_valid: '/home/long8v/torch_study/paper/file/klue-ner-v1_dev.tsv'
-    vocab:  '/home/long8v/torch_study/paper/file/bert/vocab.json'
+    src: '~/torch_study/paper/file/klue-ner-v1_train.tsv'
+    src_valid: '~/torch_study/paper/file/klue-ner-v1_dev.tsv'
+    vocab:  '~/torch_study/paper/file/bert/vocab.json'
     max_len: 128
     nsp_prob: 0.5
     mask_ratio: 0.1
     batch_size: 128
 model:
-    pretrained_path: '/home/long8v/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts' 
+    pretrained_path: '~/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts' 
     hid_dim: 256
     n_layers: 2
     n_heads: 8

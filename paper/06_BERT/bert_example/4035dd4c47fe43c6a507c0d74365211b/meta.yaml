@@ -1,4 +1,4 @@
-artifact_uri: file:///home/long8v/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts
+artifact_uri: file://~/torch_study/paper/06_BERT/mlruns/0/4035dd4c47fe43c6a507c0d74365211b/artifacts
 end_time: null
 entry_point_name: ''
 experiment_id: '0'

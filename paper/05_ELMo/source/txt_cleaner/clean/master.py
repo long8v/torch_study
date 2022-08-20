@@ -82,19 +82,25 @@ class MasterCleaner:
         """
         self.debug = debug
 
-        self.minimum_space_count = config['minimum_space_count']
+        self.minimum_space_count = config["minimum_space_count"]
 
         self.unicode_break = re.compile(chr(65533))
-        self.not_contain_hangul = re.compile(r'^((?![가-힣]{2}).)+$')
-        self.contain_japanese = re.compile(r'^.+?([ぁ-ゔ]+|[ァ-ヴー]+[々〆〤]).+?$')
-        self.contain_chinese = re.compile(r' [一-龥]{5,}')
-        self.full_english_sentence = re.compile(r'^.+?( [A-Za-z]+ [A-Za-z]+ [A-Za-z]+ [A-Za-z]+ [A-Za-z]+\.) .+$')
+        self.not_contain_hangul = re.compile(r"^((?![가-힣]{2}).)+$")
+        self.contain_japanese = re.compile(r"^.+?([ぁ-ゔ]+|[ァ-ヴー]+[々〆〤]).+?$")
+        self.contain_chinese = re.compile(r" [一-龥]{5,}")
+        self.full_english_sentence = re.compile(
+            r"^.+?( [A-Za-z]+ [A-Za-z]+ [A-Za-z]+ [A-Za-z]+ [A-Za-z]+\.) .+$"
+        )
 
-        self.line_breakers = re.compile(r'(\n|\r\n|\\n)+')
-        self.non_general_space = re.compile(r'[\xa0\u2000-\u200B\u202F\u205F\u3000\uFEFF]')
-        self.inside_bracket = re.compile(r'[\x28\x3C\x5B\x7B\u3010\u3014].+?[\x29\x3E\x5D\x7D\u3011\u3015]')
-        self.non_absolute_characters = re.compile(r'[^가-힣A-Za-z.,?!0-9一-龥 ]')
-        self.multiple_space = re.compile(r' {2,}')
+        self.line_breakers = re.compile(r"(\n|\r\n|\\n)+")
+        self.non_general_space = re.compile(
+            r"[\xa0\u2000-\u200B\u202F\u205F\u3000\uFEFF]"
+        )
+        self.inside_bracket = re.compile(
+            r"[\x28\x3C\x5B\x7B\u3010\u3014].+?[\x29\x3E\x5D\x7D\u3011\u3015]"
+        )
+        self.non_absolute_characters = re.compile(r"[^가-힣A-Za-z.,?!0-9一-龥 ]")
+        self.multiple_space = re.compile(r" {2,}")
 
     def print_debug_process(self, text, state):
         """
@@ -103,10 +109,12 @@ class MasterCleaner:
         :param state: information about process state
         :return: None
         """
+
         def _print_during_process(t, s):
-            print('\n----- {} -----\n'.format(s))
+            print("\n----- {} -----\n".format(s))
             print(t)
-            print('\n')
+            print("\n")
+
         if self.debug:
             _print_during_process(text, state)
 
@@ -116,6 +124,7 @@ class MasterCleaner:
         :param text: input text (may concatenation of str_title and str_content)
         :return: cleaned text
         """
+
         def substitute_by_regex(t, reg, change_to, state):
             t = reg.sub(change_to, t)
             if self.debug:
@@ -123,41 +132,75 @@ class MasterCleaner:
             return t
 
         def remove_by_regex(t, reg, state):
-            return substitute_by_regex(t, reg, '', state)
+            return substitute_by_regex(t, reg, "", state)
 
         def remove_by_condition(t, condition, state):
             if condition:
-                t = ''
+                t = ""
             if self.debug:
                 self.print_debug_process(t, state)
             return t
 
-        text = remove_by_regex(text, self.unicode_break, 'after deleting broken text')
-        text = remove_by_regex(text, self.not_contain_hangul, 'after deleting non-hangul article')
-        text = remove_by_regex(text, self.contain_japanese, 'after deleting contain japanese sentence')
-        text = remove_by_regex(text, self.contain_chinese, 'after deleting contain chinese sentence')
-        text = remove_by_regex(text, self.full_english_sentence, 'after deleting contain full english sentence')
+        text = remove_by_regex(text, self.unicode_break, "after deleting broken text")
+        text = remove_by_regex(
+            text, self.not_contain_hangul, "after deleting non-hangul article"
+        )
+        text = remove_by_regex(
+            text, self.contain_japanese, "after deleting contain japanese sentence"
+        )
+        text = remove_by_regex(
+            text, self.contain_chinese, "after deleting contain chinese sentence"
+        )
+        text = remove_by_regex(
+            text,
+            self.full_english_sentence,
+            "after deleting contain full english sentence",
+        )
 
-        text = substitute_by_regex(text, self.line_breakers, ' ', 'after substitute line_breakers')
-        text = substitute_by_regex(text, self.non_general_space, ' ', 'after substitute non-general spaces')
+        text = substitute_by_regex(
+            text, self.line_breakers, " ", "after substitute line_breakers"
+        )
+        text = substitute_by_regex(
+            text, self.non_general_space, " ", "after substitute non-general spaces"
+        )
 
-        text = remove_by_regex(text, self.inside_bracket, 'after deleting phrases inside of brackets')
+        text = remove_by_regex(
+            text, self.inside_bracket, "after deleting phrases inside of brackets"
+        )
 
-        text = substitute_by_regex(text, self.non_absolute_characters, ' ', 'after deleting useless special characters')
-        text = substitute_by_regex(text, self.multiple_space, ' ', 'after shrinking multiple whitespaces as one')
+        text = substitute_by_regex(
+            text,
+            self.non_absolute_characters,
+            " ",
+            "after deleting useless special characters",
+        )
+        text = substitute_by_regex(
+            text,
+            self.multiple_space,
+            " ",
+            "after shrinking multiple whitespaces as one",
+        )
 
-        text = remove_by_condition(text, self.test_no_content(text), 'check there is no content at all')
-        text = remove_by_condition(text, self.test_blank_sentence(text), 'check there is no sentence at all')
-        text = remove_by_condition(text, self.test_length_cover(text), 'check sentence length is larger than constant')
+        text = remove_by_condition(
+            text, self.test_no_content(text), "check there is no content at all"
+        )
+        text = remove_by_condition(
+            text, self.test_blank_sentence(text), "check there is no sentence at all"
+        )
+        text = remove_by_condition(
+            text,
+            self.test_length_cover(text),
+            "check sentence length is larger than constant",
+        )
         return text.strip()
 
     def test_length_cover(self, text):
-        return text.count(' ') < self.minimum_space_count
+        return text.count(" ") < self.minimum_space_count
 
     @staticmethod
     def test_blank_sentence(text):
-        return text.strip() == ''
+        return text.strip() == ""
 
     @staticmethod
     def test_no_content(text):
-        return text.strip(' ').endswith('\t')
+        return text.strip(" ").endswith("\t")

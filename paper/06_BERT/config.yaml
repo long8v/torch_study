@@ -1,7 +1,7 @@
 data:
-    src: '/home/long8v/torch_study/paper/file/bert/bert.txt'
-    src_valid: '/home/long8v/torch_study/paper/file/bert/bert_valid.txt'
-    vocab:  '/home/long8v/torch_study/paper/file/bert/vocab.json'
+    src: '~/torch_study/paper/file/bert/bert.txt'
+    src_valid: '~/torch_study/paper/file/bert/bert_valid.txt'
+    vocab:  '~/torch_study/paper/file/bert/vocab.json'
     max_len: 128
     nsp_prob: 0.5
     mask_ratio: 0.1

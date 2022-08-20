@@ -1,5 +1,5 @@
 ELMO:
-    PATH: '/home/long8v/torch_study/paper/05_ELMo/model/elmo_31051301'
+    PATH: '~/torch_study/paper/05_ELMo/model/elmo_31051301'
 
     
 DATA:
