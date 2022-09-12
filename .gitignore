@@ -6,7 +6,7 @@ __pycache__/
 
 # files
 debug
-.data/
+*/.data/
 */.data/*
 *.pt
 paper/file/
